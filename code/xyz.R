@@ -174,9 +174,9 @@ mean(distrib_annuelle)
 # distrib_auteurs_ord <- ...
 
 
-# Réponse à la question ci-dessus: 
+# Réponse à la question ci-dessus (j'en profite pour vous montrer trois syntaxes différentes produisant le même résultat): 
 
-# 1. Syntaxe étendue (petite perte de mémoire, mais plus explicite)
+# 1. Syntaxe étendue (petite perte de mémoire, mais plus explicite: le résultat de chaque opération est emmagasiné dans une variable)
 distrib_auteurs <- table(xyz$auteur)
 distrib_auteurs_ord <- sort(distrib_auteurs, decreasing = TRUE)
 head(distrib_auteurs_ord, n = 10)
@@ -187,16 +187,18 @@ head(sort(table(xyz$auteur), decreasing = TRUE), 10)
 
 
 # 3. Syntaxe enchainée (pipe), qui se lit de gauche à droite
-xyz$auteur |> table() |> sort(decreasing = TRUE) |> head()
+xyz$auteur |> table() |> sort(decreasing = TRUE) |> head(10)
 
 
 ##### Tests de corrélation -----
 # Une tâche importante dans l'AED est de comprendre s'il existe des corrélations entre des variables
-# Les corrélations se calculent sur des variables numériques. 
+# Les corrélations se calculent sur des variables numériques
 
-# EXEMPLE: soit le jeu de données `mtcars`
+# EXEMPLE avec un jeu de données disponible en tout temps dans l'extension de base, `mtcars`
+# Ce jeu de données présente différentes marques et modèles de voitures et leurs attributs techniques
+# Il permet notamment de connaître la distance au "gallon" parcourue par différentes marques selon le volume de leurs moteurs
 
-mtcars
+mtcars # Dans le jeu de données, les noms de lignes (rownames) correspondent aux marques.
 
 # On voudrait savoir s'il y a une corrélation, positive ou négative, entre le volume du moteur (disp) et la distance/gallon que peut parcourir une voiture
 # Expliquer variable indépendante / dépendante
@@ -211,9 +213,15 @@ cor.test(mtcars$disp, mtcars$mpg)
 # Pour effectuer des tests de corrélation sur des données textuelles, il faut au préalable se demander ce qu'on souhaite mesurer et générer des données numériques qui serviront au calcul.
 
 ##### Exemple -----
-# On pourrait vouloir vérifier s'il y a une corrélation, positive ou négative, entre la longueur des titres et la longueur des textes. 
-# Il faut alors créer deux nouvelles colonnes indiquant, dans l'une, le nombre de mots ou de caractères de chaque titre et, dans la seconde, le nombre de mots ou de caractères des textes.
-# Allons au plus en calculant le nombre de caractères des titres et des textes avec la fonction de base nchar().
+# On pourrait vouloir vérifier s'il y a une corrélation, positive ou négative, entre la longueur des titres et la longueur des textes.
+# Le test de corrélation est un test statistique qui mesure l'interdépendance ou l'association entre des paires de valeurs (deux variables).
+# Nous allons utiliser le coefficient de corrélation appelé tau de Kendall (compris entre -1 et +1).
+# Une corrélation positive est marquée par un tau positif, et inversement pour une corrélation négative. Plus le nombre s'éloigne de 0, plus la corrélation est forte.
+# Référence: https://academic.oup.com/biomet/article/30/1-2/81/176907 
+
+# Pour faire ce test, il faut créer deux variables numériques qui seront mises en relation. 
+# Pour aller au plus simple, nous allons calculer le nombre de caractères des titres (première variable) et le nombre de caractères des textes (2e variable).
+# Cette opération sera faite avec la fonction nchar().
 
 xyz$ncharTitre <- nchar(xyz$titre)
 xyz$ncharTexte <- nchar(xyz$texte)
@@ -222,9 +230,8 @@ xyz$ncharTexte <- nchar(xyz$texte)
 # Observons le résultat dans la table
 xyz[, c("titre", "texte", "ncharTitre", "ncharTexte")]
 
-
-cor.test(xyz$ncharTitre, xyz$ncharTexte)
-# p-value nettement au-dessus de 0.05: aucune corrélation à l'intérieur de l'intervale de confiance
+cor.test(xyz$ncharTitre, xyz$ncharTexte, method = "kendall")
+# La mesure de corrélation, `tau`, est positive, mais très proche de zéro, ce qui dénote une corrélation très faible.
 
 
 # On peut projeter ces données dans un diagramme à points
@@ -238,7 +245,7 @@ ggplot(xyz, aes(x=ncharTitre, y=ncharTexte))+
 # Le type d'objet que nous créerons est dit "catégorique" (ou 'factor')
  
 
-percentiles <- unclass(summary(xyz$ncharTexte))                  # On transforme une table des sommaires statistiques en simple vecteur avec unclass()
+percentiles <- unclass(summary(xyz$ncharTexte))                  # On transforme le sommaire statistique, un objet de type `table`, en simple vecteur avec unclass()
 
 xyz$longueur_texte_cat <- factor(                                # Création de valeurs catégorielles fondées sur les modalités d'une autre colonne
   ifelse(xyz$ncharTexte < percentiles["1st Qu."], "court",
@@ -327,6 +334,7 @@ dfm_subset(xyz_dfm, auteur %in% c("Edem Awumey", "J.D. Kurtness")) |>
 
 
 #### Analyse de cooccurrences ----
+# L'exploration du vocabulaire d'un corpus donne déjà des indications sur les thèmes 
 # L'analyse des cooccurrences consiste à évaluer la présence de deux ou plusieurs mots dans une fenêtre (contexte) de mots donnée
 # Elle montre les mots qui sont les plus souvent associés, la force d'attraction qui les lie
 # La cooccurrence peut évaluer la présence/absence de deux termes dans un contexte donné, ou mesurer la fréquence.
@@ -343,38 +351,3 @@ principaux_mots <- names(topfeatures(cooccurrence_matrice, 30))
 # La matrice de cooccurrence est réduite à ses principaux mots, et projetée sous la forme d'un graphique
 set.seed(100)
 textplot_network(fcm_select(cooccurrence_matrice, principaux_mots), min_freq = 0.8) # On augmente encore le seuil pour rendre le graphique plus facile à interpréter
-
-
-
-
-
-
-
-
-
-#### Extra ----
-##### Analyse des collocations -----
-
-#### Forge de ngrammes et analyse des collocations (association fréquente de deux mots ou plus)
-# L'analyse des collocations est facile à faire avec quanteda.textstats
-xyz_toks |> tokens_remove(lsa::stopwords_fr) |> tokens_subset(annee == 2021) |> 
-  quanteda.textstats::textstat_collocations(min_count = 5, tolower = TRUE)
-
-
-# On peut se servir de ce type de recherche pour ensuite créer des mots composés
-xyz_toks |> tokens_remove(lsa::stopwords_fr) |> tokens_subset(annee == 2021) |> 
-  quanteda.textstats::textstat_collocations(min_count = 5, tolower = TRUE)
-
-
-col <- xyz_toks |> tokens_remove(lsa::stopwords_fr) |> 
-  quanteda.textstats::textstat_collocations(min_count = 5, tolower = TRUE) 
-
-
-tokens_compound(xyz_toks, pattern = col) |> kwic( pattern = "jeune_fille")
-
-
-
-
-
-
-
