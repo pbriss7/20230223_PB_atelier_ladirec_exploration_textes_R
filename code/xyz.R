@@ -53,7 +53,8 @@ dim(xyz)
 nrow(xyz)
 
 
-# Regardons de quels types sont les colonnes
+# Regardons de quel type sont les valeurs de la colonne `ISSN (numérique)`
+# Note: on doit utiliser les guillemets pour appeler le vecteur-colonne parce qu'il contient des caractères accentués et une espace. Nous corrigerons cela plus loin.
 class(xyz$`ISSN (numérique)`)
 
 
