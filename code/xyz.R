@@ -334,7 +334,6 @@ dfm_subset(xyz_dfm, auteur %in% c("Edem Awumey", "J.D. Kurtness")) |>
 
 
 #### Analyse de cooccurrences ----
-# L'exploration du vocabulaire d'un corpus donne déjà des indications sur les thèmes 
 # L'analyse des cooccurrences consiste à évaluer la présence de deux ou plusieurs mots dans une fenêtre (contexte) de mots donnée
 # Elle montre les mots qui sont les plus souvent associés, la force d'attraction qui les lie
 # La cooccurrence peut évaluer la présence/absence de deux termes dans un contexte donné, ou mesurer la fréquence.
