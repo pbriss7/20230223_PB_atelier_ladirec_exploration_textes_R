@@ -185,6 +185,11 @@ head(distrib_auteurs_ord, n = 10)
 # 2. Syntaxe condensée, par enchâssement des fonctions. Lire de l'intérieur vers l'extérieur
 head(sort(table(xyz$auteur), decreasing = TRUE), 10)
 
+
+# 3. Syntaxe enchainée (pipe), qui se lit de gauche à droite
+xyz$auteur |> table() |> sort(decreasing = TRUE) |> head()
+
+
 ##### Tests de corrélation -----
 # Une tâche importante dans l'AED est de comprendre s'il existe des corrélations entre des variables
 # Les corrélations se calculent sur des variables numériques. 
