@@ -63,7 +63,7 @@ sapply(xyz, function(x) sum(is.na(x)))
 sapply(xyz, function(x) sum(x == ""))
 
 
-# Facultatif: on peut créer deux colonnes sans contenu vérifier à nouveau si R les repère
+# Facultatif: on peut créer deux colonnes sans contenu, puis vérifier à nouveau si R repère ces valeurs nulles
 xyz$test <- NA
 xyz$test2 <- ""
 
@@ -76,12 +76,12 @@ sapply(xyz, function(x) sum(x == ""))
 xyz[, c("test", "test2")] <- NULL
 
 
-# Vérification
-xyz
+# Vérification que les colonnes ont bien disparu
+colnames(xyz)
 
 #### Prétraitement des données ----
 # Objectifs: 
-# 1. résoudre les problèmes que pourraient poser la manipulation et l'analyse éventuelle des données (noms de colonnes, types de données, classes d'objets, NA, encodage, etc.);
+# 1. résoudre les problèmes que pourraient poser la manipulation et l'analyse éventuelle des données (noms de colonnes problématiques, types ma adapté au contenu des valeurs, classes d'objets, NA, encodage, etc.);
 # 2. réduire les dimensions de l'objet en fonction des tâches à exécuter (ex.: ne conserver que les colonnes/lignes nécessaires);
 # 3. rendre le tableau aussi lisible que possible.
 
