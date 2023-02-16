@@ -126,7 +126,7 @@ colonnes_a_supprimer <- c("periodique", "editeur", "issn_imp", "issn_num", "ment
 xyz[, colonnes_a_supprimer] <- NULL
 
 
-# Problème 4. On veut créer une colonne contenant les années. Il faut les extraire de la colonne `date`.
+##### Problème 4. On veut créer une colonne contenant les années. Il faut les extraire de la colonne `date` ----
 xyz$annee <- stringr::str_extract(xyz$date, "[0-9]+")
 
 
