@@ -7,7 +7,7 @@
 
 ?paste()
 
-
+xyz$date
 #### Préparation de l'environnement de travail ----
 
 # Installation des extensions dont nous aurons besoin (si elles ne sont pas déjà installées)
@@ -20,7 +20,7 @@ if(!"quanteda.textplots" %in% rownames(installed.packages())) {install.packages(
 if(!"quanteda.textstats" %in% rownames(installed.packages())) {install.packages("quanteda.textstats")}
 if(!"lsa" %in% rownames(installed.packages())) {install.packages("lsa")}
 
-# Activons les extensions (i.e. chargeons en mémoire toutes les fonctions qu'elles contiennent)
+# Activation des extensions (i.e. chargeons en mémoire toutes les fonctions qu'elles contiennent)
 library(readxl)               # Extension pour l'importation de fichiers Excel
 library(stringr)              # Extension pour la manipulation des chaînes de caractères
 library(dplyr)                # Extension pour la manipulation des structures des tableaux de données
@@ -30,7 +30,9 @@ library(quanteda.textplots)   # Extension pour le forage textuel
 library(quanteda.textstats)   # Extension pour l'analyse des collocations
 library(lsa)                  # Extension offrant un antidictionnaire élaboré
 
+
 ##### Importation des données -----
+
 
 # Lecture des données et assignation à une variable 
 xyz <- readxl::read_excel("donnees/XYZ-2015-2022-table-20230205JV.xlsx", sheet = 1)
@@ -54,16 +56,16 @@ nrow(xyz)
 
 
 # Regardons de quel type sont les valeurs de la colonne `ISSN (numérique)`
-# Note: on doit utiliser les guillemets pour appeler le vecteur-colonne parce qu'il contient des caractères accentués et une espace. Nous corrigerons cela plus loin.
+# Note: lorsque comme ici un nom de colonne est formé de lettres accentuées ou contient des espaces, on doit utiliser les guillemets pour appeler le vecteur-colonne
 class(xyz$`ISSN (numérique)`)
 
 
-# On veut savoir si et combien il y a des cellules sans contenu ("" ou NA)
+# On veut savoir si et combien il y a de cellules sans contenu ("" ou NA)
 sapply(xyz, function(x) sum(is.na(x)))
 sapply(xyz, function(x) sum(x == ""))
 
 
-# Facultatif: on peut créer deux colonnes sans contenu, puis vérifier à nouveau si R repère ces valeurs nulles
+# Simple test: on peut créer deux colonnes sans contenu, puis vérifier à nouveau si R repère ces valeurs nulles
 xyz$test <- NA
 xyz$test2 <- ""
 
@@ -78,6 +80,7 @@ xyz[, c("test", "test2")] <- NULL
 
 # Vérification que les colonnes ont bien disparu
 colnames(xyz)
+
 
 #### Prétraitement des données ----
 # Objectifs: 
