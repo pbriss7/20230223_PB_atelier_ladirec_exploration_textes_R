@@ -195,14 +195,16 @@ xyz$auteur |> table() |> sort(decreasing = TRUE) |> head(10)
 
 
 ##### Tests de corrélation -----
-# Une tâche importante dans l'AED est de comprendre s'il existe des corrélations entre des variables
+# Au cours de l'exploration des données, on peut tenter de comprendre s'il existe des corrélations entre des variables
 # Les corrélations se calculent sur des variables numériques
 
 # EXEMPLE avec un jeu de données disponible en tout temps dans l'extension de base, `mtcars`
 # Ce jeu de données présente différentes marques et modèles de voitures et leurs attributs techniques
 # Il permet notamment de connaître la distance au "gallon" parcourue par différentes marques selon le volume de leurs moteurs
 
+
 mtcars # Dans le jeu de données, les noms de lignes (rownames) correspondent aux marques.
+
 
 # On voudrait savoir s'il y a une corrélation, positive ou négative, entre le volume du moteur (disp) et la distance/gallon que peut parcourir une voiture
 # Expliquer variable indépendante / dépendante
@@ -227,12 +229,14 @@ cor.test(mtcars$disp, mtcars$mpg)
 # Pour aller au plus simple, nous allons calculer le nombre de caractères des titres (première variable) et le nombre de caractères des textes (2e variable).
 # Cette opération sera faite avec la fonction nchar().
 
+
 xyz$ncharTitre <- nchar(xyz$titre)
 xyz$ncharTexte <- nchar(xyz$texte)
 
 
 # Observons le résultat dans la table
 xyz[, c("titre", "texte", "ncharTitre", "ncharTexte")]
+
 
 cor.test(xyz$ncharTitre, xyz$ncharTexte, method = "kendall")
 # La mesure de corrélation, `tau`, est positive, mais très proche de zéro, ce qui dénote une corrélation très faible.
@@ -242,6 +246,7 @@ cor.test(xyz$ncharTitre, xyz$ncharTexte, method = "kendall")
 ggplot(xyz, aes(x=ncharTitre, y=ncharTexte))+
   geom_jitter()+
   geom_smooth()
+
 
 #### Enrichissement des données ----
 # On peut tirer profit des données numériques ajoutées (longueur des textes) pour créer un nouveau champ
@@ -286,7 +291,9 @@ table(xyz$longueur_texte_cat)
 
 # Pour plus d'information sur chacune des fonctions, consultez la documentation. Exemple:
 
+
 ?quanteda::corpus()
+
 
 #### Création de la matrice documents-mots ----
 xyz_corp <- quanteda::corpus(xyz, docid_field = "doc_id", text_field = "texte")   # Les arguments de la fonction corpus() permettent de préciser les champs du tableau correspondant aux identifiants et aux textes
@@ -307,6 +314,7 @@ xyz_dfm <- dfm(xyz_toks) |>                                                     
 ### Exercice: modifiez les seuils et voyez l'effet sur les dimensions de l'objet!
 # Pour voir les dimensions de l'objet, vous n'avez qu'à l'apeller ainsi:
 xyz_dfm
+
 
 # Vous pouvez également accéder en tout temps aux métadonnées
 docvars(xyz_dfm)
@@ -343,14 +351,22 @@ dfm_subset(xyz_dfm, auteur %in% c("Edem Awumey", "J.D. Kurtness")) |>
 # La cooccurrence peut évaluer la présence/absence de deux termes dans un contexte donné, ou mesurer la fréquence.
 # La fonction fcm() (fcm pour feature-context matrix) prend en entrée un objet 'tokens' qu'on peut ou non filtrer selon la direction de l'exploration
 
+
 cooccurrence_matrice <- xyz_toks |>                                   # Envoi dans la chaîne d'opérations l'objet 'tokens' créé auparavant
   tokens_remove(lsa::stopwords_fr) |>                                 # Retrait des mots fonctionnels avec l'antidictionnaire lsa
   tokens_subset(annee == 2021) |>                                     # Utilisation des mots présents seulement dans les documents de l'année 2021
   fcm(context = "window", window = 10, tri = FALSE)                   # On choisit ici une fenêtre contextuelle de 10 mots
 
+
 # On repère ici couples de mots ayant un coefficient de cooccurrence égal ou supérieur à 30
 principaux_mots <- names(topfeatures(cooccurrence_matrice, 30))
+
 
 # La matrice de cooccurrence est réduite à ses principaux mots, et projetée sous la forme d'un graphique
 set.seed(100)
 textplot_network(fcm_select(cooccurrence_matrice, principaux_mots), min_freq = 0.8) # On augmente encore le seuil pour rendre le graphique plus facile à interpréter
+
+
+
+
+
