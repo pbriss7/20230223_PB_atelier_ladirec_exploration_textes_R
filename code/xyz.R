@@ -139,7 +139,7 @@ xyz$numero <- as.integer(xyz$numero)      # La fonction as.integer() force la co
 # xyz$... <- ...(xyz$...)
 
 
-##### 6. Remplacer un symbole dans une longue chaine de caractères (un texte) -----
+##### Problème 6. Remplacer un symbole dans une longue chaine de caractères (un texte) -----
 # Observons tout d'abord un texte en particulier
 xyz$texte[1]
 
@@ -148,7 +148,7 @@ xyz$texte[1]
 xyz$texte <- gsub(pattern = "\n", replacement = " ", x = xyz$texte, fixed = TRUE)
 
 
-#### Exercice: vérifiez un texte pris au hasard pour voir s'il reste des scories
+### Exercice: vérifiez un texte pris au hasard pour voir s'il reste des scories
 # xyz$...
 
 
