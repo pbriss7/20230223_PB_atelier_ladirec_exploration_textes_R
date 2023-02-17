@@ -340,6 +340,8 @@ distrib_themes_ord <- sort(distrib_themes, decreasing = TRUE)
 
 Vous trouverez ci-dessous la réponse à la question posée ci-dessus. Vous verrez que différentes syntaxes peuvent produire le même résultat.
 
+distrib_auteurs
+
 ```{r}
 
 # 1. Syntaxe étendue (petite perte de mémoire, mais plus explicite: le résultat de chaque opération est emmagasiné dans une variable)
@@ -524,3 +526,102 @@ head(xyz_dfm, 2)
 ```
 
 
+
+### Exploration du vocabulaire de sous-ensembles de textes
+
+L'extension Quanteda rend aisée l'exploration du vocabulaire de sous-ensembles de textes. Ces sous-ensembles sont générés grâce aux métadonnées que les objets corpus-tokens-dfm portent avec eux. La fonction `dfm_subset()` a un argument `subset=` qui permet d'insérer une expression formelle agissant comme filtre.
+
+Dans le premier exemple, nous allons explorer les vocabulaires (filtrés) des textes parus en 2015 et en 2021. Le résultat sera transposé en un nuage de mots où ceux qui sont les plus fréquents seront magnifiés et positionnés au centre du nuage.
+
+```{r}
+
+          
+xyz_dfm_rioux <- dfm_subset(xyz_dfm, subset = auteur == "Hélène Rioux")
+xyz_dfm_dorais <- dfm_subset(xyz_dfm, subset = auteur == "David Dorais")
+
+set.seed(100)
+textplot_wordcloud(xyz_dfm_rioux, max_words = 200)
+set.seed(100)
+textplot_wordcloud(xyz_dfm_dorais, max_words = 200)
+
+
+
+```
+
+Si on veut mieux comparer les deux sous-groupes, on peut utiliser le code suivant, un peu plus sophistiqué.
+
+```{r}
+
+dfm_comp_auteurs <- xyz_corp |> 
+  
+  corpus_subset(auteur %in% c("Hélène Rioux", "David Dorais")) |> 
+  
+  tokens(remove_punct = TRUE,
+         remove_symbols = TRUE,
+         remove_numbers = FALSE,
+         remove_separators = TRUE) |>     
+  tokens_split(separator = "'", valuetype = "fixed") |> 
+  
+  dfm()|>                
+  
+  dfm_remove(lsa::stopwords_fr) |>        
+  
+  dfm_trim(min_docfreq = 0.15,            
+           max_docfreq = 0.7,           
+           docfreq_type = "prop")
+
+
+dfm_comp_auteurs_groupes <- dfm_group(dfm_comp_auteurs, dfm_comp_auteurs$auteur)
+
+textplot_wordcloud(dfm_comp_auteurs_groupes, comparison = TRUE, max_words = 300,
+                   color = c("blue", "red"))
+
+
+```
+
+On pourrait maintenant souhaiter comparer les vocabulaires dominants de numéros thématiques.
+
+```{r}
+
+xyz_dfm_th_jardin <- dfm_subset(xyz_dfm, subset = theme == "Jardin : un enfer de morceaux de paradis")
+
+xyz_dfm_th_YOLO <- dfm_subset(xyz_dfm, subset = theme == "YOLO (You Only Live Once) : hardis, téméraires, écervelés, aventureux, fonceurs, délurés")
+
+
+# Comparaison des vocabulaires de numéros thématiques
+set.seed(100)
+textplot_wordcloud(xyz_dfm_th_jardin)
+set.seed(100)
+textplot_wordcloud(xyz_dfm_th_YOLO)
+
+
+
+#### Exercice: choisissez deux autres numéros thématiques et comparez les vocabulaires. Vous pouvez utiliser la voie simple ou reprendre le bloc d'instructions enchainées ci-dessus.
+```
+
+```{r}
+
+#### Analyse de cooccurrences ----
+# L'analyse des cooccurrences consiste à évaluer la présence de deux ou plusieurs mots dans une fenêtre (contexte) de mots donnée
+# Elle montre les mots qui sont les plus souvent associés, la force d'attraction qui les lie
+# La cooccurrence peut évaluer la présence/absence de deux termes dans un contexte donné, ou mesurer la fréquence.
+# La fonction fcm() (fcm pour feature-context matrix) prend en entrée un objet 'tokens' qu'on peut ou non filtrer selon la direction de l'exploration
+
+
+cooccurrence_matrice <- xyz_toks |>                                   # Envoi dans la chaîne d'opérations l'objet 'tokens' créé auparavant
+  tokens_remove(lsa::stopwords_fr) |>                                 # Retrait des mots fonctionnels avec l'antidictionnaire lsa
+  tokens_subset(annee == 2021) |>                                     # Utilisation des mots présents seulement dans les documents de l'année 2021
+  fcm(context = "window", window = 10, tri = FALSE)                   # On choisit ici une fenêtre contextuelle de 10 mots
+
+
+# On repère ici couples de mots ayant un coefficient de cooccurrence égal ou supérieur à 30
+principaux_mots <- names(topfeatures(cooccurrence_matrice, 30))
+
+
+# La matrice de cooccurrence est réduite à ses principaux mots, et projetée sous la forme d'un graphique
+set.seed(100)
+textplot_network(fcm_select(cooccurrence_matrice, principaux_mots), min_freq = 0.8) # On augmente encore le seuil pour rendre le graphique plus facile à interpréter
+
+
+
+```
