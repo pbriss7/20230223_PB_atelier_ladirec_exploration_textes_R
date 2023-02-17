@@ -7,7 +7,6 @@
 
 ?paste()
 
-xyz$date
 #### Préparation de l'environnement de travail ----
 
 # Installation des extensions dont nous aurons besoin (si elles ne sont pas déjà installées)
@@ -136,6 +135,8 @@ xyz$annee <- stringr::str_extract(xyz$date, "[0-9]+")
 
 ##### Problème 5. Cette colonne `annee`, de même que la colonne `numero`, devraient être de type `numeric`, non de type `chr` -----
 xyz$numero <- as.integer(xyz$numero)      # La fonction as.integer() force la conversion du type chararcter en type integer
+
+# Faites la même opération avec la colonne appelée `numero`
 # xyz$... <- ...(xyz$...)
 
 
@@ -157,7 +158,7 @@ xyz <- xyz[, c("doc_id", "auteur", "titre", "numero", "annee", "theme", "texte")
 
 
 #### EXPLORATION 1: LES MÉTADONNÉES ----
-# La fonction `table( )` permet d'observer la fréquence des modalités d'un ou de plusieurs champs 
+# La fonction `table( )` calcule le nombre de modalités ou valeurs d'un vecteur-colonne. 
 distrib_annuelle <- table(xyz$annee)
 
 
@@ -178,7 +179,7 @@ mean(distrib_annuelle)
 # distrib_auteurs_ord <- ...
 
 
-# Réponse à la question ci-dessus (j'en profite pour vous montrer trois syntaxes différentes produisant le même résultat): 
+# Réponse à la question ci-dessus. Vous verrez que différentes syntaxes peuvent produire le même résultat: 
 
 # 1. Syntaxe étendue (petite perte de mémoire, mais plus explicite: le résultat de chaque opération est emmagasiné dans une variable)
 distrib_auteurs <- table(xyz$auteur)
@@ -198,21 +199,19 @@ xyz$auteur |> table() |> sort(decreasing = TRUE) |> head(10)
 # Au cours de l'exploration des données, on peut tenter de comprendre s'il existe des corrélations entre des variables
 # Les corrélations se calculent sur des variables numériques
 
-# EXEMPLE avec un jeu de données disponible en tout temps dans l'extension de base, `mtcars`
+# EXEMPLE avec un jeu de données fourni par l'extension de base de R, `mtcars`
 # Ce jeu de données présente différentes marques et modèles de voitures et leurs attributs techniques
-# Il permet notamment de connaître la distance au "gallon" parcourue par différentes marques selon le volume de leurs moteurs
+# Il permet notamment de connaître la distance parcourue par différentes marques selon le volume de leurs moteurs
 
 
 mtcars # Dans le jeu de données, les noms de lignes (rownames) correspondent aux marques.
 
 
 # On voudrait savoir s'il y a une corrélation, positive ou négative, entre le volume du moteur (disp) et la distance/gallon que peut parcourir une voiture
-# Expliquer variable indépendante / dépendante
+# Ici, on peut projeter sur un plan en deux dimensions les deux variables.
 plot(mtcars$disp, mtcars$mpg)
 
-
-# Cette corrélation est confirmée par la p-value
-# Ajouter quelques informations sur la corrélation - et +, sur la force de la corrélation et la p-value
+# La fonction qui sert à calculer la corrélation est cor.test().
 cor.test(mtcars$disp, mtcars$mpg)
 
 
