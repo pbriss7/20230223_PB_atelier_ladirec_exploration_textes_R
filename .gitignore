@@ -1,5 +1,4 @@
 .RData
 .Rhistory
-.gitignore
 .Rproj.user
-code/Archive/**
+code/Archive/
