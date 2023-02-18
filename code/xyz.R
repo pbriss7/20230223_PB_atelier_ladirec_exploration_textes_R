@@ -5,9 +5,59 @@
 # Pour exécuter une instruction, placez votre curseur au début de la ligne et appuyez sur 'COMMAND' + 'RETURN' (raccourci Mac) ou 'CTRL' + 'RETURN' (raccourci Windows)
 # Pour obtenir de l'aide sur une fonction, exécutez-la précédée d'un point d'interrogation. Par exemple:
 
-?paste()
 
-#### Préparation de l'environnement de travail ----
+
+## ----setup, include=FALSE---------------------------------------------------------------------------------------
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
+
+
+## ---------------------------------------------------------------------------------------------------------------
+
+romans <- c("Illusions perdues", "Le Dernier jour d'un condamné", "La Débâcle")
+
+cat("Mon roman préféré est ", sample(romans, 1), ".", sep = "")
+
+
+
+## ---------------------------------------------------------------------------------------------------------------
+
+romans <- c("Illusions perdues", "Le Dernier jour d'un condamné", "La Débâcle")
+
+cat("Mon roman préféré est ", sample(romans, 1), ".", sep = "")
+
+
+
+## ---------------------------------------------------------------------------------------------------------------
+
+?paste()
+?str()
+?install.packages()
+?library()
+?nchar()
+?data.frame()
+
+
+
+## ---------------------------------------------------------------------------------------------------------------
+# Création d'objets à éliminer
+a=1
+b=3
+c="Virginie"
+d="Théodore"
+
+# Élimination de tout le contenu de l'environnement:
+
+rm(list = ls()) 
+
+
+# Élimination d'une sélection d'éléments
+rm(list = setdiff(ls(), c("d")))
+
+
+
+
+## ---------------------------------------------------------------------------------------------------------------
 
 # Installation des extensions dont nous aurons besoin (si elles ne sont pas déjà installées)
 if(!"stringr" %in% rownames(installed.packages())) {install.packages("stringr")}
@@ -19,7 +69,7 @@ if(!"quanteda.textplots" %in% rownames(installed.packages())) {install.packages(
 if(!"quanteda.textstats" %in% rownames(installed.packages())) {install.packages("quanteda.textstats")}
 if(!"lsa" %in% rownames(installed.packages())) {install.packages("lsa")}
 
-# Activation des extensions (i.e. chargeons en mémoire toutes les fonctions qu'elles contiennent)
+# Activation des extensions
 library(readxl)               # Extension pour l'importation de fichiers Excel
 library(stringr)              # Extension pour la manipulation des chaînes de caractères
 library(dplyr)                # Extension pour la manipulation des structures des tableaux de données
@@ -30,37 +80,46 @@ library(quanteda.textstats)   # Extension pour l'analyse des collocations
 library(lsa)                  # Extension offrant un antidictionnaire élaboré
 
 
-##### Importation des données -----
 
+## ---------------------------------------------------------------------------------------------------------------
 
 # Lecture des données et assignation à une variable 
-xyz <- readxl::read_excel("donnees/XYZ-2015-2022-table-20230205JV.xlsx", sheet = 1)
+xyz <- readxl::read_excel("../donnees/XYZ-2015-2022-table-20230205JV.xlsx", sheet = 1)
 
 
-##### Examen de la structure -----
+
+
+## ---------------------------------------------------------------------------------------------------------------
+# Structure de l'objet
 str(xyz)
 
-
-# On peut observer les détails de cette structure une information à la fois
 # Nom des colonnes
 colnames(xyz)
 
+# Nombre de colonnes
+ncol(xyz)
 
-# Nombre de lignes et de colonnes dans le tableau
-dim(xyz)
-
+# Nom des lignes
+rownames(xyz)
 
 # Nombre de lignes
 nrow(xyz)
 
+# Nombre de lignes et de colonnes dans le tableau
+dim(xyz)
 
-# Regardons de quel type sont les valeurs de la colonne `ISSN (numérique)`
-# Note: lorsque comme ici un nom de colonne est formé de lettres accentuées ou contient des espaces, on doit utiliser les guillemets pour appeler le vecteur-colonne
+# Type d'objet
+class(xyz)
+
+# Type de données d'un vecteur du tableau
 class(xyz$`ISSN (numérique)`)
 
 
-# On veut savoir si et combien il y a de cellules sans contenu ("" ou NA)
+## ---------------------------------------------------------------------------------------------------------------
+# La première fonction renvoie, pour chaque colonne du tableau, la somme des valeurs correspondant à NA.
 sapply(xyz, function(x) sum(is.na(x)))
+
+# Cette deuxième fonction renvoie, pour chacune des colonnes du tableau, la somme des valeurs correspondant à une chaîne de caractères vide.
 sapply(xyz, function(x) sum(x == ""))
 
 
@@ -73,7 +132,7 @@ sapply(xyz, function(x) sum(is.na(x)))
 sapply(xyz, function(x) sum(x == ""))
 
 
-# On supprime ces colonnes inutiles
+# On supprime ainsi des colonnes devenues inutiles
 xyz[, c("test", "test2")] <- NULL
 
 
@@ -81,41 +140,42 @@ xyz[, c("test", "test2")] <- NULL
 colnames(xyz)
 
 
-#### Prétraitement des données ----
-# Objectifs: 
-# 1. résoudre les problèmes que pourraient poser la manipulation et l'analyse éventuelle des données (noms de colonnes problématiques, types ma adapté au contenu des valeurs, classes d'objets, NA, encodage, etc.);
-# 2. réduire les dimensions de l'objet en fonction des tâches à exécuter (ex.: ne conserver que les colonnes/lignes nécessaires);
-# 3. rendre le tableau aussi lisible que possible.
-
-# Problème 1: les noms de colonnes contiennent des accents et des espaces.
-# Problème 2: les observations ne sont pas pourvues d'identifiants uniques.
-# Problème 3: certaines colonnes semblent n'apporter aucune information essentielle. À vérifier. Éliminer si inutiles.
-# Problème 4: on aimerait avoir une colonne réservée aux années.
-# Problème 5: on voudrait que les valeurs numériques soient considérées comme des nombres, non comme des chaines de caractères.
-# Problème 6: dans la colonne `texte`, les sauts de paragraphes du texte original sont indiqués par "\n".
 
 
-##### Problème 1. Renommer les colonnes -----
+## ---------------------------------------------------------------------------------------------------------------
+
+
 colnames(xyz) <- c("periodique", "titre", "auteur",
                    "numero", "date", "theme", "uri",
                    "editeur", "issn_imp", "issn_num",
                    "citation", "mention_legale", "texte")
 
 
-##### Problème 2. Créer un identifiant unique. On peut utiliser les numéros de ligne -----
+
+
+## ---------------------------------------------------------------------------------------------------------------
+
+
 xyz$doc_id <- 1:nrow(xyz)
 
 
-##### Problème 3. Repérer les colonnes inutiles et les éliminer -----
+
+
+## ---------------------------------------------------------------------------------------------------------------
+
 # La première colonne semble contenir une information redondante. Vérifions:
 unique(xyz[ , "periodique"])  # ou table(xyz$periodique)
 unique(xyz[, "numero"])       # ou table(xyz$numero)
 unique(xyz[, "theme"])        # ou table(xyz$theme)
 
 
-### Exercice: poursuivez la vérification avec les colonnes `uri`, `editeur`, `issn` (x2), `mention_legale`. ###
+# Exercice: poursuivez la vérification avec les colonnes `uri`, `editeur`, `issn` (x2), `mention_legale`. ###
 # unique(...[, ...])
 
+
+
+## ---------------------------------------------------------------------------------------------------------------
+# Solution au problème no 3
 
 # Créons un vecteur avec les colonnes inutiles (on utilise pour cela la fonction de concaténation c( ) )
 colonnes_a_supprimer <- c("periodique", "editeur", "issn_imp", "issn_num", "mention_legale", "uri", "citation")
@@ -125,7 +185,11 @@ colonnes_a_supprimer <- c("periodique", "editeur", "issn_imp", "issn_num", "ment
 xyz[, colonnes_a_supprimer] <- NULL
 
 
-##### Problème 4. On veut créer une colonne contenant les années. Il faut les extraire de la colonne `date` ----
+
+## ---------------------------------------------------------------------------------------------------------------
+
+# Il faut extraire les années de la colonne `date`. On utilise pour cela l'extension stringr.
+
 xyz$annee <- stringr::str_extract(xyz$date, "[0-9]+")
 
 
@@ -133,16 +197,24 @@ xyz$annee <- stringr::str_extract(xyz$date, "[0-9]+")
 # xyz$... <- ...
 
 
-##### Problème 5. Cette colonne `annee`, de même que la colonne `numero`, devraient être de type `numeric`, non de type `chr` -----
-xyz$numero <- as.integer(xyz$numero)      # La fonction as.integer() force la conversion du type chararcter en type integer
 
-# Faites la même opération avec la colonne appelée `numero`
+## ---------------------------------------------------------------------------------------------------------------
+
+# La fonction as.integer() force la conversion du type chararcter en type integer.
+
+xyz$numero <- as.integer(xyz$numero)      
+
+# Faites la même opération pour la colonne appelée `numero`:
+
 # xyz$... <- ...(xyz$...)
 
 
-##### Problème 6. Remplacer un symbole dans une longue chaine de caractères (un texte) -----
+
+
+## ---------------------------------------------------------------------------------------------------------------
+
 # Observons tout d'abord un texte en particulier
-xyz$texte[1]
+# xyz$texte[1]
 
 
 # Remplaçons par une espace simple le symbole `\n`
@@ -153,24 +225,28 @@ xyz$texte <- gsub(pattern = "\n", replacement = " ", x = xyz$texte, fixed = TRUE
 # xyz$...
 
 
-# Enfin, par souci de lisibilité, réordonnons la séquence des colonnes
+
+## ---------------------------------------------------------------------------------------------------------------
+
 xyz <- xyz[, c("doc_id", "auteur", "titre", "numero", "annee", "theme", "texte")]
 
 
-#### EXPLORATION 1: LES MÉTADONNÉES ----
-# La fonction `table( )` calcule le nombre de modalités ou valeurs d'un vecteur-colonne. 
-distrib_annuelle <- table(xyz$annee)
 
+## ---------------------------------------------------------------------------------------------------------------
+# La fonction `table( )` permet d'observer le nombre de modalités d'une variable. 
+distrib_annuelle <- table(xyz$annee)
+# distrib_annuelle
 
 # Quelle est la moyenne de cette distribution?
 mean(distrib_annuelle)
-
 
 ### Exercice: créez une table pour observer la distribution des thèmes ###
 # distrib_themes <- ...
 
 
-# Pour ordonner cette table, on peut utiliser la fonction `sort( )`, auquel on passe l'argument `decreasing = TRUE`
+
+## ---------------------------------------------------------------------------------------------------------------
+
 # distrib_themes_ord <- sort(distrib_themes, decreasing = TRUE)
 
 
@@ -179,8 +255,8 @@ mean(distrib_annuelle)
 # distrib_auteurs_ord <- ...
 
 
-# Réponse à la question ci-dessus. Vous verrez que différentes syntaxes peuvent produire le même résultat: 
 
+## ---------------------------------------------------------------------------------------------------------------
 # 1. Syntaxe étendue (petite perte de mémoire, mais plus explicite: le résultat de chaque opération est emmagasiné dans une variable)
 distrib_auteurs <- table(xyz$auteur)
 distrib_auteurs_ord <- sort(distrib_auteurs, decreasing = TRUE)
@@ -195,136 +271,167 @@ head(sort(table(xyz$auteur), decreasing = TRUE), 10)
 xyz$auteur |> table() |> sort(decreasing = TRUE) |> head(10)
 
 
-##### Tests de corrélation -----
-# Au cours de l'exploration des données, on peut tenter de comprendre s'il existe des corrélations entre des variables
-# Les corrélations se calculent sur des variables numériques
-
-# EXEMPLE avec un jeu de données fourni par l'extension de base de R, `mtcars`
-# Ce jeu de données présente différentes marques et modèles de voitures et leurs attributs techniques
-# Il permet notamment de connaître la distance parcourue par différentes marques selon le volume de leurs moteurs
 
 
-mtcars # Dans le jeu de données, les noms de lignes (rownames) correspondent aux marques.
+## ---------------------------------------------------------------------------------------------------------------
 
+mtcars[1:3] # Dans le jeu de données, les noms de lignes (rownames) correspondent aux marques.
 
-# On voudrait savoir s'il y a une corrélation, positive ou négative, entre le volume du moteur (disp) et la distance/gallon que peut parcourir une voiture
-# Ici, on peut projeter sur un plan en deux dimensions les deux variables.
+# Dans ce graphique simple, on pose la variable dépendante en y et l'indépendante en x
 plot(mtcars$disp, mtcars$mpg)
 
-# La fonction qui sert à calculer la corrélation est cor.test().
-cor.test(mtcars$disp, mtcars$mpg)
 
 
-# Pour effectuer des tests de corrélation sur des données textuelles, il faut au préalable se demander ce qu'on souhaite mesurer et générer des données numériques qui serviront au calcul.
+## ---------------------------------------------------------------------------------------------------------------
 
-##### Exemple -----
-# On pourrait vouloir vérifier s'il y a une corrélation, positive ou négative, entre la longueur des titres et la longueur des textes.
-# Le test de corrélation est un test statistique qui mesure l'interdépendance ou l'association entre des paires de valeurs (deux variables).
-# Nous allons utiliser le coefficient de corrélation appelé tau de Kendall (compris entre -1 et +1).
-# Une corrélation positive est marquée par un tau positif, et inversement pour une corrélation négative. Plus le nombre s'éloigne de 0, plus la corrélation est forte.
-# Référence: https://academic.oup.com/biomet/article/30/1-2/81/176907 
+cor.test(mtcars$disp, mtcars$mpg, method = "kendall")
 
-# Pour faire ce test, il faut créer deux variables numériques qui seront mises en relation. 
-# Pour aller au plus simple, nous allons calculer le nombre de caractères des titres (première variable) et le nombre de caractères des textes (2e variable).
-# Cette opération sera faite avec la fonction nchar().
 
+
+## ---------------------------------------------------------------------------------------------------------------
 
 xyz$ncharTitre <- nchar(xyz$titre)
 xyz$ncharTexte <- nchar(xyz$texte)
 
 
 # Observons le résultat dans la table
-xyz[, c("titre", "texte", "ncharTitre", "ncharTexte")]
+xyz[, c("ncharTitre", "ncharTexte")]
 
+
+
+
+## ---------------------------------------------------------------------------------------------------------------
 
 cor.test(xyz$ncharTitre, xyz$ncharTexte, method = "kendall")
-# La mesure de corrélation, `tau`, est positive, mais très proche de zéro, ce qui dénote une corrélation très faible.
 
 
-# On peut projeter ces données dans un diagramme à points
+
+
+## ---------------------------------------------------------------------------------------------------------------
+
 ggplot(xyz, aes(x=ncharTitre, y=ncharTexte))+
   geom_jitter()+
   geom_smooth()
 
 
-#### Enrichissement des données ----
-# On peut tirer profit des données numériques ajoutées (longueur des textes) pour créer un nouveau champ
-# Par exemple, on pourrait souhaiter classer les textes selon qu'ils sont "courts", "moyens" ou "longs"
-# Le type d'objet que nous créerons est dit "catégorique" (ou 'factor')
- 
+## ---------------------------------------------------------------------------------------------------------------
 
-percentiles <- unclass(summary(xyz$ncharTexte))                  # On transforme le sommaire statistique, un objet de type `table`, en simple vecteur avec unclass()
+# On peut tout d'abord observer le sommaire statistique et s'en inspirer
+summary(xyz$ncharTexte)    
 
 xyz$longueur_texte_cat <- factor(                                # Création de valeurs catégorielles fondées sur les modalités d'une autre colonne
-  ifelse(xyz$ncharTexte < percentiles["1st Qu."], "court",
-         ifelse(xyz$ncharTexte > percentiles["3rd Qu."], "long", "moyen")),
+  ifelse(xyz$ncharTexte < 5000, "court",
+         ifelse(xyz$ncharTexte >10000, "long", "moyen")),
   levels = c("court", "moyen", "long")                           # La fonction `factor()` possède un argument, `levels=` qui permet de déterminer l'ordre des catégories
 )
 
+# Exercice: observez la distribution de cette variable avec la fonction table().
 
-# On peut maintenant observer les proportions
+
+
+## ---------------------------------------------------------------------------------------------------------------
+
 ggplot(xyz, aes(x = longueur_texte_cat))+                        
   geom_bar(stat = "count")
 
-table(xyz$longueur_texte_cat)
 
 
-
-#### EXPLORATION 2 -- LES DONNÉES TEXTUELLES ----
-# Pour aller plus loin dans l'analyse des données textuelles, nous devrons transformer le tableau de données en matrice documents-mots
-# Une matrice est un objet qui ressemble beaucoup à un tableau de données, à ceci près qu'il n'est composé que d'un seul type de données
-# Chaque ligne de notre matrice représentera un document et chaque colonne, un mot unique du vocabulaire complet de tous les textes assemblés en "corpus"
-# Ce type de matrices peut être pondérée pour accorder plus de poids à certains mots, elle peut être normalisée pour éviter les biais de longueur
-# De plus, les matrices permettent des calculs vectoriels, donc très rapides.
-
-# Pour transformer notre tableau en matrice documents-mots (ou 'document-feature matrix'), nous allons utiliser l'extension Quanteda
-# Quanteda offre une multitude de fonctions utiles pour l'ADT. Sa syntaxe est cohérente et la documentation est abondante.
-# Si on ne veut pas avoir à écrire ses propres fonctions (de tokénisation, de transformation, etc.), Quanteda est un bon compromis
-
-# La transformation se fait en trois grandes étapes, chacune visant un objectif précis et permettant de faire des opérations à la volée
-# La première étape est la création d'un corpus avec la fonction corpus(). On y précise la colonne des identifiants uniques et la colonne contenant le texte à analyser
-# La deuxième étape est la tokénisation des textes du corpus. On peut à cette étape se servir d'un antidictionnaire pour éliminer les mots fonctionnels
-# La troisième étape est le passage entre cet objet "tokens" à la dfm (document-feature matrix).
-
-# Les métadonnées suivent par défaut chacune des transformations et permettront, une fois la dfm construite, de filtrer les documents en ligne avec les métadonnées
-
-# Pour plus d'information sur chacune des fonctions, consultez la documentation. Exemple:
-
+## ---------------------------------------------------------------------------------------------------------------
 
 ?quanteda::corpus()
 
 
-#### Création de la matrice documents-mots ----
-xyz_corp <- quanteda::corpus(xyz, docid_field = "doc_id", text_field = "texte")   # Les arguments de la fonction corpus() permettent de préciser les champs du tableau correspondant aux identifiants et aux textes
+
+## ---------------------------------------------------------------------------------------------------------------
+
+xyz_corp <- quanteda::corpus(xyz, docid_field = "doc_id", text_field = "texte")   
+
+head(xyz_corp, 2)
+
+
+
+## ---------------------------------------------------------------------------------------------------------------
 xyz_toks <- tokens(xyz_corp, 
-                   remove_punct = TRUE,                                           # On supprime à la volée la ponctuation
-                   remove_symbols = TRUE,                                         # On supprime à la volée les symboles
-                   remove_numbers = FALSE,                                        # On pourrait supprimer à la volée les nombres
-                   remove_separators = TRUE) |>                                   # On supprime les blancs laissés par la tokénisation
-  tokens_split(separator = "'", valuetype = "fixed")                              # On force la tokénisation à partir de l'apostrophe
+                   remove_punct = TRUE,              # On supprime à la volée la ponctuation
+                   remove_symbols = TRUE,            # On supprime à la volée les symboles
+                   remove_numbers = FALSE,           # On pourrait supprimer à la volée les nombres
+                   remove_separators = TRUE) |>      # On supprime les blancs laissés par la tokénisation
+  tokens_split(separator = "'", valuetype = "fixed") # On force la tokénisation à partir de l'apostrophe
 
-xyz_dfm <- dfm(xyz_toks) |>                                                       # On transforme l'objet tokens en dfm
-  dfm_remove(lsa::stopwords_fr) |>                                                # On élimine toutes les colonnes correspondant à un mot fonctionnel (toujours inspecter l'antidictionnaire)
-  dfm_trim(min_docfreq = 0.15,                                                    # Un mot doit être présent dans au moins 15% des documents (élimination des hapax)
-           max_docfreq = 0.7,                                                     # Un mot ne doit pas être présent dans plus de 70% des documents du corpus
-           docfreq_type = "prop")                                                 # Cet argument permet de préciser que les valeurs indiquées dans les arguments précédents sont des proportions
+head(xyz_toks, 2)
 
+
+
+## ---------------------------------------------------------------------------------------------------------------
+
+# On transforme l'objet tokens en dfm
+xyz_dfm <- dfm(xyz_toks) |>
+   # Retrait des mots fonctionnels avec l'antidictionnaire lsa (inspecter le dictionnaire!)
+  dfm_remove(lsa::stopwords_fr) |>  
+  # Un mot doit être présent dans au moins 15% des documents (élimination des hapax)
+  dfm_trim(min_docfreq = 0.15,
+  # Un mot ne doit pas être présent dans plus de 70% des documents du corpus
+           max_docfreq = 0.7, 
+  # L'argument suivant précise que la valeur indiquée dans min_docfreq= est une proportion
+           docfreq_type = "prop")          
+
+head(xyz_dfm, 2)
 
 ### Exercice: modifiez les seuils et voyez l'effet sur les dimensions de l'objet!
 # Pour voir les dimensions de l'objet, vous n'avez qu'à l'apeller ainsi:
-xyz_dfm
 
 
-# Vous pouvez également accéder en tout temps aux métadonnées
-docvars(xyz_dfm)
 
 
-#### Exploration du vocabulaire ----
-##### Examen des vocabulaires en fonction d'années ou de thèmes -----
-xyz_dfm_2015 <- dfm_subset(xyz_dfm, subset = annee == 2015)
-xyz_dfm_2021 <- dfm_subset(xyz_dfm, subset = annee == 2021)
+
+## ---------------------------------------------------------------------------------------------------------------
+
+          
+xyz_dfm_rioux <- dfm_subset(xyz_dfm, subset = auteur == "Hélène Rioux")
+xyz_dfm_dorais <- dfm_subset(xyz_dfm, subset = auteur == "David Dorais")
+
+set.seed(100)
+textplot_wordcloud(xyz_dfm_rioux, max_words = 200)
+set.seed(100)
+textplot_wordcloud(xyz_dfm_dorais, max_words = 200)
+
+
+
+
+
+## ---------------------------------------------------------------------------------------------------------------
+
+dfm_comp_auteurs <- xyz_corp |> 
+  
+  corpus_subset(auteur %in% c("Hélène Rioux", "David Dorais")) |> 
+  
+  tokens(remove_punct = TRUE,
+         remove_symbols = TRUE,
+         remove_numbers = FALSE,
+         remove_separators = TRUE) |>     
+  tokens_split(separator = "'", valuetype = "fixed") |> 
+  
+  dfm()|>                
+  
+  dfm_remove(lsa::stopwords_fr) |>        
+  
+  dfm_trim(min_docfreq = 0.15,            
+           max_docfreq = 0.7,           
+           docfreq_type = "prop")
+
+
+dfm_comp_auteurs_groupes <- dfm_group(dfm_comp_auteurs, dfm_comp_auteurs$auteur)
+
+textplot_wordcloud(dfm_comp_auteurs_groupes, comparison = TRUE, max_words = 300,
+                   color = c("blue", "red"))
+
+
+
+
+## ---------------------------------------------------------------------------------------------------------------
 
 xyz_dfm_th_jardin <- dfm_subset(xyz_dfm, subset = theme == "Jardin : un enfer de morceaux de paradis")
+
 xyz_dfm_th_YOLO <- dfm_subset(xyz_dfm, subset = theme == "YOLO (You Only Live Once) : hardis, téméraires, écervelés, aventureux, fonceurs, délurés")
 
 
@@ -335,37 +442,63 @@ set.seed(100)
 textplot_wordcloud(xyz_dfm_th_YOLO)
 
 
-# On pourrait également comparer les vocabulaires d'auteurs ayant offert chacun 3 contributions à XYZ
-set.seed(100)
-dfm_subset(xyz_dfm, auteur %in% c("Edem Awumey", "J.D. Kurtness")) |> 
-  textplot_wordcloud(comparison = TRUE)
+
+#### Exercice: choisissez deux autres numéros thématiques et comparez les vocabulaires. Vous pouvez utiliser la voie simple ou reprendre le bloc d'instructions enchainées ci-dessus.
 
 
-#### Exercice: choisissez deux numéros thématiques et comparez les vocabulaires de chacun
+## ---------------------------------------------------------------------------------------------------------------
 
-
-#### Analyse de cooccurrences ----
-# L'analyse des cooccurrences consiste à évaluer la présence de deux ou plusieurs mots dans une fenêtre (contexte) de mots donnée
-# Elle montre les mots qui sont les plus souvent associés, la force d'attraction qui les lie
-# La cooccurrence peut évaluer la présence/absence de deux termes dans un contexte donné, ou mesurer la fréquence.
-# La fonction fcm() (fcm pour feature-context matrix) prend en entrée un objet 'tokens' qu'on peut ou non filtrer selon la direction de l'exploration
-
-
-cooccurrence_matrice <- xyz_toks |>                                   # Envoi dans la chaîne d'opérations l'objet 'tokens' créé auparavant
-  tokens_remove(lsa::stopwords_fr) |>                                 # Retrait des mots fonctionnels avec l'antidictionnaire lsa
-  tokens_subset(annee == 2021) |>                                     # Utilisation des mots présents seulement dans les documents de l'année 2021
-  fcm(context = "window", window = 10, tri = FALSE)                   # On choisit ici une fenêtre contextuelle de 10 mots
+  # On fournit en entrée l'objet tokens créé auparavant
+xyz_fcm <- xyz_toks |>
+  # On ne retient que les tokens trouvés dans les textes d'un auteur
+  tokens_subset(subset = auteur == "David Dorais") |> 
+  # Retrait des mots fonctionnels avec l'antidictionnaire lsa
+  tokens_remove(lsa::stopwords_fr) |>
+  # On choisit ici une fenêtre contextuelle de 10 mots
+  fcm(context = "window", window = 10, tri = FALSE)
 
 
 # On repère ici couples de mots ayant un coefficient de cooccurrence égal ou supérieur à 30
-principaux_mots <- names(topfeatures(cooccurrence_matrice, 30))
+principaux_mots <- names(topfeatures(xyz_fcm, 30))
 
 
-# La matrice de cooccurrence est réduite à ses principaux mots, et projetée sous la forme d'un graphique
+# La matrice de cooccurrence est réduite à ses principaux mots, et projetée sous la forme d'un diagramme de réseau
 set.seed(100)
-textplot_network(fcm_select(cooccurrence_matrice, principaux_mots), min_freq = 0.8) # On augmente encore le seuil pour rendre le graphique plus facile à interpréter
+textplot_network(fcm_select(xyz_fcm, principaux_mots), min_freq = 0.7)
+# On augmente encore le seuil pour rendre le graphique plus facile à interpréter
 
 
+
+
+
+## ---------------------------------------------------------------------------------------------------------------
+
+# Conversion de l'objet fcm en simple matrice
+xyz_cooc_matrice <- convert(xyz_fcm, "matrix")
+
+# On peut observer la structure de cet objet. On voit que les noms de lignes et de colonnes correspondent aux mots des textes
+str(xyz_cooc_matrice)
+
+# On peut donc indexer la matrice avec les mots à observer. La valeur renvoyée correspondra au nombre de fois que ces mots cooccurrent dans la fenêtre de 10 mots.
+xyz_cooc_matrice["jeune", "femme"]
+
+
+## ---------------------------------------------------------------------------------------------------------------
+
+xyz_corp |> 
+
+  corpus_subset(subset = auteur == "David Dorais") |> 
+  
+  tokens(remove_punct = TRUE,
+         remove_symbols = TRUE, 
+         remove_numbers = FALSE, 
+         remove_separators = TRUE) |>
+  
+  # tokens_remove(lsa::stopwords_fr) |>
+  
+  kwic(pattern = phrase("jeunes? femmes?"), 
+       window = 3, 
+       valuetype = "regex") |> head()
 
 
 

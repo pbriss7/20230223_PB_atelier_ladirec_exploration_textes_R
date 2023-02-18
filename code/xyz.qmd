@@ -347,7 +347,6 @@ Pour ordonner cette table en fonction des valeurs, on peut utiliser la fonction 
 
 Vous trouverez ci-dessous la réponse à la question posée ci-dessus. Vous verrez que différentes syntaxes peuvent produire le même résultat.
 
-
 ```{r}
 #| include: false
 
@@ -709,9 +708,9 @@ Guay, Jean-Herman. s. d. « Statistiques en sciences humaines et sociales avec
 
 Jockers, Matthew L. 2014. *Text Analysis with R for Students of Literature*. Quantitative Methods in the Humanities and Social Sciences. Springer International Publishing. <https://doi.org/10.1007/978-3-319-03164-4>.
 
-Kboubi, Férihane, Anja Habacha Chabi, et Mohamed BenAhmed. s. d. « L\'exploitation des relations d\'association de termes pour l\'enrichissement de l\'indexation de documents textuels ».
+Kboubi, Férihane, Anja Habacha Chabi, et Mohamed BenAhmed. s. d. « L'exploitation des relations d'association de termes pour l'enrichissement de l'indexation de documents textuels ».
 
-Lebart, Ludovic, Bénédicte Pincemin, et Céline Poudat. 2019. *Analyse des données textuelles*. Mesure et évaluation 11. Québec: Presses de l\'Université du Québec.
+Lebart, Ludovic, Bénédicte Pincemin, et Céline Poudat. 2019. *Analyse des données textuelles*. Mesure et évaluation 11. Québec: Presses de l'Université du Québec.
 
 Paradis, Emmanuel. 2002. « R pour les débutants ». <https://cran.r-project.org/doc/contrib/Paradis-rdebuts_fr.pdf>.
 
