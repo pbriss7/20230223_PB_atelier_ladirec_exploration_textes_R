@@ -102,10 +102,46 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#avant-propos" id="toc-avant-propos" class="nav-link active" data-scroll-target="#avant-propos">Avant-propos</a>
+  <ul class="collapse">
+  <li><a href="#exécuter-le-code-dun-document-quarto" id="toc-exécuter-le-code-dun-document-quarto" class="nav-link" data-scroll-target="#exécuter-le-code-dun-document-quarto">Exécuter le code d’un document Quarto</a></li>
+  <li><a href="#raccourci-et-aide" id="toc-raccourci-et-aide" class="nav-link" data-scroll-target="#raccourci-et-aide">Raccourci et aide</a></li>
+  <li><a href="#nettoyage-de-lenvironnement-de-travail-élimination-des-objets-inutiles" id="toc-nettoyage-de-lenvironnement-de-travail-élimination-des-objets-inutiles" class="nav-link" data-scroll-target="#nettoyage-de-lenvironnement-de-travail-élimination-des-objets-inutiles">Nettoyage de l’environnement de travail (élimination des objets inutiles)</a></li>
+  </ul></li>
+  <li><a href="#préparation-de-lenvironnement-de-travail" id="toc-préparation-de-lenvironnement-de-travail" class="nav-link" data-scroll-target="#préparation-de-lenvironnement-de-travail">Préparation de l’environnement de travail</a></li>
+  <li><a href="#importation-des-données" id="toc-importation-des-données" class="nav-link" data-scroll-target="#importation-des-données">Importation des données</a></li>
+  <li><a href="#examen-de-lobjet" id="toc-examen-de-lobjet" class="nav-link" data-scroll-target="#examen-de-lobjet">Examen de l’objet</a>
+  <ul class="collapse">
+  <li><a href="#valeurs-nulles-et-cellules-sans-contenu" id="toc-valeurs-nulles-et-cellules-sans-contenu" class="nav-link" data-scroll-target="#valeurs-nulles-et-cellules-sans-contenu">Valeurs nulles et cellules sans contenu</a></li>
+  </ul></li>
+  <li><a href="#prétraitement-des-données" id="toc-prétraitement-des-données" class="nav-link" data-scroll-target="#prétraitement-des-données">Prétraitement des données</a>
+  <ul class="collapse">
+  <li><a href="#principaux-problèmes-du-jeu-de-données" id="toc-principaux-problèmes-du-jeu-de-données" class="nav-link" data-scroll-target="#principaux-problèmes-du-jeu-de-données">Principaux problèmes du jeu de données</a></li>
+  </ul></li>
+  <li><a href="#exploration-1-les-métadonnées" id="toc-exploration-1-les-métadonnées" class="nav-link" data-scroll-target="#exploration-1-les-métadonnées">Exploration 1: les métadonnées</a>
+  <ul class="collapse">
+  <li><a href="#tests-de-corrélation" id="toc-tests-de-corrélation" class="nav-link" data-scroll-target="#tests-de-corrélation">Tests de corrélation</a></li>
+  </ul></li>
+  <li><a href="#enrichissement-des-données" id="toc-enrichissement-des-données" class="nav-link" data-scroll-target="#enrichissement-des-données">Enrichissement des données</a></li>
+  <li><a href="#exploration-2-les-données-textuelles" id="toc-exploration-2-les-données-textuelles" class="nav-link" data-scroll-target="#exploration-2-les-données-textuelles">Exploration 2: les données textuelles</a>
+  <ul class="collapse">
+  <li><a href="#transformation-de-lobjet-avec-quanteda" id="toc-transformation-de-lobjet-avec-quanteda" class="nav-link" data-scroll-target="#transformation-de-lobjet-avec-quanteda">Transformation de l’objet avec Quanteda</a></li>
+  <li><a href="#exploration-du-vocabulaire-de-sous-ensembles-de-textes" id="toc-exploration-du-vocabulaire-de-sous-ensembles-de-textes" class="nav-link" data-scroll-target="#exploration-du-vocabulaire-de-sous-ensembles-de-textes">Exploration du vocabulaire de sous-ensembles de textes</a></li>
+  <li><a href="#réseaux-des-cooccurrences" id="toc-réseaux-des-cooccurrences" class="nav-link" data-scroll-target="#réseaux-des-cooccurrences">Réseaux des cooccurrences</a></li>
+  <li><a href="#au-plus-près-des-textes-le-concordancier" id="toc-au-plus-près-des-textes-le-concordancier" class="nav-link" data-scroll-target="#au-plus-près-des-textes-le-concordancier">Au plus près des textes: le concordancier</a></li>
+  </ul></li>
+  <li><a href="#bibliographie" id="toc-bibliographie" class="nav-link" data-scroll-target="#bibliographie">Bibliographie</a></li>
+  </ul>
+</nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -153,6 +189,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>Vous pouvez également ajouter des options. L’option <code>#| echo: false</code>, par exemple, permet d’imprimer le résultat d’une instruction dans le document généré avec <strong>Render</strong>, mais non le bloc de code. Cliquez sur <strong>Render</strong> et voyez le résultat.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>romans <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Illusions perdues"</span>, <span class="st">"Le Dernier jour d'un condamné"</span>, <span class="st">"La Débâcle"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Mon roman préféré est "</span>, <span class="fu">sample</span>(romans, <span class="dv">1</span>), <span class="st">"."</span>, <span class="at">sep =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Mon roman préféré est La Débâcle.</code></pre>
 </div>
@@ -162,32 +201,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3 class="anchored" data-anchor-id="raccourci-et-aide">Raccourci et aide</h3>
 <p>Pour exécuter tout un bloc de code, vous pouvez cliquer sur la flèche à l’extrémité supérieure droite du bloc. Si vous souhaitez plutôt exécuter les instructions d’un même bloc les unes après les autres, et observer le résultat, vous pouvez placer votre curseur au début de la ligne d’instruction à exécuter et appuyez sur ‘COMMAND’ + ‘RETURN’ (raccourci Mac) ou ‘CTRL’ + ‘RETURN’ (raccourci Windows) de votre clavier. Vous pouvez vous pratiquer avec les lignes d’instruction ci-dessous. Chacune appelle de l’aide sur une fonction en particulier. La fenêtre d’aide s’ouvrira dans la partie inférieure droite de RStudio.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">paste</span>()</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>?<span class="fu">str</span>()</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>?<span class="fu">install.packages</span>()</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>?<span class="fu">library</span>()</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>?<span class="fu">nchar</span>()</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>?<span class="fu">data.frame</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">paste</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>?<span class="fu">str</span>()</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>?<span class="fu">install.packages</span>()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>?<span class="fu">library</span>()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>?<span class="fu">nchar</span>()</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>?<span class="fu">data.frame</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="nettoyage-de-lenvironnement-de-travail-élimination-des-objets-inutiles" class="level3">
 <h3 class="anchored" data-anchor-id="nettoyage-de-lenvironnement-de-travail-élimination-des-objets-inutiles">Nettoyage de l’environnement de travail (élimination des objets inutiles)</h3>
 <p>L’environnement de travail, auquel nous donne accès l’onglent Environment de RStudio (coin supérieur droit), contient tous vos objets. Chaque fois que vous emmagasinez une donnée dans une variable, celle-ci est ajoutée à l’environnement. Cela prend peu de temps pour charger l’environnement (et la mémoire) de RStudio. Voici comment nettoyer partiellement ou entièrement cet environnement:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Création d'objets à éliminer</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>a<span class="ot">=</span><span class="dv">1</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>b<span class="ot">=</span><span class="dv">3</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>c<span class="ot">=</span><span class="st">"Virginie"</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>d<span class="ot">=</span><span class="st">"Théodore"</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Élimination de tout le contenu de l'environnement:</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>()) </span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Élimination d'une sélection d'éléments</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">setdiff</span>(<span class="fu">ls</span>(), <span class="fu">c</span>(<span class="st">"d"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 </section>
 </section>
 <section id="préparation-de-lenvironnement-de-travail" class="level2">
@@ -207,40 +231,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Activation des extensions</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)               <span class="co"># Extension pour l'importation de fichiers Excel</span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)              <span class="co"># Extension pour la manipulation des chaînes de caractères</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)                <span class="co"># Extension pour la manipulation des structures des tableaux de données</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'dplyr'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:stats':
-
-    filter, lag</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:base':
-
-    intersect, setdiff, setequal, union</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)              <span class="co"># Extension pour la production de graphiques de haute qualité</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda)             <span class="co"># Extension pour le forage textuel</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Package version: 3.2.3
-Unicode version: 14.0
-ICU version: 71.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Parallel computing: 10 of 10 threads used.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>See https://quanteda.io for tutorials and examples.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda.textplots)   <span class="co"># Extension pour le forage textuel</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda.textstats)   <span class="co"># Extension pour l'analyse des collocations</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lsa)                  <span class="co"># Extension offrant un antidictionnaire élaboré</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: SnowballC</code></pre>
-</div>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)                <span class="co"># Extension pour la manipulation des structures des tableaux de données</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)              <span class="co"># Extension pour la production de graphiques de haute qualité</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda)             <span class="co"># Extension pour le forage textuel</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda.textplots)   <span class="co"># Extension pour le forage textuel</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda.textstats)   <span class="co"># Extension pour l'analyse des collocations</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lsa)                  <span class="co"># Extension offrant un antidictionnaire élaboré</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="importation-des-données" class="level2">
@@ -248,8 +244,8 @@ ICU version: 71.1</code></pre>
 <p>Les données que nous utiliserons sont contenues dans un dossier séparé du répertoire. Il est judicieux de séparer les scripts, les données et les résultats dans trois dossiers différents. Les données sont emmagasinées dans un fichier Excel. Pour lire un tel fichier, il faut utiliser une extension spécialisée appelée <strong>readxl</strong>. Ci-dessous, on appelle la fonction read_excel() de cette extension et on lui donne, comme argument <strong>path=</strong>, le chemin conduisant vers le fichier. On lui indique également (argument <strong>sheet=1</strong>) que la première feuille de calcul seule est à lire.</p>
 <p>Le résultat de cette lecture est emmagasiné dans la variable xyz.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lecture des données et assignation à une variable </span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>xyz <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"../donnees/XYZ-2015-2022-table-20230205JV.xlsx"</span>, <span class="at">sheet =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lecture des données et assignation à une variable </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>xyz <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"../donnees/XYZ-2015-2022-table-20230205JV.xlsx"</span>, <span class="at">sheet =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="examen-de-lobjet" class="level2">
@@ -258,71 +254,6 @@ ICU version: 71.1</code></pre>
 <section id="valeurs-nulles-et-cellules-sans-contenu" class="level3">
 <h3 class="anchored" data-anchor-id="valeurs-nulles-et-cellules-sans-contenu">Valeurs nulles et cellules sans contenu</h3>
 <p>On ne verra pas ici les différentes manières de traiter les valeurs nulles ou sans contenu, mais on peut au moins montrer comment les repérer. Dans R, une valeur nulle est indiquée par NA (<em>not available</em>). Cependant, vous quand vous travaillez avec des textes, vous pouvez avoir de nombreuses chaines de caractères tout simplement vides. On voit ci-dessous la manière de repérer ces deux types de valeurs.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># La première fonction renvoie, pour chaque colonne du tableau, la somme des valeurs correspondant à NA.</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(xyz, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">is.na</span>(x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      périodique            titre           auteur           numéro 
-               0                0                0                0 
-            date            thème              URI       éditeur(s) 
-               0                0                0                0 
-  ISSN (imprimé) ISSN (numérique)         citation   mention légale 
-               0                0                0                0 
-           texte 
-               0 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cette deuxième fonction renvoie, pour chacune des colonnes du tableau, la somme des valeurs correspondant à une chaîne de caractères vide.</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(xyz, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">==</span> <span class="st">""</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      périodique            titre           auteur           numéro 
-               0                0                0                0 
-            date            thème              URI       éditeur(s) 
-               0                0                0                0 
-  ISSN (imprimé) ISSN (numérique)         citation   mention légale 
-               0                0                0                0 
-           texte 
-               0 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple test: on peut créer deux colonnes sans contenu, puis vérifier à nouveau si R repère ces valeurs nulles</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>xyz<span class="sc">$</span>test <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>xyz<span class="sc">$</span>test2 <span class="ot">&lt;-</span> <span class="st">""</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(xyz, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">is.na</span>(x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      périodique            titre           auteur           numéro 
-               0                0                0                0 
-            date            thème              URI       éditeur(s) 
-               0                0                0                0 
-  ISSN (imprimé) ISSN (numérique)         citation   mention légale 
-               0                0                0                0 
-           texte             test            test2 
-               0              321                0 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(xyz, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">==</span> <span class="st">""</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      périodique            titre           auteur           numéro 
-               0                0                0                0 
-            date            thème              URI       éditeur(s) 
-               0                0                0                0 
-  ISSN (imprimé) ISSN (numérique)         citation   mention légale 
-               0                0                0                0 
-           texte             test            test2 
-               0               NA              321 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On supprime ainsi des colonnes devenues inutiles</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>xyz[, <span class="fu">c</span>(<span class="st">"test"</span>, <span class="st">"test2"</span>)] <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification que les colonnes ont bien disparu</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(xyz)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "périodique"       "titre"            "auteur"           "numéro"          
- [5] "date"             "thème"            "URI"              "éditeur(s)"      
- [9] "ISSN (imprimé)"   "ISSN (numérique)" "citation"         "mention légale"  
-[13] "texte"           </code></pre>
-</div>
-</div>
 </section>
 </section>
 <section id="prétraitement-des-données" class="level2">
@@ -338,7 +269,546 @@ ICU version: 71.1</code></pre>
 <li><p>Problème 5: on voudrait que les valeurs numériques soient considérées comme des nombres, non comme des chaines de caractères;</p></li>
 <li><p>Problème 6: dans la colonne `texte`, les sauts de paragraphes du texte original sont indiqués par “\n”.</p></li>
 </ul>
+<p>Traitons ces problèmes un par un.</p>
+<p>Problème 1. Renommer les colonnes</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(xyz) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"periodique"</span>, <span class="st">"titre"</span>, <span class="st">"auteur"</span>,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"numero"</span>, <span class="st">"date"</span>, <span class="st">"theme"</span>, <span class="st">"uri"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"editeur"</span>, <span class="st">"issn_imp"</span>, <span class="st">"issn_num"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"citation"</span>, <span class="st">"mention_legale"</span>, <span class="st">"texte"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Problème 2. Créer un identifiant unique. On peut utiliser les numéros de ligne.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>xyz<span class="sc">$</span>doc_id <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(xyz)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Problème 3. Repérer les colonnes inutiles et les éliminer</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># La première colonne semble contenir une information redondante. Vérifions:</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(xyz[ , <span class="st">"periodique"</span>])  <span class="co"># ou table(xyz$periodique)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  periodique                  
+  &lt;chr&gt;                       
+1 XYZ. La revue de la nouvelle</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(xyz[, <span class="st">"numero"</span>])       <span class="co"># ou table(xyz$numero)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 1
+   numero
+   &lt;chr&gt; 
+ 1 121   
+ 2 122   
+ 3 123   
+ 4 124   
+ 5 125   
+ 6 126   
+ 7 127   
+ 8 128   
+ 9 129   
+10 130   
+# … with 14 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(xyz[, <span class="st">"theme"</span>])        <span class="co"># ou table(xyz$theme)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 28 × 1
+   theme                                                                    
+   &lt;chr&gt;                                                                    
+ 1 Jardin : un enfer de morceaux de paradis                                 
+ 2 Tarot : des destins tout tracés ?                                        
+ 3 Récompenses : onze nouvelles sur le podium                               
+ 4 Thème libre                                                              
+ 5 Séductions : entre flirt, désir, charme, fantasme, chavirement et mystère
+ 6 Hors-frontières                                                          
+ 7 Nouvelle d'une plage : à l'écart du tourisme de masse                    
+ 8 Ponctuation : signe que les mots ne peuvent pas tout dire                
+ 9 Concours de nouvelles XYZ                                                
+10 Le double : l'autre, c'est moi                                           
+# … with 18 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exercice: poursuivez la vérification avec les colonnes `uri`, `editeur`, `issn` (x2), `mention_legale`. </span><span class="al">###</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># unique(...[, ...])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solution au problème no 3</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Créons un vecteur avec les colonnes inutiles (on utilise pour cela la fonction de concaténation c( ) )</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>colonnes_a_supprimer <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"periodique"</span>, <span class="st">"editeur"</span>, <span class="st">"issn_imp"</span>, <span class="st">"issn_num"</span>, <span class="st">"mention_legale"</span>, <span class="st">"uri"</span>, <span class="st">"citation"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># On élimine l'ensemble des colonnes inutiles d'un seul coup.</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>xyz[, colonnes_a_supprimer] <span class="ot">&lt;-</span> <span class="cn">NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Problème 4. On veut créer une colonne contenant les années.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Il faut extraire les années de la colonne `date`. On utilise pour cela l'extension stringr.</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>xyz<span class="sc">$</span>annee <span class="ot">&lt;-</span> stringr<span class="sc">::</span><span class="fu">str_extract</span>(xyz<span class="sc">$</span>date, <span class="st">"[0-9]+"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="do">### Exercice: éliminez la colonne `date`, qui ne sert plus à rien. </span><span class="al">###</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># xyz$... &lt;- ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Problème 5. Cette colonne `annee`, de même que la colonne `numero`, devraient être de type `numeric`, non de type `chr`.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># La fonction as.integer() force la conversion du type chararcter en type integer.</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>xyz<span class="sc">$</span>numero <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(xyz<span class="sc">$</span>numero)      </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Faites la même opération pour la colonne appelée `numero`:</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># xyz$... &lt;- ...(xyz$...)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Problème 6. Remplacer un symbole dans une longue chaine de caractères (un texte).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Observons tout d'abord un texte en particulier</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># xyz$texte[1]</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Remplaçons par une espace simple le symbole `\n`</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>xyz<span class="sc">$</span>texte <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="at">pattern =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">replacement =</span> <span class="st">" "</span>, <span class="at">x =</span> xyz<span class="sc">$</span>texte, <span class="at">fixed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="do">### Exercice: vérifiez un texte pris au hasard pour voir s'il reste des scories</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co"># xyz$...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Enfin, par souci de lisibilité, réordonnons la séquence des colonnes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>xyz <span class="ot">&lt;-</span> xyz[, <span class="fu">c</span>(<span class="st">"doc_id"</span>, <span class="st">"auteur"</span>, <span class="st">"titre"</span>, <span class="st">"numero"</span>, <span class="st">"annee"</span>, <span class="st">"theme"</span>, <span class="st">"texte"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
+</section>
+<section id="exploration-1-les-métadonnées" class="level2">
+<h2 class="anchored" data-anchor-id="exploration-1-les-métadonnées">Exploration 1: les métadonnées</h2>
+<p>Maintenant que le tableau ne présente plus de problèmes apparents, on peut commencer à explorer les données. On veut pour l’essentiel se familiariser avec le contenu du tableau, observer des distributions, voir si des variables sont corrélées. Il est bon de séparer dans un premier temps l’exploration des métadonnées de celle des données textuelles.</p>
+<p>Une première fonction très utile est <code>table()</code>. Celle-ci calcule le nombre de modalités ou valeurs d’une colonne. On peut ensuite faire des statistiques sur cette distribution.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># La fonction `table( )` permet d'observer le nombre de modalités d'une variable. </span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>distrib_annuelle <span class="ot">&lt;-</span> <span class="fu">table</span>(xyz<span class="sc">$</span>annee)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># distrib_annuelle</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Quelle est la moyenne de cette distribution?</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(distrib_annuelle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 53.5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Exercice: créez une table pour observer la distribution des thèmes </span><span class="al">###</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># distrib_themes &lt;- ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Pour ordonner cette table en fonction des valeurs, on peut utiliser la fonction <code>sort( )</code>, auquel on passe l’argument <code>decreasing = TRUE</code> pour que les valeurs se présentent de manière décroissante.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># distrib_themes_ord &lt;- sort(distrib_themes, decreasing = TRUE)</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="do">### Exercice: trouvez les noms des 10 principaux contributeurs de la revue </span><span class="al">###</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># distrib_auteurs &lt;- ...</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co"># distrib_auteurs_ord &lt;- ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Vous trouverez ci-dessous la réponse à la question posée ci-dessus. Vous verrez que différentes syntaxes peuvent produire le même résultat.</p>
+<section id="tests-de-corrélation" class="level3">
+<h3 class="anchored" data-anchor-id="tests-de-corrélation">Tests de corrélation</h3>
+<p>Au cours de l’exploration des données, on peut tenter de comprendre s’il existe des corrélations entre des variables. Les corrélations se calculent sur des variables numériques.</p>
+<section id="test-de-corrélation-avec-des-données-numériques" class="level4">
+<h4 class="anchored" data-anchor-id="test-de-corrélation-avec-des-données-numériques">Test de corrélation avec des données numériques</h4>
+<p>Dans l’exemple ci-dessous, on utilise un jeu de données fourni par l’extension de base de R, <code>mtcars</code>. Celui-ci présente différentes marques et modèles de voitures et leurs attributs techniques, telle la distance parcourue par différentes marques selon le volume de leurs moteurs. On voudrait savoir s’il y a une corrélation, positive ou négative, entre le volume du moteur (disp) et la distance/gallon que peut parcourir une voiture.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="co"># Dans le jeu de données, les noms de lignes (rownames) correspondent aux marques.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     mpg cyl  disp
+Mazda RX4           21.0   6 160.0
+Mazda RX4 Wag       21.0   6 160.0
+Datsun 710          22.8   4 108.0
+Hornet 4 Drive      21.4   6 258.0
+Hornet Sportabout   18.7   8 360.0
+Valiant             18.1   6 225.0
+Duster 360          14.3   8 360.0
+Merc 240D           24.4   4 146.7
+Merc 230            22.8   4 140.8
+Merc 280            19.2   6 167.6
+Merc 280C           17.8   6 167.6
+Merc 450SE          16.4   8 275.8
+Merc 450SL          17.3   8 275.8
+Merc 450SLC         15.2   8 275.8
+Cadillac Fleetwood  10.4   8 472.0
+Lincoln Continental 10.4   8 460.0
+Chrysler Imperial   14.7   8 440.0
+Fiat 128            32.4   4  78.7
+Honda Civic         30.4   4  75.7
+Toyota Corolla      33.9   4  71.1
+Toyota Corona       21.5   4 120.1
+Dodge Challenger    15.5   8 318.0
+AMC Javelin         15.2   8 304.0
+Camaro Z28          13.3   8 350.0
+Pontiac Firebird    19.2   8 400.0
+Fiat X1-9           27.3   4  79.0
+Porsche 914-2       26.0   4 120.3
+Lotus Europa        30.4   4  95.1
+Ford Pantera L      15.8   8 351.0
+Ferrari Dino        19.7   6 145.0
+Maserati Bora       15.0   8 301.0
+Volvo 142E          21.4   4 121.0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dans ce graphique simple, on pose la variable dépendante en y et l'indépendante en x</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mtcars<span class="sc">$</span>disp, mtcars<span class="sc">$</span>mpg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="xyz_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Le test de corrélation est un test statistique qui mesure l’interdépendance ou l’association entre des paires de valeurs (deux variables). Plusieurs mesures permettent de vérifier la corrélation entre variables. Nous allons utiliser le coefficient appelé tau de Kendall (compris entre -1 et +1). Selon cette mesure, une corrélation positive est marquée par un tau positif, et inversement pour une corrélation négative. Plus le nombre s’éloigne de 0, plus la corrélation est forte. Vous pourrez lire l’article de Kendall <a href="https://academic.oup.com/biomet/article/30/1-2/81/176907">en ligne</a>. Avec les deux variables du jeu de données <code>mtcars</code>, le test montre que la variable dépendante est fortement corrélée à l’indépendante, et négative.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(mtcars<span class="sc">$</span>disp, mtcars<span class="sc">$</span>mpg, <span class="at">method =</span> <span class="st">"kendall"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Kendall's rank correlation tau
+
+data:  mtcars$disp and mtcars$mpg
+z = -6.1083, p-value = 1.007e-09
+alternative hypothesis: true tau is not equal to 0
+sample estimates:
+       tau 
+-0.7681311 </code></pre>
+</div>
+</div>
+</section>
+<section id="test-de-corrélation-avec-des-données-textuelles" class="level4">
+<h4 class="anchored" data-anchor-id="test-de-corrélation-avec-des-données-textuelles">Test de corrélation avec des données textuelles</h4>
+<p>Pour faire un test de corrélation avec des données textuelles, il faut créer des variables numériques qui seront mises en relation. Les chaines de caractères ne peuvent pas, telles quelles, être corrélées. Il faut choisir une mesure liée à la question de recherche. On prendra ici un exemple très simple et assez futile, simplement pour indiquer le processus.</p>
+<p>Nous allons vérifier s’il y a une corrélation, positive ou négative, entre la longueur des titres et la longueur des textes. Comme mesure, nous pouvons utiliser le nombre de mots que comportent les titres et les textes, ou encore le nombre de caractères de chaque variable. Nous allons retenir cette dernière option par souci de simplicité. Les sommes de caractères pour chaque titre et chaque texte sera faite avec la fonction de base <code>nchar()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>xyz<span class="sc">$</span>ncharTitre <span class="ot">&lt;-</span> <span class="fu">nchar</span>(xyz<span class="sc">$</span>titre)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>xyz<span class="sc">$</span>ncharTexte <span class="ot">&lt;-</span> <span class="fu">nchar</span>(xyz<span class="sc">$</span>texte)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Observons le résultat dans la table</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>xyz[, <span class="fu">c</span>(<span class="st">"ncharTitre"</span>, <span class="st">"ncharTexte"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 321 × 2
+   ncharTitre ncharTexte
+        &lt;int&gt;      &lt;int&gt;
+ 1          8       5234
+ 2          8       8474
+ 3         27       4660
+ 4          8       7350
+ 5         20       9140
+ 6          6      10346
+ 7         27      10672
+ 8          7      18760
+ 9          9       5716
+10         18       3790
+# … with 311 more rows</code></pre>
+</div>
+</div>
+<p>Procédons maintenant au test de corrélation</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(xyz<span class="sc">$</span>ncharTitre, xyz<span class="sc">$</span>ncharTexte, <span class="at">method =</span> <span class="st">"kendall"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Kendall's rank correlation tau
+
+data:  xyz$ncharTitre and xyz$ncharTexte
+z = 1.6758, p-value = 0.09378
+alternative hypothesis: true tau is not equal to 0
+sample estimates:
+       tau 
+0.06377637 </code></pre>
+</div>
+</div>
+<p>La mesure de corrélation, `tau`, est positive, mais très proche de zéro, ce qui dénote une corrélation très faible. On peut projeter ces données dans un diagramme à points</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(xyz, <span class="fu">aes</span>(<span class="at">x=</span>ncharTitre, <span class="at">y=</span>ncharTexte))<span class="sc">+</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>()<span class="sc">+</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="xyz_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="enrichissement-des-données" class="level2">
+<h2 class="anchored" data-anchor-id="enrichissement-des-données">Enrichissement des données</h2>
+<p>On peut tirer profit des données numériques ajoutées (longueur des titres et des textes) pour créer de nouveaux champs. Par exemple, on pourrait souhaiter classer les textes selon qu’ils sont “courts”, “moyens” ou “longs”. Un tel type de données est dit “catégorique”. Le type d’objet que nous créerons pour emmagasiner ces données catégoriques s’appelle <code>factor</code>. Ci-dessous, nous allons choisir trois seuils aléatoires pour diviser nos données.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On peut tout d'abord observer le sommaire statistique et s'en inspirer</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(xyz<span class="sc">$</span>ncharTexte)    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    679    5449    8228    9351   12048   29823 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>xyz<span class="sc">$</span>longueur_texte_cat <span class="ot">&lt;-</span> <span class="fu">factor</span>(                                <span class="co"># Création de valeurs catégorielles fondées sur les modalités d'une autre colonne</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(xyz<span class="sc">$</span>ncharTexte <span class="sc">&lt;</span> <span class="dv">5000</span>, <span class="st">"court"</span>,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">ifelse</span>(xyz<span class="sc">$</span>ncharTexte <span class="sc">&gt;</span><span class="dv">10000</span>, <span class="st">"long"</span>, <span class="st">"moyen"</span>)),</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"court"</span>, <span class="st">"moyen"</span>, <span class="st">"long"</span>)                           <span class="co"># La fonction `factor()` possède un argument, `levels=` qui permet de déterminer l'ordre des catégories</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Exercice: observez la distribution de cette variable avec la fonction table().</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>On peut observer ces proportions à l’aide d’un diagramme à barres.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(xyz, <span class="fu">aes</span>(<span class="at">x =</span> longueur_texte_cat))<span class="sc">+</span>                        </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="xyz_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="exploration-2-les-données-textuelles" class="level2">
+<h2 class="anchored" data-anchor-id="exploration-2-les-données-textuelles">Exploration 2: les données textuelles</h2>
+<p>Pour explorer les données textuelles à proprement parler, soit les textes de fiction contenus dans le tableau sous la variable <code>texte</code>, nous devons transformer l’objet de fond en comble. Comme on l’a vu ci-dessus avec les tests de corrélation, il est plus facile de demander à l’ordinateur de traiter des chiffres que des mots. Le texte sera donc transformé en une grande matrice d’occurrences de type documents-mots, où chaque ligne correspondra à un texte et chaque colonne, à l’un des mots du vocabulaire du corpus. Une matrice est un objet qui ressemble beaucoup à un tableau de données, à ceci près que les valeurs dans les cellules sont toutes identiques. Dans notre grande matrice documents-mots, les valeurs correspondront au nombre de fois que tel mot en colonne apparaît dans tel texte en ligne. La représentation des textes qui en résulte est souvent appelée <em>Bag-Of-Words</em>, un sac de mots, car chaque texte est conçu comme un ensemble particulier de mots dont l’ordre d’apparition n’est pas pris en compte. Cette représentation repose sur l’idée qu’un texte qui contient un grand nombre de fois les mots “enfant”, “parent” et “lien” parlera vraisemblablement de la relation parent-enfant.</p>
+<p>Pour faire face aux limites de ce modèle un peu grossier, mais aisé à concevoir, les spécialistes ont mis au point plusieurs techniques, telle l’application d’antidictionnaires aux matrices pour éliminer les mots fonctionnels ou sans intérêt dans un contexte de recherche spécifique. On peut également filtrer les matrices selon des seuils d’occurrences inférieurs ou supérieurs, on peut les pondérer pour augmenter le poids de mots (par exemple ceux qui sont particulièrement représentatifs d’un texte par rapport à tous les autres textes du corpus) et les normaliser (pour mieux comparer des textes de longueurs différentes). On peut également forger des n-grammes fondés sur des expressions d’intérêt pour la recherche ou sur des mesures de collocation. Nous ne ferons pas toutes ces opérations ici, mais il est important que vous sachiez que les limites inhérentes au <em>BOW</em> ont fait l’objet de nombreuses recherches et suscité des stratégies pour en neutraliser les effets.</p>
+<p>Également, il est bon de savoir que d’autres représentations du texte ont fait leur apparition depuis le début du siècle (word2vec, BERT, etc.), dont on ne parlera pas ici. Le fameux modèle de langue GPT-3, derrière ChatGPT, est le dernier en date et repose sur un entrainement sur plusieurs milliards de mots.</p>
+<p>Dans la suite de l’atelier, nous allons donc transformer le corpus textuel en une grande matrice d’occurrences de type documents-mots.</p>
+<p>Pour faire l’ensemble des opérations, nous allons recourir à l’extension Quanteda, créée spécifiquement pour l’analyse statistique des textes. Il existe plusieurs autres extensions de ce type (udpipe, text2vec, tm, lsa, tidytext, etc.). On retient ici Quanteda en raison de la cohérence de la syntaxe et de la grande variété des analyses qu’elle permet.</p>
+<p>On gagnera à consulter la page du <em>Comprehensive R Archive Network (CRAN)</em> consacrée au <a href="https://cran.r-project.org/web/views/NaturalLanguageProcessing.html"><em>Natural Language Processing</em></a>.</p>
+<section id="transformation-de-lobjet-avec-quanteda" class="level3">
+<h3 class="anchored" data-anchor-id="transformation-de-lobjet-avec-quanteda">Transformation de l’objet avec Quanteda</h3>
+<p>Le processus de transformation de l’objet tableau de données en grande matrice se fait, dans Quanteda, en trois grandes étapes.</p>
+<ol type="1">
+<li><p>La première étape est la création d’un corpus avec la fonction corpus(). On y précise la colonne des identifiants uniques et la colonne contenant le texte à analyser;</p></li>
+<li><p>La deuxième étape est la tokénisation des textes du corpus. On peut à cette étape se servir d’un antidictionnaire pour éliminer les mots fonctionnels;</p></li>
+<li><p>La troisième étape est le passage entre cet objet “tokens” à la dfm (document-feature matrix).</p></li>
+</ol>
+<p>Les métadonnées suivent par défaut chacune des transformations et permettront, une fois la dfm construite, de filtrer les documents en ligne avec les métadonnées.</p>
+<p>Pour plus d’information sur chacune des fonctions, consultez la documentation. Exemple:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>?quanteda<span class="sc">::</span><span class="fu">corpus</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="premiière-étape-création-dun-objet-corpus" class="level4">
+<h4 class="anchored" data-anchor-id="premiière-étape-création-dun-objet-corpus">Premiière étape: création d’un objet corpus</h4>
+<p>Les arguments de la fonction <code>corpus()</code> permettent de préciser les colonnes du tableau correspondant aux identifiants uniques et aux textes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>xyz_corp <span class="ot">&lt;-</span> quanteda<span class="sc">::</span><span class="fu">corpus</span>(xyz, <span class="at">docid_field =</span> <span class="st">"doc_id"</span>, <span class="at">text_field =</span> <span class="st">"texte"</span>)   </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(xyz_corp, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 2 documents and 8 docvars.
+1 :
+"Elle l'appellerait Ozanne. Ozanne. Deux fois née. Hier, mort..."
+
+2 :
+"Depuis une douzaine d'années, je consacre une bonne partie d..."</code></pre>
+</div>
+</div>
+</section>
+<section id="deuxième-étape-création-dun-objet-tokens-avec-le-corpus" class="level4">
+<h4 class="anchored" data-anchor-id="deuxième-étape-création-dun-objet-tokens-avec-le-corpus">Deuxième étape: création d’un objet tokens avec le corpus</h4>
+<p>La transformation du corpus en tokens correspond à la séparation des mots ou n-grammes de chaque texte. C’est ce qu’on appelle la tokénisation. Plusieurs opérations peuvent être faites à la volée.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>xyz_toks <span class="ot">&lt;-</span> <span class="fu">tokens</span>(xyz_corp, </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">remove_punct =</span> <span class="cn">TRUE</span>,              <span class="co"># On supprime à la volée la ponctuation</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">remove_symbols =</span> <span class="cn">TRUE</span>,            <span class="co"># On supprime à la volée les symboles</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">remove_numbers =</span> <span class="cn">FALSE</span>,           <span class="co"># On pourrait supprimer à la volée les nombres</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">remove_separators =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span>      <span class="co"># On supprime les blancs laissés par la tokénisation</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens_split</span>(<span class="at">separator =</span> <span class="st">"'"</span>, <span class="at">valuetype =</span> <span class="st">"fixed"</span>) <span class="co"># On force la tokénisation à partir de l'apostrophe</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(xyz_toks, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 2 documents and 8 docvars.
+1 :
+ [1] "Elle"        "l"           "appellerait" "Ozanne"      "Ozanne"     
+ [6] "Deux"        "fois"        "née"         "Hier"        "morte"      
+[11] "au"          "berceau"    
+[ ... and 925 more ]
+
+2 :
+ [1] "Depuis"   "une"      "douzaine" "d"        "années"   "je"      
+ [7] "consacre" "une"      "bonne"    "partie"   "de"       "mon"     
+[ ... and 1,493 more ]</code></pre>
+</div>
+</div>
+</section>
+<section id="troisième-étape-création-dun-objet-dfm-à-partir-de-lobjet-tokens" class="level4">
+<h4 class="anchored" data-anchor-id="troisième-étape-création-dun-objet-dfm-à-partir-de-lobjet-tokens">Troisième étape: création d’un objet dfm à partir de l’objet tokens</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On transforme l'objet tokens en dfm</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>xyz_dfm <span class="ot">&lt;-</span> <span class="fu">dfm</span>(xyz_toks) <span class="sc">|&gt;</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Retrait des mots fonctionnels avec l'antidictionnaire lsa (inspecter le dictionnaire!)</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm_remove</span>(lsa<span class="sc">::</span>stopwords_fr) <span class="sc">|&gt;</span>  </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Un mot doit être présent dans au moins 15% des documents (élimination des hapax)</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm_trim</span>(<span class="at">min_docfreq =</span> <span class="fl">0.15</span>,</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Un mot ne doit pas être présent dans plus de 70% des documents du corpus</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">max_docfreq =</span> <span class="fl">0.7</span>, </span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># L'argument suivant précise que la valeur indiquée dans min_docfreq= est une proportion</span></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">docfreq_type =</span> <span class="st">"prop"</span>)          </span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(xyz_dfm, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Document-feature matrix of: 2 documents, 401 features (81.05% sparse) and 8 docvars.
+    features
+docs fille mur lit vieille femme cas semble air doute donner
+   1     3   5   2       2     2   1      1   1     1      2
+   2     1   0   0       0     5   1      0   1     0      0
+[ reached max_nfeat ... 391 more features ]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Exercice: modifiez les seuils et voyez l'effet sur les dimensions de l'objet!</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Pour voir les dimensions de l'objet, vous n'avez qu'à l'apeller ainsi:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="exploration-du-vocabulaire-de-sous-ensembles-de-textes" class="level3">
+<h3 class="anchored" data-anchor-id="exploration-du-vocabulaire-de-sous-ensembles-de-textes">Exploration du vocabulaire de sous-ensembles de textes</h3>
+<p>L’extension Quanteda rend aisée l’exploration du vocabulaire de sous-ensembles de textes. Ces sous-ensembles sont générés grâce aux métadonnées que les objets corpus-tokens-dfm portent avec eux. La fonction <code>dfm_subset()</code> a un argument <code>subset=</code> qui permet d’insérer une expression formelle agissant comme filtre.</p>
+<p>Dans le premier exemple, nous allons explorer les vocabulaires (filtrés) des textes parus en 2015 et en 2021. Le résultat sera transposé en un nuage de mots où ceux qui sont les plus fréquents seront magnifiés et positionnés au centre du nuage.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>xyz_dfm_rioux <span class="ot">&lt;-</span> <span class="fu">dfm_subset</span>(xyz_dfm, <span class="at">subset =</span> auteur <span class="sc">==</span> <span class="st">"Hélène Rioux"</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>xyz_dfm_dorais <span class="ot">&lt;-</span> <span class="fu">dfm_subset</span>(xyz_dfm, <span class="at">subset =</span> auteur <span class="sc">==</span> <span class="st">"David Dorais"</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_wordcloud</span>(xyz_dfm_rioux, <span class="at">max_words =</span> <span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="xyz_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_wordcloud</span>(xyz_dfm_dorais, <span class="at">max_words =</span> <span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="xyz_files/figure-html/unnamed-chunk-31-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Si on veut mieux comparer les deux sous-groupes, on peut utiliser le code suivant, un peu plus sophistiqué.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>dfm_comp_auteurs <span class="ot">&lt;-</span> xyz_corp <span class="sc">|&gt;</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">corpus_subset</span>(auteur <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Hélène Rioux"</span>, <span class="st">"David Dorais"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens</span>(<span class="at">remove_punct =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">remove_symbols =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">remove_numbers =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">remove_separators =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span>     </span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens_split</span>(<span class="at">separator =</span> <span class="st">"'"</span>, <span class="at">valuetype =</span> <span class="st">"fixed"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm</span>()<span class="sc">|&gt;</span>                </span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm_remove</span>(lsa<span class="sc">::</span>stopwords_fr) <span class="sc">|&gt;</span>        </span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm_trim</span>(<span class="at">min_docfreq =</span> <span class="fl">0.15</span>,            </span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>           <span class="at">max_docfreq =</span> <span class="fl">0.7</span>,           </span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>           <span class="at">docfreq_type =</span> <span class="st">"prop"</span>)</span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-20"><a href="#cb50-20" aria-hidden="true" tabindex="-1"></a>dfm_comp_auteurs_groupes <span class="ot">&lt;-</span> <span class="fu">dfm_group</span>(dfm_comp_auteurs, dfm_comp_auteurs<span class="sc">$</span>auteur)</span>
+<span id="cb50-21"><a href="#cb50-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-22"><a href="#cb50-22" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_wordcloud</span>(dfm_comp_auteurs_groupes, <span class="at">comparison =</span> <span class="cn">TRUE</span>, <span class="at">max_words =</span> <span class="dv">300</span>,</span>
+<span id="cb50-23"><a href="#cb50-23" aria-hidden="true" tabindex="-1"></a>                   <span class="at">color =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="xyz_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>On pourrait maintenant souhaiter comparer les vocabulaires dominants de numéros thématiques.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>xyz_dfm_th_jardin <span class="ot">&lt;-</span> <span class="fu">dfm_subset</span>(xyz_dfm, <span class="at">subset =</span> theme <span class="sc">==</span> <span class="st">"Jardin : un enfer de morceaux de paradis"</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>xyz_dfm_th_YOLO <span class="ot">&lt;-</span> <span class="fu">dfm_subset</span>(xyz_dfm, <span class="at">subset =</span> theme <span class="sc">==</span> <span class="st">"YOLO (You Only Live Once) : hardis, téméraires, écervelés, aventureux, fonceurs, délurés"</span>)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparaison des vocabulaires de numéros thématiques</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_wordcloud</span>(xyz_dfm_th_jardin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="xyz_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_wordcloud</span>(xyz_dfm_th_YOLO)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="xyz_files/figure-html/unnamed-chunk-33-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Exercice: choisissez deux autres numéros thématiques et comparez les vocabulaires. Vous pouvez utiliser la voie simple ou reprendre le bloc d'instructions enchainées ci-dessus.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="réseaux-des-cooccurrences" class="level3">
+<h3 class="anchored" data-anchor-id="réseaux-des-cooccurrences">Réseaux des cooccurrences</h3>
+<p>L’exploration de textes fondée sur la fréquence (brute, pondérée ou normalisée) et la technique du “sac de mots” (<em>BOW</em>) ne dit rien du contexte immédiat dans lequel les mots sont plongés. Dans le nuage de mots généré à partir des textes de l’auteur David Dorais, on a vu que “jeune” et “femme” sont les mots dominants, suivis de près par “homme”. De là à dire que les textes de Dorais s’intéresse à la “jeune femme”, il y a un pas qu’on ne peut franchir avant d’avoir vérifié si les mots apparaissent bel et bien, de manière récurrente, dans le même contexte. L’une des manières de se rapprocher du texte et de vérifier quels couples de mots s’attirent, apparaissent souvent dans un même contexte, est de créer un <strong>réseau de cooccurrence</strong>.</p>
+<p>Selon Kboubi, Habacha, and BenAhmed (2010), “un réseau de cooccurrence est un réseau de termes où chaque noeud représente un terme et un arc entre deux nœuds représente la relation de cooccurrence entre les deux termes concernés. Ce réseau permet d’identifier les termes qui apparaissent souvent ensemble au sein d’une même fenêtre mais pas nécessairement juxtaposés.”</p>
+<p>Le réseau de cooccurrence ne permet pas encore de savoir si “jeune” et “femme” se suivent dans cet ordre dans les textes de D. Dorais, mais il permettra, à mi-chemin entre le “sac de mots” et la plongée dans le texte par une lecture rapprochée, de vérifier les associations.</p>
+<p>L’extension Quanteda offre une fonction qui permet, à partir d’un objet tokens ou dfm, de construire une matrice de cooccurrence qui puisse être projetée sous forme de diagramme de réseau. C’est cette fonction, fcm(), que nous utiliserons ci-dessous. Nous allons devoir réduire considérablement les dimensions de cette matrice en utilisant un nombre réduit de cooccurrences – les plus fréquentes –, sans quoi le diagramme sera impossible à déchiffrer. Mais vous pouvez modifier tous les paramètres et observer les effets sur le diagramme.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># On fournit en entrée l'objet tokens créé auparavant</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>xyz_fcm <span class="ot">&lt;-</span> xyz_toks <span class="sc">|&gt;</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># On ne retient que les tokens trouvés dans les textes d'un auteur</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens_subset</span>(<span class="at">subset =</span> auteur <span class="sc">==</span> <span class="st">"David Dorais"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Retrait des mots fonctionnels avec l'antidictionnaire lsa</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens_remove</span>(lsa<span class="sc">::</span>stopwords_fr) <span class="sc">|&gt;</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># On choisit ici une fenêtre contextuelle de 10 mots</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fcm</span>(<span class="at">context =</span> <span class="st">"window"</span>, <span class="at">window =</span> <span class="dv">10</span>, <span class="at">tri =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a><span class="co"># On repère ici couples de mots ayant un coefficient de cooccurrence égal ou supérieur à 30</span></span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>principaux_mots <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">topfeatures</span>(xyz_fcm, <span class="dv">30</span>))</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a><span class="co"># La matrice de cooccurrence est réduite à ses principaux mots, et projetée sous la forme d'un diagramme de réseau</span></span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_network</span>(<span class="fu">fcm_select</span>(xyz_fcm, principaux_mots), <span class="at">min_freq =</span> <span class="fl">0.7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="xyz_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On augmente encore le seuil pour rendre le graphique plus facile à interpréter</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>L’épaisseur du lien et la proximité entre les mots “jeune” et “femme” montrent que les mots s’appellent fortement. On peut retourner à la matrice pour voir exactement combien de fois les deux termes cooccurrent dans une fenêtre de 10 mots.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversion de l'objet fcm en simple matrice</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>xyz_cooc_matrice <span class="ot">&lt;-</span> <span class="fu">convert</span>(xyz_fcm, <span class="st">"matrix"</span>)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="co"># On peut observer la structure de cet objet. On voit que les noms de lignes et de colonnes correspondent aux mots des textes</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(xyz_cooc_matrice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> num [1:3879, 1:3879] 6 1 1 0 0 1 0 0 0 4 ...
+ - attr(*, "dimnames")=List of 2
+  ..$ features: chr [1:3879] "fois" "fille" "déesse" "mur" ...
+  ..$ features: chr [1:3879] "fois" "fille" "déesse" "mur" ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On peut donc indexer la matrice avec les mots à observer. La valeur renvoyée correspondra au nombre de fois que ces mots cooccurrent dans la fenêtre de 10 mots.</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>xyz_cooc_matrice[<span class="st">"jeune"</span>, <span class="st">"femme"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 22</code></pre>
+</div>
+</div>
+</section>
+<section id="au-plus-près-des-textes-le-concordancier" class="level3">
+<h3 class="anchored" data-anchor-id="au-plus-près-des-textes-le-concordancier">Au plus près des textes: le concordancier</h3>
+<p>On peut souhaiter se rapprocher davantage encore de la texture des mots et vérifier <em>de visu</em>, sans pour autant lire intégralement tous les textes, si “jeune” et “femme” se suivent dans cet ordre et, le cas échéant, quels mots viennent tout juste avant et après la cooccurrence. On utilisera alors un outil bien connu, le concordancier, que Quanteda met à notre portée avec la fonction <code>kwic()</code>. Cette fonction, dont le nom correspond à <em>keywords-in-context</em>, peut prendre en entrée un objet <strong>corpus</strong> ou encore un objet <strong>tokens</strong>. Un argument, <code>window=</code>, permet d’indiquer le nombre de mots que l’on souhaite obtenir de chaque côté du mot-pivot. Ce dernier est précisé à l’aide de l’argument <code>pattern=</code>, ce qui veut dire que vous pouvez utiliser une expression régulière (<em>regex</em>) pour attraper différentes formes d’un mot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>xyz_corp <span class="sc">|&gt;</span> </span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">corpus_subset</span>(<span class="at">subset =</span> auteur <span class="sc">==</span> <span class="st">"David Dorais"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens</span>(<span class="at">remove_punct =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">remove_symbols =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">remove_numbers =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">remove_separators =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># tokens_remove(lsa::stopwords_fr) |&gt;</span></span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kwic</span>(<span class="at">pattern =</span> <span class="fu">phrase</span>(<span class="st">"jeunes? femmes?"</span>), </span>
+<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">window =</span> <span class="dv">3</span>, </span>
+<span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">valuetype =</span> <span class="st">"regex"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword-in-context with 6 matches.                                                                               
+ [102, 1295:1296]         bleues mais la | jeune femme | a les pieds           
+   [108, 683:684]            par ceci la | jeune femme | de l'histoire ne      
+   [108, 779:780] Ensuite la mystérieuse | jeune femme | accepte d'épouser cet 
+   [108, 852:853]            a invité la | jeune femme | ainsi que sa          
+   [108, 930:931]         cupidité de la | jeune femme | qui la pousse         
+ [108, 1009:1010]       petit cabinet La | jeune femme | est tellement curieuse</code></pre>
+</div>
+</div>
+<p>Ce concordancier est la dernière étape de notre exploration, mais plusieurs autres techniques sont à votre portée pour explorer et analyser vos données textuelles!</p>
+<p>Pour toute question ou commentaire: pascal.brissette@mcgill.ca</p>
+</section>
+</section>
+<section id="bibliographie" class="level2">
+<h2 class="anchored" data-anchor-id="bibliographie">Bibliographie</h2>
+<p>Baillargeon, Sophie. s.&nbsp;d.&nbsp;«&nbsp;R pour scientifique&nbsp;». Consulté le 31 août 2022. <a href="https://stt4230.rbind.io/" class="uri">https://stt4230.rbind.io/</a>.</p>
+<p>Baruffa, Oscar. s.&nbsp;d.&nbsp;<em>Big Book of R</em>. Consulté le 1 septembre 2022. <a href="https://www.bigbookofr.com/" class="uri">https://www.bigbookofr.com/</a>.</p>
+<p>Claveau, Vincent, Ewa Kijak, et Olivier Ferret. s.&nbsp;d.&nbsp;«&nbsp;Explorer le graphe de voisinage pour améliorer les thésaurus distributionnels&nbsp;».</p>
+<p>Digital Scholarship Hub - McGill University, réal. 2022. <em>Planning Your Text Analysis Project</em>. <a href="https://www.youtube.com/watch?v=6DNmoRHRQ-g" class="uri">https://www.youtube.com/watch?v=6DNmoRHRQ-g</a>.</p>
+<p>Goulet, Vincent. s.&nbsp;d.&nbsp;«&nbsp;Introduction à R&nbsp;». Consulté le 29 août 2022. <a href="https://vigou3.github.io/raquebec-atelier-introduction-r/" class="uri">https://vigou3.github.io/raquebec-atelier-introduction-r/</a>.</p>
+<p>Grimmer, Justin. 2022. <em>Text as Data: A New Framework for Machine Learning and the Social Sciences</em>. Princeton.</p>
+<p>Guay, Jean-Herman. s.&nbsp;d.&nbsp;«&nbsp;Statistiques en sciences humaines et sociales avec R&nbsp;». Consulté le 19 août 2022. <a href="https://dimension.usherbrooke.ca/" class="uri">https://dimension.usherbrooke.ca/</a>.</p>
+<p>Jockers, Matthew L. 2014. <em>Text Analysis with R for Students of Literature</em>. Quantitative Methods in the Humanities and Social Sciences. Springer International Publishing. <a href="https://doi.org/10.1007/978-3-319-03164-4" class="uri">https://doi.org/10.1007/978-3-319-03164-4</a>.</p>
+<p>Kboubi, Férihane, Anja Habacha Chabi, et Mohamed BenAhmed. s.&nbsp;d.&nbsp;«&nbsp;L'exploitation des relations d'association de termes pour l'enrichissement de l'indexation de documents textuels&nbsp;».</p>
+<p>Lebart, Ludovic, Bénédicte Pincemin, et Céline Poudat. 2019. <em>Analyse des données textuelles</em>. Mesure et évaluation 11. Québec: Presses de l'Université du Québec.</p>
+<p>Paradis, Emmanuel. 2002. «&nbsp;R pour les débutants&nbsp;». <a href="https://cran.r-project.org/doc/contrib/Paradis-rdebuts_fr.pdf" class="uri">https://cran.r-project.org/doc/contrib/Paradis-rdebuts_fr.pdf</a>.</p>
+<p>Series, QCBS R. Workshop. s.&nbsp;d.&nbsp;«&nbsp;Ateliers du Centre québécois des sciences de la biodiversité&nbsp;». Consulté le 20 août 2022. <a href="https://r.qcbs.ca/fr/" class="uri">https://r.qcbs.ca/fr/</a>.</p>
+<p>Silge, Julia, et David Robinson. s.&nbsp;d.&nbsp;<em>Text Mining with R</em>. Consulté le 6 mars 2020. <a href="https://www.tidytextmining.com/" class="uri">https://www.tidytextmining.com/</a>.</p>
 </section>
 
 </main>

@@ -2,7 +2,13 @@
 title: "Exploration de données textuelles avec R"
 author: "Pascal Brissette"
 date: 2023-02-23
-format: html
+format:
+  html:
+    toc: true
+    theme: yete
+    fontsize: 1.1em
+    linestretch: 1.7
+toc: true
 editor: visual
 ---
 
@@ -30,7 +36,6 @@ cat("Mon roman préféré est ", sample(romans, 1), ".", sep = "")
 Vous pouvez également ajouter des options. L'option `#| echo: false`, par exemple, permet d'imprimer le résultat d'une instruction dans le document généré avec **Render**, mais non le bloc de code. Cliquez sur **Render** et voyez le résultat.
 
 ```{r}
-#| echo: false
 
 romans <- c("Illusions perdues", "Le Dernier jour d'un condamné", "La Débâcle")
 
@@ -58,6 +63,7 @@ Pour exécuter tout un bloc de code, vous pouvez cliquer sur la flèche à l'ext
 L'environnement de travail, auquel nous donne accès l'onglent Environment de RStudio (coin supérieur droit), contient tous vos objets. Chaque fois que vous emmagasinez une donnée dans une variable, celle-ci est ajoutée à l'environnement. Cela prend peu de temps pour charger l'environnement (et la mémoire) de RStudio. Voici comment nettoyer partiellement ou entièrement cet environnement:
 
 ```{r}
+#| include: false
 
 # Création d'objets à éliminer
 a=1
@@ -155,6 +161,8 @@ class(xyz$`ISSN (numérique)`)
 On ne verra pas ici les différentes manières de traiter les valeurs nulles ou sans contenu, mais on peut au moins montrer comment les repérer. Dans R, une valeur nulle est indiquée par NA (*not available*). Cependant, vous quand vous travaillez avec des textes, vous pouvez avoir de nombreuses chaines de caractères tout simplement vides. On voit ci-dessous la manière de repérer ces deux types de valeurs.
 
 ```{r}
+#| include: false
+
 # La première fonction renvoie, pour chaque colonne du tableau, la somme des valeurs correspondant à NA.
 sapply(xyz, function(x) sum(is.na(x)))
 
@@ -309,12 +317,12 @@ xyz <- xyz[, c("doc_id", "auteur", "titre", "numero", "annee", "theme", "texte")
 
 Maintenant que le tableau ne présente plus de problèmes apparents, on peut commencer à explorer les données. On veut pour l'essentiel se familiariser avec le contenu du tableau, observer des distributions, voir si des variables sont corrélées. Il est bon de séparer dans un premier temps l'exploration des métadonnées de celle des données textuelles.
 
-Une première fonction très utile est `table()`. Celle-ci calcule le nombre de modalités ou valeurs d'un vecteur-colonne. On peut ensuite faire des statistiques sur cette distribution.
+Une première fonction très utile est `table()`. Celle-ci calcule le nombre de modalités ou valeurs d'une colonne. On peut ensuite faire des statistiques sur cette distribution.
 
 ```{r}
 # La fonction `table( )` permet d'observer le nombre de modalités d'une variable. 
 distrib_annuelle <- table(xyz$annee)
-distrib_annuelle
+# distrib_annuelle
 
 # Quelle est la moyenne de cette distribution?
 mean(distrib_annuelle)
@@ -322,14 +330,13 @@ mean(distrib_annuelle)
 ### Exercice: créez une table pour observer la distribution des thèmes ###
 # distrib_themes <- ...
 
-
 ```
 
 Pour ordonner cette table en fonction des valeurs, on peut utiliser la fonction `sort( )`, auquel on passe l'argument `decreasing = TRUE` pour que les valeurs se présentent de manière décroissante.
 
 ```{r}
 
-distrib_themes_ord <- sort(distrib_themes, decreasing = TRUE)
+# distrib_themes_ord <- sort(distrib_themes, decreasing = TRUE)
 
 
 ### Exercice: trouvez les noms des 10 principaux contributeurs de la revue ###
@@ -340,9 +347,9 @@ distrib_themes_ord <- sort(distrib_themes, decreasing = TRUE)
 
 Vous trouverez ci-dessous la réponse à la question posée ci-dessus. Vous verrez que différentes syntaxes peuvent produire le même résultat.
 
-distrib_auteurs
 
 ```{r}
+#| include: false
 
 # 1. Syntaxe étendue (petite perte de mémoire, mais plus explicite: le résultat de chaque opération est emmagasiné dans une variable)
 distrib_auteurs <- table(xyz$auteur)
@@ -370,7 +377,7 @@ Dans l'exemple ci-dessous, on utilise un jeu de données fourni par l'extension 
 
 ```{r}
 
-mtcars # Dans le jeu de données, les noms de lignes (rownames) correspondent aux marques.
+mtcars[1:3] # Dans le jeu de données, les noms de lignes (rownames) correspondent aux marques.
 
 # Dans ce graphique simple, on pose la variable dépendante en y et l'indépendante en x
 plot(mtcars$disp, mtcars$mpg)
@@ -382,6 +389,7 @@ Le test de corrélation est un test statistique qui mesure l'interdépendance ou
 ```{r}
 
 cor.test(mtcars$disp, mtcars$mpg, method = "kendall")
+
 ```
 
 #### Test de corrélation avec des données textuelles
@@ -477,7 +485,9 @@ Les métadonnées suivent par défaut chacune des transformations et permettront
 Pour plus d'information sur chacune des fonctions, consultez la documentation. Exemple:
 
 ```{r}
+
 ?quanteda::corpus()
+
 ```
 
 #### Premiière étape: création d'un objet corpus
@@ -489,6 +499,7 @@ Les arguments de la fonction `corpus()` permettent de préciser les colonnes du 
 xyz_corp <- quanteda::corpus(xyz, docid_field = "doc_id", text_field = "texte")   
 
 head(xyz_corp, 2)
+
 ```
 
 #### Deuxième étape: création d'un objet tokens avec le corpus
@@ -510,11 +521,17 @@ head(xyz_toks, 2)
 #### Troisième étape: création d'un objet dfm à partir de l'objet tokens
 
 ```{r}
-xyz_dfm <- dfm(xyz_toks) |>                # On transforme l'objet tokens en dfm
-  dfm_remove(lsa::stopwords_fr) |>         # On élimine toutes les colonnes correspondant à un mot fonctionnel (toujours inspecter l'antidictionnaire)
-  dfm_trim(min_docfreq = 0.15,             # Un mot doit être présent dans au moins 15% des documents (élimination des hapax)
-           max_docfreq = 0.7,              # Un mot ne doit pas être présent dans plus de 70% des documents du corpus
-           docfreq_type = "prop")           # Cet argument permet de préciser que les valeurs indiquées dans les arguments précédents sont des proportions
+
+# On transforme l'objet tokens en dfm
+xyz_dfm <- dfm(xyz_toks) |>
+   # Retrait des mots fonctionnels avec l'antidictionnaire lsa (inspecter le dictionnaire!)
+  dfm_remove(lsa::stopwords_fr) |>  
+  # Un mot doit être présent dans au moins 15% des documents (élimination des hapax)
+  dfm_trim(min_docfreq = 0.15,
+  # Un mot ne doit pas être présent dans plus de 70% des documents du corpus
+           max_docfreq = 0.7, 
+  # L'argument suivant précise que la valeur indiquée dans min_docfreq= est une proportion
+           docfreq_type = "prop")          
 
 head(xyz_dfm, 2)
 
@@ -524,8 +541,6 @@ head(xyz_dfm, 2)
 
 
 ```
-
-
 
 ### Exploration du vocabulaire de sous-ensembles de textes
 
@@ -599,29 +614,107 @@ textplot_wordcloud(xyz_dfm_th_YOLO)
 #### Exercice: choisissez deux autres numéros thématiques et comparez les vocabulaires. Vous pouvez utiliser la voie simple ou reprendre le bloc d'instructions enchainées ci-dessus.
 ```
 
+### Réseaux des cooccurrences
+
+L'exploration de textes fondée sur la fréquence (brute, pondérée ou normalisée) et la technique du "sac de mots" (*BOW*) ne dit rien du contexte immédiat dans lequel les mots sont plongés. Dans le nuage de mots généré à partir des textes de l'auteur David Dorais, on a vu que "jeune" et "femme" sont les mots dominants, suivis de près par "homme". De là à dire que les textes de Dorais s'intéresse à la "jeune femme", il y a un pas qu'on ne peut franchir avant d'avoir vérifié si les mots apparaissent bel et bien, de manière récurrente, dans le même contexte. L'une des manières de se rapprocher du texte et de vérifier quels couples de mots s'attirent, apparaissent souvent dans un même contexte, est de créer un **réseau de cooccurrence**.
+
+Selon Kboubi, Habacha, and BenAhmed (2010), "un réseau de cooccurrence est un réseau de termes où chaque noeud représente un terme et un arc entre deux nœuds représente la relation de cooccurrence entre les deux termes concernés. Ce réseau permet d'identifier les termes qui apparaissent souvent ensemble au sein d'une même fenêtre mais pas nécessairement juxtaposés."
+
+Le réseau de cooccurrence ne permet pas encore de savoir si "jeune" et "femme" se suivent dans cet ordre dans les textes de D. Dorais, mais il permettra, à mi-chemin entre le "sac de mots" et la plongée dans le texte par une lecture rapprochée, de vérifier les associations.
+
+L'extension Quanteda offre une fonction qui permet, à partir d'un objet tokens ou dfm, de construire une matrice de cooccurrence qui puisse être projetée sous forme de diagramme de réseau. C'est cette fonction, fcm(), que nous utiliserons ci-dessous. Nous allons devoir réduire considérablement les dimensions de cette matrice en utilisant un nombre réduit de cooccurrences -- les plus fréquentes --, sans quoi le diagramme sera impossible à déchiffrer. Mais vous pouvez modifier tous les paramètres et observer les effets sur le diagramme.
+
 ```{r}
 
-#### Analyse de cooccurrences ----
-# L'analyse des cooccurrences consiste à évaluer la présence de deux ou plusieurs mots dans une fenêtre (contexte) de mots donnée
-# Elle montre les mots qui sont les plus souvent associés, la force d'attraction qui les lie
-# La cooccurrence peut évaluer la présence/absence de deux termes dans un contexte donné, ou mesurer la fréquence.
-# La fonction fcm() (fcm pour feature-context matrix) prend en entrée un objet 'tokens' qu'on peut ou non filtrer selon la direction de l'exploration
-
-
-cooccurrence_matrice <- xyz_toks |>                                   # Envoi dans la chaîne d'opérations l'objet 'tokens' créé auparavant
-  tokens_remove(lsa::stopwords_fr) |>                                 # Retrait des mots fonctionnels avec l'antidictionnaire lsa
-  tokens_subset(annee == 2021) |>                                     # Utilisation des mots présents seulement dans les documents de l'année 2021
-  fcm(context = "window", window = 10, tri = FALSE)                   # On choisit ici une fenêtre contextuelle de 10 mots
+  # On fournit en entrée l'objet tokens créé auparavant
+xyz_fcm <- xyz_toks |>
+  # On ne retient que les tokens trouvés dans les textes d'un auteur
+  tokens_subset(subset = auteur == "David Dorais") |> 
+  # Retrait des mots fonctionnels avec l'antidictionnaire lsa
+  tokens_remove(lsa::stopwords_fr) |>
+  # On choisit ici une fenêtre contextuelle de 10 mots
+  fcm(context = "window", window = 10, tri = FALSE)
 
 
 # On repère ici couples de mots ayant un coefficient de cooccurrence égal ou supérieur à 30
-principaux_mots <- names(topfeatures(cooccurrence_matrice, 30))
+principaux_mots <- names(topfeatures(xyz_fcm, 30))
 
 
-# La matrice de cooccurrence est réduite à ses principaux mots, et projetée sous la forme d'un graphique
+# La matrice de cooccurrence est réduite à ses principaux mots, et projetée sous la forme d'un diagramme de réseau
 set.seed(100)
-textplot_network(fcm_select(cooccurrence_matrice, principaux_mots), min_freq = 0.8) # On augmente encore le seuil pour rendre le graphique plus facile à interpréter
+textplot_network(fcm_select(xyz_fcm, principaux_mots), min_freq = 0.7)
+# On augmente encore le seuil pour rendre le graphique plus facile à interpréter
 
 
 
 ```
+
+L'épaisseur du lien et la proximité entre les mots "jeune" et "femme" montrent que les mots s'appellent fortement. On peut retourner à la matrice pour voir exactement combien de fois les deux termes cooccurrent dans une fenêtre de 10 mots.
+
+```{r}
+
+# Conversion de l'objet fcm en simple matrice
+xyz_cooc_matrice <- convert(xyz_fcm, "matrix")
+
+# On peut observer la structure de cet objet. On voit que les noms de lignes et de colonnes correspondent aux mots des textes
+str(xyz_cooc_matrice)
+
+# On peut donc indexer la matrice avec les mots à observer. La valeur renvoyée correspondra au nombre de fois que ces mots cooccurrent dans la fenêtre de 10 mots.
+xyz_cooc_matrice["jeune", "femme"]
+```
+
+### Au plus près des textes: le concordancier
+
+On peut souhaiter se rapprocher davantage encore de la texture des mots et vérifier *de visu*, sans pour autant lire intégralement tous les textes, si "jeune" et "femme" se suivent dans cet ordre et, le cas échéant, quels mots viennent tout juste avant et après la cooccurrence. On utilisera alors un outil bien connu, le concordancier, que Quanteda met à notre portée avec la fonction `kwic()`. Cette fonction, dont le nom correspond à *keywords-in-context*, peut prendre en entrée un objet **corpus** ou encore un objet **tokens**. Un argument, `window=`, permet d'indiquer le nombre de mots que l'on souhaite obtenir de chaque côté du mot-pivot. Ce dernier est précisé à l'aide de l'argument `pattern=`, ce qui veut dire que vous pouvez utiliser une expression régulière (*regex*) pour attraper différentes formes d'un mot.
+
+```{r}
+
+xyz_corp |> 
+
+  corpus_subset(subset = auteur == "David Dorais") |> 
+  
+  tokens(remove_punct = TRUE,
+         remove_symbols = TRUE, 
+         remove_numbers = FALSE, 
+         remove_separators = TRUE) |>
+  
+  # tokens_remove(lsa::stopwords_fr) |>
+  
+  kwic(pattern = phrase("jeunes? femmes?"), 
+       window = 3, 
+       valuetype = "regex") |> head()
+
+
+```
+
+Ce concordancier est la dernière étape de notre exploration, mais plusieurs autres techniques sont à votre portée pour explorer et analyser vos données textuelles!
+
+Pour toute question ou commentaire: pascal.brissette\@mcgill.ca
+
+## Bibliographie
+
+Baillargeon, Sophie. s. d. « R pour scientifique ». Consulté le 31 août 2022. <https://stt4230.rbind.io/>.
+
+Baruffa, Oscar. s. d. *Big Book of R*. Consulté le 1 septembre 2022. <https://www.bigbookofr.com/>.
+
+Claveau, Vincent, Ewa Kijak, et Olivier Ferret. s. d. « Explorer le graphe de voisinage pour améliorer les thésaurus distributionnels ».
+
+Digital Scholarship Hub - McGill University, réal. 2022. *Planning Your Text Analysis Project*. <https://www.youtube.com/watch?v=6DNmoRHRQ-g>.
+
+Goulet, Vincent. s. d. « Introduction à R ». Consulté le 29 août 2022. <https://vigou3.github.io/raquebec-atelier-introduction-r/>.
+
+Grimmer, Justin. 2022. *Text as Data: A New Framework for Machine Learning and the Social Sciences*. Princeton.
+
+Guay, Jean-Herman. s. d. « Statistiques en sciences humaines et sociales avec R ». Consulté le 19 août 2022. <https://dimension.usherbrooke.ca/>.
+
+Jockers, Matthew L. 2014. *Text Analysis with R for Students of Literature*. Quantitative Methods in the Humanities and Social Sciences. Springer International Publishing. <https://doi.org/10.1007/978-3-319-03164-4>.
+
+Kboubi, Férihane, Anja Habacha Chabi, et Mohamed BenAhmed. s. d. « L\'exploitation des relations d\'association de termes pour l\'enrichissement de l\'indexation de documents textuels ».
+
+Lebart, Ludovic, Bénédicte Pincemin, et Céline Poudat. 2019. *Analyse des données textuelles*. Mesure et évaluation 11. Québec: Presses de l\'Université du Québec.
+
+Paradis, Emmanuel. 2002. « R pour les débutants ». <https://cran.r-project.org/doc/contrib/Paradis-rdebuts_fr.pdf>.
+
+Series, QCBS R. Workshop. s. d. « Ateliers du Centre québécois des sciences de la biodiversité ». Consulté le 20 août 2022. <https://r.qcbs.ca/fr/>.
+
+Silge, Julia, et David Robinson. s. d. *Text Mining with R*. Consulté le 6 mars 2020. <https://www.tidytextmining.com/>.
