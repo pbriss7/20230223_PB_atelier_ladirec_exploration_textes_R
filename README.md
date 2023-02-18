@@ -7,7 +7,8 @@ Le répertoire contient le matériel utilisé lors d'un atelier d'introduction �
 * un fichier Quarto, `xyz.qmd`, contenant le code commenté;
 * un ficher `xyz.html` généré par la fonction Render de Quarto;
 * un script R, `xyz.R`, avec le code et un minimum de commentaires;
-3. Dossier `donnees/`: un jeu de données textuelles, soit 321 textes de fictions publiés initialement dans la revue de création XYZ.
+3. Dossier `donnees/`: 
+* un jeu de données textuelles, soit 321 textes de fictions publiés initialement dans la revue de création XYZ.
 
 
 L’autorisation d’utiliser les données textuelles dans le cadre d’ateliers de fouille a été accordée par la direction de la revue XYZ. Les textes ont été moissonnés sur le site Érudit (https://www.erudit.org/fr/revues/xyz/) par l’équipe du LADIREC (Amélie Ducharme et Yu Chen Shi, sous la supervision de Julien Vallières-Gingras). La série n’est pas complète; elle comprend les années 2015 à 2018 et 2021-2022.
