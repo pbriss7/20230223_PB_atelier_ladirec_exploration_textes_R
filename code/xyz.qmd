@@ -96,6 +96,7 @@ if(!"quanteda" %in% rownames(installed.packages())) {install.packages("quanteda"
 if(!"quanteda.textplots" %in% rownames(installed.packages())) {install.packages("quanteda.textplots")}
 if(!"quanteda.textstats" %in% rownames(installed.packages())) {install.packages("quanteda.textstats")}
 if(!"lsa" %in% rownames(installed.packages())) {install.packages("lsa")}
+if(!"janitor" %in% rownames(installed.packages())) {install.packages("janitor")}
 
 # Activation des extensions
 library(readxl)               # Extension pour l'importation de fichiers Excel
@@ -106,6 +107,7 @@ library(quanteda)             # Extension pour le forage textuel
 library(quanteda.textplots)   # Extension pour le forage textuel
 library(quanteda.textstats)   # Extension pour l'analyse des collocations
 library(lsa)                  # Extension offrant un antidictionnaire élaboré
+library(janitor)              # Extension qui offre des fonctions pour le "nettoyage" de chaines de caractères
 
 ```
 
@@ -227,8 +229,16 @@ Problème 2. Créer un identifiant unique. On peut utiliser les numéros de lign
 
 ```{r}
 
-# On assigne à une nouvelle colonne appelée `doc_id` un vecteur numérique de 1 jusqu'au nombre de lignes que contient le tableau
-xyz$doc_id <- 1 : nrow(xyz)
+# Nous allons créer une petite fonction maison qui va générer des identifiants uniques composé d'une chaine de caractères commençant par le nom de l'auteur du texte, suivi du numéro de la ligne du document dans le tableau. Ces éléments seront concaténés. La fonction recourra ensuite à la fonction `make_clean_names()` de l'extension janitor pour assurer un résultat propre et uniforme.
+
+faire_unique_id_fonction <- function(vecteur1, vecteur2){
+  valeurs_concatenees <- paste(vecteur1, vecteur2, sep = "_")
+  valeurs_concatenees <- janitor::make_clean_names(valeurs_concatenees)
+  return(valeurs_concatenees)
+}
+
+# Nous passons à notre fonction les deux vecteurs qui forment le matériau de nos doc_id, et emmagasinons le résultat dans une nouvelle colonne du tableau appelée `doc_id`.
+xyz$doc_id <- faire_unique_id_fonction(vecteur1 = xyz$auteur, vecteur2 = 1:nrow(xyz))
 
 
 ```
@@ -321,11 +331,11 @@ xyz <- xyz[, c("doc_id", "auteur", "titre", "numero", "annee", "theme", "texte")
 
 Maintenant que le tableau ne présente plus de problèmes apparents, on peut commencer à explorer les données. On veut pour l'essentiel se familiariser avec le contenu du tableau, observer des distributions, voir si des variables sont corrélées. Il est bon de séparer dans un premier temps l'exploration des métadonnées de celle des données textuelles.
 
-Une première fonction très utile est `table()`. Celle-ci calcule le nombre de modalités ou valeurs d'une colonne. On peut ensuite faire des statistiques sur cette distribution.
+Une fonction de base très utile est `table()`. Celle-ci calcule le nombre de valeurs uniques d'une variable. On peut ensuite faire des statistiques sur cette distribution.
 
 ```{r}
 
-# La fonction `table( )` permet d'observer le nombre de modalités d'une variable. 
+# La fonction `table( )` permet d'observer le nombre de modalités uniques d'une variable. 
 distrib_annuelle <- table(xyz$annee)
 
 # Observons le résultat en appelant les 10 premiers éléments de L'objet `table`
@@ -357,15 +367,14 @@ sort(distrib_annuelle, decreasing = TRUE)
 Vous trouverez ci-dessous la réponse à la question posée ci-dessus (10 principaux contributeurs). Vous verrez que différentes syntaxes peuvent produire le même résultat.
 
 ```{r}
-#| include: false
 
-# 1. Syntaxe étendue (petite perte de mémoire, mais plus explicite: le résultat de chaque opération est emmagasiné dans une variable)
+# 1. Syntaxe étendue -- plus explicite: le résultat de chaque opération est emmagasiné dans une variable -- plus d'objets sont cependant générés et stockés en mémoire
 distrib_auteurs <- table(xyz$auteur)
 distrib_auteurs_ord <- sort(distrib_auteurs, decreasing = TRUE)
 head(distrib_auteurs_ord, n = 10)
 
 
-# 2. Syntaxe condensée, par enchâssement des fonctions. Lire de l'intérieur vers l'extérieur
+# 2. Syntaxe condensée: enchâssement des fonctions -- lire de l'intérieur vers l'extérieur
 head(sort(table(xyz$auteur), decreasing = TRUE), 10)
 
 
@@ -377,22 +386,22 @@ xyz$auteur |> table() |> sort(decreasing = TRUE) |> head(10)
 
 ### Tests de corrélation
 
-Au cours de l'exploration des données, on peut tenter de comprendre s'il existe des corrélations entre des variables. Les corrélations se calculent sur des variables numériques.
+Au cours de l'exploration des données, on peut tenter de comprendre s'il existe des corrélations entre des variables.
 
 #### Test de corrélation avec des données numériques
 
-Dans l'exemple ci-dessous, on utilise un jeu de données fourni par l'extension de base de R, `mtcars`. Celui-ci présente différentes marques et modèles de voitures et leurs attributs techniques, telle la distance parcourue par différents types de voitures selon le volume de leurs moteurs. On voudrait savoir s'il y a une corrélation, positive ou négative, entre le volume du moteur (disp) et la distance/gallon que peut parcourir une voiture.
+Dans l'exemple ci-dessous, on utilise un jeu de données issu de l'extension de base de R, `mtcars`. Celui-ci présente différentes marques et modèles de voitures et leurs attributs techniques, telle la distance parcourue par différents types de voitures selon le volume de leurs moteurs. Pour la démonstration, on voudrait savoir s'il y a une corrélation entre le volume du moteur (disp) et la distance au "gallon" que peut parcourir une voiture.
 
 ```{r}
 
-mtcars[1:3] # Dans le jeu de données, les noms de lignes (rownames) correspondent aux marques.
+mtcars[1:3, 1:3] # Dans le jeu de données, les noms de lignes (rownames) correspondent aux marques
 
 # Dans ce graphique simple, on pose la variable dépendante en y et l'indépendante en x
 plot(mtcars$disp, mtcars$mpg)
 
 ```
 
-Le test de corrélation est un test statistique qui mesure l'interdépendance ou l'association entre des paires de valeurs (deux variables). Plusieurs mesures permettent de vérifier la corrélation entre variables. Nous allons utiliser le coefficient appelé **tau de Kendall** (compris entre -1 et +1). Selon cette mesure, une corrélation positive est marquée par un tau positif, et inversement pour une corrélation négative. Plus le nombre s'éloigne de 0, plus la corrélation est forte. Vous pourrez lire l'article de Kendall [en ligne](https://academic.oup.com/biomet/article/30/1-2/81/176907). Avec les deux variables du jeu de données `mtcars`, le test montre que la variable dépendante est fortement corrélée à l'indépendante, et négative.
+Le test de corrélation est un test statistique qui mesure l'interdépendance ou l'association entre des paires de valeurs. Plusieurs mesures permettent de vérifier la corrélation entre variables. Nous allons utiliser le coefficient appelé **tau de Kendall** (compris entre -1 et +1). Selon cette mesure, une corrélation positive est marquée par un tau positif, et inversement pour une corrélation négative. Plus le nombre s'éloigne de 0, plus la corrélation est forte. Vous pourrez lire l'article de Kendall [en ligne](https://academic.oup.com/biomet/article/30/1-2/81/176907). Avec les deux variables du jeu de données `mtcars`, le test montre que la variable dépendante est fortement corrélée à l'indépendante, et négative.
 
 ```{r}
 
@@ -402,13 +411,18 @@ cor.test(mtcars$disp, mtcars$mpg, method = "kendall")
 
 #### Test de corrélation avec des données textuelles
 
-Pour faire un test de corrélation avec des données textuelles, il faut créer des variables numériques qui seront mises en relation. Les chaines de caractères ne peuvent pas, telles quelles, être corrélées. Il faut choisir une mesure liée à la question de recherche. On prendra ici un exemple très simple et assez futile, simplement pour montrer le processus.
+Pour faire un test de corrélation avec des données textuelles, il faut créer des variables numériques qui seront mises en relation. Les chaines de caractères ne peuvent pas, telles quelles, être fournies en entrée aux tests de corrélation. Il faut choisir une mesure liée à la question de recherche. On prendra ici un exemple très simple et assez futile, simplement pour montrer le processus.
 
-Nous allons vérifier s'il y a une corrélation, positive ou négative, entre la longueur des titres et la longueur des textes. Comme mesure, nous pouvons utiliser le nombre de mots ou de caractères que comportent les titres et les textes. Nous allons utiliser le nombrte de caractères des titres et textes par souci de simplicité. La somme de caractères pour chaque titre et chaque texte sera faite avec la fonction de base `nchar()`.
+Nous allons vérifier s'il y a une corrélation, positive ou négative, entre la longueur des titres et la longueur des textes. Comme unité de mesure, nous pouvons utiliser le nombre de mots, ou encore de caractères, des variables `titres` et `texte`. La simplicité de la démarche pour obtenir le nombre total de caractères de chaque titre et de chaque texte nous convainc d'opter pour cette option. On utilisera pour ce faire la fonction `nchar()`, qui prend une chaine de caractères en entrée.
 
 ```{r}
 
+# Dans R, la plupart des fonctions de base sont vectorisées, c'est-à-dire que si on lui donne en entrée un vecteur, la fonction effectuera l'opération demandée sur chacun de ses éléments. D'où la grande simplicité des instructions suivantes:
+
+# Nombre total de caractères pour chaque titre
 xyz$ncharTitre <- nchar(xyz$titre)
+
+# Nombre total de caractères pour chaque texte
 xyz$ncharTexte <- nchar(xyz$texte)
 
 
@@ -427,13 +441,14 @@ cor.test(xyz$ncharTitre, xyz$ncharTexte, method = "kendall")
 
 ```
 
-La mesure de corrélation, \`tau\`, est positive, mais très proche de zéro, ce qui dénote une corrélation très faible. On peut projeter ces données dans un diagramme à points
+La mesure de corrélation, le `tau de Kendall`, est positive, mais très proche de zéro, ce qui dénote une corrélation très faible. On peut projeter ces données dans un diagramme à points
 
 ```{r}
 
 ggplot(xyz, aes(x=ncharTitre, y=ncharTexte))+
   geom_jitter()+
   geom_smooth()
+
 ```
 
 ## Enrichissement des données
@@ -468,13 +483,17 @@ ggplot(xyz, aes(x = longueur_texte_cat))+
 
 ## Exploration 2: les données textuelles
 
-Pour explorer les données textuelles à proprement parler, soit les textes de fiction contenus dans le tableau sous la variable `texte`, nous devons transformer l'objet de fond en comble. Comme on l'a vu ci-dessus avec les tests de corrélation, il est plus facile de demander à l'ordinateur de traiter des chiffres que des mots. Le texte sera donc transformé en une grande matrice d'occurrences de type documents-mots, où chaque ligne correspondra à un texte et chaque colonne, à l'un des mots du vocabulaire du corpus.
+Pour explorer les données textuelles à proprement parler, soit les textes de fiction contenus dans le tableau sous la variable `texte`, nous devons transformer l'objet de fond en comble. Comme on l'a vu ci-dessus avec les tests de corrélation, il est plus facile de demander à l'ordinateur de traiter des chiffres que des mots. Le corpus, composé des données textuelles et des métadonnées, sera donc transformé en une grande matrice d'occurrences de type documents-mots, où chaque ligne correspondra à un document et chaque colonne, à l'un des mots du vocabulaire des données textuelles.
 
-Une matrice est un objet qui ressemble beaucoup à un tableau de données, à ceci près que les valeurs dans les cellules sont toutes du même type. Dans notre grande matrice documents-mots, les valeurs seront numériques et correspondront au nombre de fois que tel mot en colonne apparaît dans tel texte en ligne. La représentation des textes qui en résulte est souvent appelée *Bag-Of-Words*, un sac de mots, car chaque texte est conçu comme un ensemble particulier de mots dont l'ordre d'apparition n'est pas pris en compte. Cette représentation repose sur l'idée qu'un texte qui contient un grand nombre de fois les mots "enfant", "parent" et "lien", par exemple, parlera vraisemblablement de la relation parent-enfant.
+Figure 1: matrice documents-mots (dtm)
 
-Pour faire face aux limites de ce modèle un peu grossier, mais aisé à concevoir, les spécialistes ont mis au point plusieurs techniques, telle l'application d'antidictionnaires aux matrices pour éliminer les mots fonctionnels ou sans intérêt dans un contexte de recherche spécifique. On peut également filtrer les matrices selon des seuils d'occurrences inférieurs ou supérieurs, on peut les pondérer pour augmenter le poids de mots (par exemple ceux qui sont particulièrement représentatifs d'un texte par rapport à tous les autres textes du corpus) et les normaliser (pour mieux comparer des textes de longueurs différentes). On peut également forger des n-grammes fondés sur des expressions d'intérêt pour la recherche ou sur des mesures de collocation. Nous ne ferons pas toutes ces opérations ici, mais il est important que vous sachiez que les limites inhérentes au *BOW* ont fait l'objet de nombreuses recherches et suscité des stratégies pour en neutraliser les effets.
+![](images/Capture%20d%E2%80%99e%CC%81cran,%20le%202023-02-19%20a%CC%80%2015.17.58-01.png)
 
-Également, il est bon de savoir que d'autres représentations du texte ont fait leur apparition depuis le début du siècle (word2vec, BERT, etc.), dont on ne parlera pas ici. Le fameux modèle de langue GPT-3, derrière ChatGPT, est le dernier en date et repose sur un entrainement sur plusieurs milliards de mots.
+Comme vous le voyez, une **matrice** est un objet qui ressemble beaucoup à un tableau de données, à ceci près que les valeurs dans les cellules sont toutes du même type. Dans notre grande matrice documents-mots, les valeurs seront numériques et correspondront au nombre de fois que tel mot en colonne apparaît dans tel texte en ligne. La représentation des textes qui en résulte est souvent appelée *Bag-Of-Words*, un sac de mots, car chaque texte est conçu comme un ensemble particulier de mots dont l'ordre d'apparition n'est pas pris en compte. Cette représentation repose sur l'idée qu'un texte qui contient un grand nombre de fois les mots "enfant", "parent" et "lien", par exemple, parlera vraisemblablement de la relation parent-enfant.
+
+Pour faire face aux limites de ce modèle un peu grossier, mais aisé à concevoir, les spécialistes ont mis au point plusieurs techniques, telle l'application d'antidictionnaires aux matrices pour éliminer les mots fonctionnels ou sans intérêt dans un contexte de recherche spécifique. On peut également filtrer les matrices selon des seuils d'occurrences inférieurs ou supérieurs, on peut les pondérer pour augmenter le poids de mots (par exemple ceux qui sont particulièrement représentatifs d'un texte par rapport à tous les autres textes du corpus) et les normaliser (pour mieux comparer des textes de longueurs différentes). On peut également forger des n-grammes fondés sur des expressions d'intérêt pour la recherche ou sur des mesures de collocation. Nous ne ferons pas toutes ces opérations ici, mais il est important que vous sachiez que les limites inhérentes au *BOW* ont fait l'objet de nombreuses recherches et suscité des stratégies pour en neutraliser les inconvénients.
+
+Également, il est bon de savoir que d'autres représentations du texte ont fait leur apparition depuis le début du siècle (word2vec, BERT, etc.), dont on ne parlera pas ici. Le fameux modèle de langue GPT-3, derrière ChatGPT, est le dernier en date de ces modèles.
 
 Dans la suite de l'atelier, nous allons donc transformer le corpus textuel en une grande matrice d'occurrences de type documents-mots.
 
@@ -486,13 +505,13 @@ On gagnera à consulter la page du *Comprehensive R Archive Network (CRAN)* cons
 
 Le processus de transformation de l'objet tableau de données en grande matrice se fait, dans Quanteda, en trois grandes étapes.
 
-1.  La première étape est la création d'un corpus avec la fonction corpus(). On y précise la colonne des identifiants uniques et la colonne contenant le texte à analyser;
+1.  La première étape est la création d'un corpus avec la fonction `corpus()`. On y précise la colonne des identifiants uniques et la colonne contenant le texte à analyser;
 
 2.  La deuxième étape est la tokénisation des textes du corpus. On peut à cette étape se servir d'un antidictionnaire pour éliminer les mots fonctionnels;
 
-3.  La troisième étape est le passage entre cet objet "tokens" à la dfm (document-feature matrix).
+3.  La troisième étape est le passage entre cet objet "tokens" à la dfm (*document-feature matrix*).
 
-Les métadonnées suivent par défaut chacune des transformations et permettront, une fois la dfm construite, de filtrer les documents en ligne avec les métadonnées.
+Les métadonnées sont emmagasinées dans chacun de ces objets. On verra comment les utiliser pour explorer des sous-ensembles de documents (par exemple tous les textes d'un même auteur).
 
 Pour plus d'information sur chacune des fonctions, consultez la documentation. Exemple:
 
@@ -516,7 +535,7 @@ head(xyz_corp, 2)
 
 #### Deuxième étape: création d'un objet tokens avec le corpus
 
-La transformation du corpus en tokens correspond à la séparation des mots ou n-grammes de chaque texte. C'est ce qu'on appelle la tokénisation. Plusieurs opérations peuvent être faites à la volée.
+La transformation de l'objet **corpus** en objet **tokens** correspond à la séparation des mots ou n-grammes de chaque texte. C'est ce qu'on appelle la tokénisation. Plusieurs opérations peuvent être faites à la volée.
 
 ```{r}
 xyz_toks <- tokens(xyz_corp, 
@@ -550,13 +569,13 @@ head(xyz_dfm, 2)
 ### Exercice: modifiez les seuils et voyez l'effet sur les dimensions de l'objet!
 # Pour voir les dimensions de l'objet, vous n'avez qu'à l'appeler ainsi:
 
-
+xyz_dfm
 
 ```
 
 ### Exploration du vocabulaire de sous-ensembles de textes
 
-L'extension Quanteda rend aisée l'exploration du vocabulaire de sous-ensembles de textes. Ces sous-ensembles sont générés grâce aux métadonnées que les objets corpus-tokens-dfm portent avec eux. La fonction `dfm_subset()` a un argument `subset=` qui permet d'insérer une expression formelle agissant comme filtre.
+L'extension Quanteda rend aisée l'exploration du vocabulaire de sous-ensembles de textes. Ces sous-ensembles sont générés grâce aux métadonnées que les objets **corpus**, **tokens** et dfmportent avec eux. La fonction `dfm_subset()` a un argument `subset=` qui permet d'insérer une expression formelle agissant comme filtre.
 
 Dans le premier exemple, nous allons explorer les vocabulaires (filtrés) des textes parus en 2015 et en 2021. Le résultat sera transposé en un nuage de mots où ceux qui sont les plus fréquents seront magnifiés et positionnés au centre du nuage.
 
@@ -575,7 +594,7 @@ textplot_wordcloud(xyz_dfm_dorais, max_words = 200)
 
 ```
 
-Si on veut mieux comparer les deux sous-groupes, on peut utiliser le code suivant, un peu plus sophistiqué.
+Si on veut mieux comparer deux sous-groupes dans un même graphique, on peut utiliser le code suivant, un peu plus sophistiqué.
 
 ```{r}
 
@@ -680,6 +699,7 @@ xyz_cooc_matrice["jeune", "femme"]
 On peut souhaiter se rapprocher davantage encore de la texture des mots et vérifier *de visu*, sans pour autant lire intégralement tous les textes, si "jeune" et "femme" se suivent dans cet ordre et, le cas échéant, quels mots viennent tout juste avant et après la cooccurrence. On utilisera alors un outil bien connu, le concordancier, que Quanteda met à notre portée avec la fonction `kwic()`. Cette fonction, dont le nom correspond à *keywords-in-context*, peut prendre en entrée un objet **corpus** ou encore un objet **tokens**. Un argument, `window=`, permet d'indiquer le nombre de mots que l'on souhaite obtenir de chaque côté du mot pivot. Ce dernier est précisé à l'aide de l'argument `pattern=`, ce qui veut dire que vous pouvez utiliser une expression régulière (*regex*) pour attraper différentes formes d'un mot.
 
 ```{r}
+#| include: false
 
 xyz_corp |> 
 
@@ -693,13 +713,15 @@ xyz_corp |>
   # tokens_remove(lsa::stopwords_fr) |>
   
   kwic(pattern = phrase("jeunes? femmes?"), 
-       window = 3, 
-       valuetype = "regex") |> head()
+       window = 5, 
+       valuetype = "regex") |> head(10)
 
 
 ```
 
-Ce concordancier est la dernière étape de notre exploration, mais plusieurs autres techniques sont à votre portée pour explorer et analyser vos données textuelles!
+Ce concordancier est la dernière étape de notre exploration, mais plusieurs autres techniques sont à votre portée pour explorer et analyser vos données textuelles. La bibliographie ci-dessous pointe vers quelques-unes des ressources par où commencer votre périple en ADT. Sur le langage R, voyez notamment la [documentation](https://stt4230.rbind.io/) du cours en ligne de la statisticienne Sophie Baillargeon. Pour une application de R à l'analyse de textes littéraires, on pourra consulter la version gratuite du livre de Matthew L. Jockers, [*Text Analysis with R for Students of Literature*](https://doi.org/10.1007/978-3-319-03164-4). Les politologues apprécieront les ressources mises à leur disposition par Jean-Herman Gay (U. de Sherbrooke) sur son site [dimension.usherbrooke.ca](https://dimension.usherbrooke.ca/).
+
+Suivez également la [programmation du LADIREC et ses ateliers](https://www.mcgill.ca/innovation/fr/channels/event/ateliers-du-ladirec-2023-initiation-lanalyse-de-textes-assistee-par-ordinateur-345112). Le prochain aura lieu le 9 mars 2023 et portera sur la visualisation des résultats d'analyse avec l'extension ggplot2 de R.
 
 Pour toute question ou commentaire: pascal.brissette\@mcgill.ca
 
