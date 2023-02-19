@@ -19,9 +19,9 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 ## Avant-propos
 
-Les lignes d'instruction (ou lignes de code) contenues dans le présent document, **xyz.qmd**, et dans le script **xyz.R** du même dossier sont à peu identiques. La différence entre les deux fichiers, c'est que l'un permet de tirer profit du langage HTML et de présenter un texte suivi avec des titres, des sous-titres, des italiques, des caractères gras, des listes, etc. Dans un script .R, au contraire, les possibilités sont limitées, le script étant d'abord fait pour rassembler des lignes d'instructions qui seront exécutées. Les commentaires généralement courts qu'on trouve dans un script sont précédés d'un ou de plusieurs croisillons #. Cela est plus rebutant à la lecture, mais il est bon de se familiariser avec ces deux formats. Un script .R est plus léger et c'est généralement le format qu'on utilise pour travailler. On recourt au document Quarto (.qmd) pour des présentations devant public. Un aspect très intéressant d'un tel document .qmd est qu'on peut générer, à partir de son contenu, un document .pdf, .word ou .html.
+Vous trouverez dans le répertoire de travail, à l'intérieur du dossier `code/`, deux fichiers contenant le code de l'atelier, l'un portant l'extension .qmd, l'autre `.R`. Le premier, que vous avez ouvert et dont vous lisez actuellement le contenu, se présente comme une page HTML avec du texte suivi et des blocs de code. Si vous ouvrez l'autre fichier, vous verrez que le code est identique, mais que l'apparence est plus brute. En général, on utilise des documents Quarto, avec l'extension .qmd, lorsqu'on veut faire des présentations et qu'on souhaite ajouter au code des paragraphes de commentaires. Un script `.R` de base est davantage fait pour exécuter du code. On peut certes y insérer des commentaires, mais on ne dispose d'aucun des outils d'édition auxquels on est habitués. Il est tout de même bon de se familiariser avec ces deux formats.
 
-### Exécuter le code d'un document Quarto
+### Exécuter le code dans un document Quarto
 
 Lorsque vous cliquez sur le bouton **Render** dans le menu supérieur, un document sera généré comprenant aussi bien le contenu que le résultat des blocs de code. Vous pouvez insérer du code comme ceci:
 
