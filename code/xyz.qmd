@@ -117,15 +117,17 @@ Le résultat de cette lecture est emmagasiné dans la variable `xyz`.
 
 ```{r}
 
-# Lecture des données et assignation à une variable 
-xyz <- readxl::read_excel("donnees/XYZ-2015-2022-table-20230205JV.xlsx", sheet = 1)
+# Lecture des données et assignation à une variable
+# Les deux points suivis de / indiquent à R qu'il doit remonter d'un niveau pour trouver un dossier appelé `donnees`
+
+xyz <- readxl::read_excel("../donnees/XYZ-2015-2022-table-20230205JV.xlsx", sheet = 1)
 
 
 ```
 
 ## Examen de l'objet
 
-La différence entre un logiciel comme Excel et un environnement de développement comme RStudio, c'est qu'on ne voit pas d'emblée le contenu des objets qu'on importe ou qu'on crée. Il faut soit les appeler directement (on exécute le nom d'un objet), soit cliquer sur l'icône de la grille qui se trouve à droite du nom de l'objet dans la partie Environment, soit encore utiliser différentes fonctions qui renverront les informations utiles sur l'objet. Voici les principales:
+La différence entre un logiciel comme Excel et un environnement de développement comme RStudio, c'est qu'on ne voit pas d'emblée le contenu des objets qu'on importe ou qu'on crée. Il faut soit les appeler directement (on exécute le nom d'un objet), soit cliquer sur l'icône de la grille qui se trouve à droite du nom de l'objet dans la partie Environment (cela fera apparaître une fenêtre similaire à une feuille Excel), soit encore utiliser différentes fonctions qui renverront les informations utiles sur l'objet. Voici les principales:
 
 ```{r}
 #| include: false
@@ -190,7 +192,7 @@ colnames(xyz)
 
 ## Prétraitement des données
 
-On appelle prétraitement les opérations qui doivent être faites aux données métadonnées pour faciliter ou rendre possible leur manipulation. Le prétraitement peut impliquer une réduction des dimensions du jeu de données pour réduire le bruit ou simplement rendre moins lourd les processus ultérieurs. D'autres problèmes requièrent des opérations plus chronophages: corrections de chaînes de caractères, traitement des valeurs nulles, etc. Des logiciels gratuits tel OpenRefine sont de très puissants alliés à cette étape, même si tout peut être fait avec R.
+On appelle prétraitement les opérations qui doivent être faites aux données pour faciliter ou rendre possible leur manipulation. Le prétraitement peut impliquer une réduction des dimensions du jeu de données pour réduire le bruit ou simplement rendre moins lourd les processus ultérieurs. D'autres problèmes requièrent des opérations plus chronophages: corrections de chaînes de caractères, traitement des valeurs nulles, etc. Des logiciels gratuits tel OpenRefine sont de très puissants alliés à cette étape, même si tout peut être fait avec R.
 
 ### Principaux problèmes du jeu de données
 
@@ -204,7 +206,7 @@ On appelle prétraitement les opérations qui doivent être faites aux données 
 
 -   Problème 5: on voudrait que les valeurs numériques soient considérées comme des nombres, non comme des chaines de caractères;
 
--   Problème 6: dans la colonne \`texte\`, les sauts de paragraphes du texte original sont indiqués par "\\n".
+-   Problème 6: dans la colonne \`texte\`, les sauts de paragraphes du texte original sont indiqués par "\\n". Ce symbole ne sera pas utile ici et crée du bruit.
 
 Traitons ces problèmes un par un.
 
@@ -212,7 +214,7 @@ Problème 1. Renommer les colonnes
 
 ```{r}
 
-
+# On assigne aux noms de colonnes un vecteur comprenant, pour chaque colonne, le nom choisi, dans le bon ordre.
 colnames(xyz) <- c("periodique", "titre", "auteur",
                    "numero", "date", "theme", "uri",
                    "editeur", "issn_imp", "issn_num",
@@ -225,8 +227,8 @@ Problème 2. Créer un identifiant unique. On peut utiliser les numéros de lign
 
 ```{r}
 
-
-xyz$doc_id <- 1:nrow(xyz)
+# On assigne à une nouvelle colonne appelée `doc_id` un vecteur numérique de 1 jusqu'au nombre de lignes que contient le tableau
+xyz$doc_id <- 1 : nrow(xyz)
 
 
 ```
@@ -249,7 +251,7 @@ unique(xyz[, "theme"])        # ou table(xyz$theme)
 ```{r}
 # Solution au problème no 3
 
-# Créons un vecteur avec les colonnes inutiles (on utilise pour cela la fonction de concaténation c( ) )
+# On crée un vecteur avec les colonnes inutiles
 colonnes_a_supprimer <- c("periodique", "editeur", "issn_imp", "issn_num", "mention_legale", "uri", "citation")
 
 
@@ -296,7 +298,10 @@ Problème 6. Remplacer un symbole dans une longue chaine de caractères (un text
 
 
 # Remplaçons par une espace simple le symbole `\n`
-xyz$texte <- gsub(pattern = "\n", replacement = " ", x = xyz$texte, fixed = TRUE)
+xyz$texte <- gsub(pattern = "\n",
+                  replacement = " ",
+                  x = xyz$texte,
+                  fixed = TRUE) # On indique ici à R de ne pas lire le "pattern" comme une                                       expression régulière, mais littéralement
 
 
 ### Exercice: vérifiez un texte pris au hasard pour voir s'il reste des scories
@@ -319,9 +324,12 @@ Maintenant que le tableau ne présente plus de problèmes apparents, on peut com
 Une première fonction très utile est `table()`. Celle-ci calcule le nombre de modalités ou valeurs d'une colonne. On peut ensuite faire des statistiques sur cette distribution.
 
 ```{r}
+
 # La fonction `table( )` permet d'observer le nombre de modalités d'une variable. 
 distrib_annuelle <- table(xyz$annee)
-# distrib_annuelle
+
+# Observons le résultat en appelant les 10 premiers éléments de L'objet `table`
+distrib_annuelle[1:10]
 
 # Quelle est la moyenne de cette distribution?
 mean(distrib_annuelle)
@@ -335,6 +343,8 @@ Pour ordonner cette table en fonction des valeurs, on peut utiliser la fonction 
 
 ```{r}
 
+sort(distrib_annuelle, decreasing = TRUE)
+
 # distrib_themes_ord <- sort(distrib_themes, decreasing = TRUE)
 
 
@@ -344,7 +354,7 @@ Pour ordonner cette table en fonction des valeurs, on peut utiliser la fonction 
 
 ```
 
-Vous trouverez ci-dessous la réponse à la question posée ci-dessus. Vous verrez que différentes syntaxes peuvent produire le même résultat.
+Vous trouverez ci-dessous la réponse à la question posée ci-dessus (10 principaux contributeurs). Vous verrez que différentes syntaxes peuvent produire le même résultat.
 
 ```{r}
 #| include: false
@@ -371,7 +381,7 @@ Au cours de l'exploration des données, on peut tenter de comprendre s'il existe
 
 #### Test de corrélation avec des données numériques
 
-Dans l'exemple ci-dessous, on utilise un jeu de données fourni par l'extension de base de R, `mtcars`. Celui-ci présente différentes marques et modèles de voitures et leurs attributs techniques, telle la distance parcourue par différentes marques selon le volume de leurs moteurs. On voudrait savoir s'il y a une corrélation, positive ou négative, entre le volume du moteur (disp) et la distance/gallon que peut parcourir une voiture.
+Dans l'exemple ci-dessous, on utilise un jeu de données fourni par l'extension de base de R, `mtcars`. Celui-ci présente différentes marques et modèles de voitures et leurs attributs techniques, telle la distance parcourue par différents types de voitures selon le volume de leurs moteurs. On voudrait savoir s'il y a une corrélation, positive ou négative, entre le volume du moteur (disp) et la distance/gallon que peut parcourir une voiture.
 
 ```{r}
 
@@ -382,7 +392,7 @@ plot(mtcars$disp, mtcars$mpg)
 
 ```
 
-Le test de corrélation est un test statistique qui mesure l'interdépendance ou l'association entre des paires de valeurs (deux variables). Plusieurs mesures permettent de vérifier la corrélation entre variables. Nous allons utiliser le coefficient appelé tau de Kendall (compris entre -1 et +1). Selon cette mesure, une corrélation positive est marquée par un tau positif, et inversement pour une corrélation négative. Plus le nombre s'éloigne de 0, plus la corrélation est forte. Vous pourrez lire l'article de Kendall [en ligne](https://academic.oup.com/biomet/article/30/1-2/81/176907). Avec les deux variables du jeu de données `mtcars`, le test montre que la variable dépendante est fortement corrélée à l'indépendante, et négative.
+Le test de corrélation est un test statistique qui mesure l'interdépendance ou l'association entre des paires de valeurs (deux variables). Plusieurs mesures permettent de vérifier la corrélation entre variables. Nous allons utiliser le coefficient appelé **tau de Kendall** (compris entre -1 et +1). Selon cette mesure, une corrélation positive est marquée par un tau positif, et inversement pour une corrélation négative. Plus le nombre s'éloigne de 0, plus la corrélation est forte. Vous pourrez lire l'article de Kendall [en ligne](https://academic.oup.com/biomet/article/30/1-2/81/176907). Avec les deux variables du jeu de données `mtcars`, le test montre que la variable dépendante est fortement corrélée à l'indépendante, et négative.
 
 ```{r}
 
@@ -392,9 +402,9 @@ cor.test(mtcars$disp, mtcars$mpg, method = "kendall")
 
 #### Test de corrélation avec des données textuelles
 
-Pour faire un test de corrélation avec des données textuelles, il faut créer des variables numériques qui seront mises en relation. Les chaines de caractères ne peuvent pas, telles quelles, être corrélées. Il faut choisir une mesure liée à la question de recherche. On prendra ici un exemple très simple et assez futile, simplement pour indiquer le processus.
+Pour faire un test de corrélation avec des données textuelles, il faut créer des variables numériques qui seront mises en relation. Les chaines de caractères ne peuvent pas, telles quelles, être corrélées. Il faut choisir une mesure liée à la question de recherche. On prendra ici un exemple très simple et assez futile, simplement pour montrer le processus.
 
-Nous allons vérifier s'il y a une corrélation, positive ou négative, entre la longueur des titres et la longueur des textes. Comme mesure, nous pouvons utiliser le nombre de mots que comportent les titres et les textes, ou encore le nombre de caractères de chaque variable. Nous allons retenir cette dernière option par souci de simplicité. Les sommes de caractères pour chaque titre et chaque texte seront faites avec la fonction de base `nchar()`.
+Nous allons vérifier s'il y a une corrélation, positive ou négative, entre la longueur des titres et la longueur des textes. Comme mesure, nous pouvons utiliser le nombre de mots ou de caractères que comportent les titres et les textes. Nous allons utiliser le nombrte de caractères des titres et textes par souci de simplicité. La somme de caractères pour chaque titre et chaque texte sera faite avec la fonction de base `nchar()`.
 
 ```{r}
 
@@ -435,10 +445,12 @@ On peut tirer profit des données numériques ajoutées (longueur des titres et 
 # On peut tout d'abord observer le sommaire statistique et s'en inspirer
 summary(xyz$ncharTexte)    
 
-xyz$longueur_texte_cat <- factor(                                # Création de valeurs catégorielles fondées sur les modalités d'une autre colonne
+# Création de valeurs catégorielles fondées sur les modalités d'une autre colonne
+# La fonction `factor()` possède un argument, `levels=` qui permet de déterminer l'ordre des catégories
+xyz$longueur_texte_cat <- factor(                                
   ifelse(xyz$ncharTexte < 5000, "court",
          ifelse(xyz$ncharTexte >10000, "long", "moyen")),
-  levels = c("court", "moyen", "long")                           # La fonction `factor()` possède un argument, `levels=` qui permet de déterminer l'ordre des catégories
+  levels = c("court", "moyen", "long")                        
 )
 
 # Exercice: observez la distribution de cette variable avec la fonction table().
@@ -456,7 +468,9 @@ ggplot(xyz, aes(x = longueur_texte_cat))+
 
 ## Exploration 2: les données textuelles
 
-Pour explorer les données textuelles à proprement parler, soit les textes de fiction contenus dans le tableau sous la variable `texte`, nous devons transformer l'objet de fond en comble. Comme on l'a vu ci-dessus avec les tests de corrélation, il est plus facile de demander à l'ordinateur de traiter des chiffres que des mots. Le texte sera donc transformé en une grande matrice d'occurrences de type documents-mots, où chaque ligne correspondra à un texte et chaque colonne, à l'un des mots du vocabulaire du corpus. Une matrice est un objet qui ressemble beaucoup à un tableau de données, à ceci près que les valeurs dans les cellules sont toutes identiques. Dans notre grande matrice documents-mots, les valeurs correspondront au nombre de fois que tel mot en colonne apparaît dans tel texte en ligne. La représentation des textes qui en résulte est souvent appelée *Bag-Of-Words*, un sac de mots, car chaque texte est conçu comme un ensemble particulier de mots dont l'ordre d'apparition n'est pas pris en compte. Cette représentation repose sur l'idée qu'un texte qui contient un grand nombre de fois les mots "enfant", "parent" et "lien" parlera vraisemblablement de la relation parent-enfant.
+Pour explorer les données textuelles à proprement parler, soit les textes de fiction contenus dans le tableau sous la variable `texte`, nous devons transformer l'objet de fond en comble. Comme on l'a vu ci-dessus avec les tests de corrélation, il est plus facile de demander à l'ordinateur de traiter des chiffres que des mots. Le texte sera donc transformé en une grande matrice d'occurrences de type documents-mots, où chaque ligne correspondra à un texte et chaque colonne, à l'un des mots du vocabulaire du corpus.
+
+Une matrice est un objet qui ressemble beaucoup à un tableau de données, à ceci près que les valeurs dans les cellules sont toutes du même type. Dans notre grande matrice documents-mots, les valeurs seront numériques et correspondront au nombre de fois que tel mot en colonne apparaît dans tel texte en ligne. La représentation des textes qui en résulte est souvent appelée *Bag-Of-Words*, un sac de mots, car chaque texte est conçu comme un ensemble particulier de mots dont l'ordre d'apparition n'est pas pris en compte. Cette représentation repose sur l'idée qu'un texte qui contient un grand nombre de fois les mots "enfant", "parent" et "lien", par exemple, parlera vraisemblablement de la relation parent-enfant.
 
 Pour faire face aux limites de ce modèle un peu grossier, mais aisé à concevoir, les spécialistes ont mis au point plusieurs techniques, telle l'application d'antidictionnaires aux matrices pour éliminer les mots fonctionnels ou sans intérêt dans un contexte de recherche spécifique. On peut également filtrer les matrices selon des seuils d'occurrences inférieurs ou supérieurs, on peut les pondérer pour augmenter le poids de mots (par exemple ceux qui sont particulièrement représentatifs d'un texte par rapport à tous les autres textes du corpus) et les normaliser (pour mieux comparer des textes de longueurs différentes). On peut également forger des n-grammes fondés sur des expressions d'intérêt pour la recherche ou sur des mesures de collocation. Nous ne ferons pas toutes ces opérations ici, mais il est important que vous sachiez que les limites inhérentes au *BOW* ont fait l'objet de nombreuses recherches et suscité des stratégies pour en neutraliser les effets.
 
