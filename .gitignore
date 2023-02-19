@@ -1,4 +1,11 @@
-.RData
-.Rhistory
-.Rproj.user
-Archive/
+#Ignore everything
+*
+
+#But not these files
+!Introduction_EDA_R.pptx
+!README.md
+!EDA_R.Rproj
+!xyz.R
+!xyz.qmd
+!.gitignore
+!XYZ-2015-2022-table-20230205JV.xlsx
