@@ -19,16 +19,18 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 ## Avant-propos
 
-Vous trouverez dans le répertoire de travail, à l'intérieur du dossier `code/`, deux fichiers contenant le code de l'atelier, l'un portant l'extension .qmd, l'autre `.R`. Le premier, que vous avez ouvert et dont vous lisez actuellement le contenu, se présente comme une page HTML avec du texte suivi et des blocs de code. Si vous ouvrez l'autre fichier, vous verrez que le code est identique, mais que l'apparence est plus brute. En général, on utilise des documents Quarto, avec l'extension .qmd, lorsqu'on veut faire des présentations et qu'on souhaite ajouter au code des paragraphes de commentaires. Un script `.R` de base est davantage fait pour exécuter du code. On peut certes y insérer des commentaires, mais on ne dispose d'aucun des outils d'édition auxquels on est habitués. Il est tout de même bon de se familiariser avec ces deux formats.
+Vous trouverez dans le répertoire de travail, à l'intérieur du dossier `code/`, deux fichiers contenant le code de l'atelier, l'un portant l'extension **.qmd**, l'autre **.R**. Le premier, que vous avez ouvert et dont vous lisez actuellement le contenu, se présente comme une page HTML avec du texte suivi et des blocs de code. Si vous ouvrez l'autre fichier, vous verrez que le code est identique, mais que l'apparence est plus brute. En général, on utilise des documents Quarto, avec l'extension **.qmd**, lorsqu'on veut faire des présentations et qu'on souhaite ajouter au code à exécuter des paragraphes de commentaires. Un script **.R** de base est davantage fait pour exécuter du code. On peut certes y insérer des commentaires, mais on ne dispose d'aucun des outils d'édition auxquels on est habitués (tailles de titres, italiques, caractères gras, etc.). Il est tout de même bon de se familiariser avec ces deux formats. Le langage R peut également être exécuté dans des carnets Jupyter (*Jupyter Notebooks*), largement utilisés par la communauté scientifique.
 
-### Exécuter le code dans document Quarto
+### Exécuter le code dans un document Quarto
 
-Lorsque vous cliquez sur le bouton **Render** dans le menu supérieur, un document sera généré comprenant aussi bien le contenu que le résultat des blocs de code. Vous pouvez insérer du code comme ceci:
+Lorsque vous cliquez sur le bouton **Render** dans le menu supérieur, un document est généré comprenant aussi bien le contenu que le résultat des blocs de code. Vous pouvez insérer du code comme ceci:
 
 ```{r}
 
+# Création d'un vecteur comprenant trois titres de romans
 romans <- c("Illusions perdues", "Le Dernier jour d'un condamné", "La Débâcle")
 
+# Impression d'une chaine de caractères et d'une fonction qui choisit au hasard l'un des trois éléments du vecteur romans
 cat("Mon roman préféré est ", sample(romans, 1), ".", sep = "")
 
 ```
@@ -36,6 +38,7 @@ cat("Mon roman préféré est ", sample(romans, 1), ".", sep = "")
 Vous pouvez également ajouter des options. L'option `#| echo: false`, par exemple, permet d'imprimer le résultat d'une instruction dans le document généré avec **Render**, mais non le bloc de code. Cliquez sur **Render** et voyez le résultat.
 
 ```{r}
+#| echo: false
 
 romans <- c("Illusions perdues", "Le Dernier jour d'un condamné", "La Débâcle")
 
@@ -45,14 +48,13 @@ cat("Mon roman préféré est ", sample(romans, 1), ".", sep = "")
 
 ### Raccourci et aide
 
-Pour exécuter tout un bloc de code, vous pouvez cliquer sur la flèche à l'extrémité supérieure droite du bloc. Si vous souhaitez plutôt exécuter les instructions d'un même bloc les unes après les autres, et observer le résultat, vous pouvez placer votre curseur au début de la ligne d'instruction à exécuter et appuyez sur 'COMMAND' + 'RETURN' (raccourci Mac) ou 'CTRL' + 'RETURN' (raccourci Windows) de votre clavier. Vous pouvez vous pratiquer avec les lignes d'instruction ci-dessous. Chacune appelle de l'aide sur une fonction en particulier. La fenêtre d'aide s'ouvrira dans la partie inférieure droite de RStudio.
+Pour exécuter tout un bloc de code, vous pouvez cliquer sur la flèche à l'extrémité supérieure droite du bloc. Si vous souhaitez plutôt exécuter les instructions d'un même bloc les unes après les autres, et observer le résultat, vous pouvez placer votre curseur au début de la ligne d'instruction à exécuter, puis appuyez sur 'COMMAND' + 'RETURN' (raccourci Mac) ou 'CTRL' + 'RETURN' (raccourci Windows) de votre clavier. Vous pouvez vous pratiquer avec les lignes d'instruction ci-dessous. Chacune appelle de l'aide sur une fonction en particulier. La fenêtre d'aide s'ouvrira dans la partie inférieure droite de RStudio.
 
 ```{r}
-
+#| include: false
 ?paste()
 ?str()
 ?install.packages()
-?library()
 ?nchar()
 ?data.frame()
 
@@ -60,10 +62,9 @@ Pour exécuter tout un bloc de code, vous pouvez cliquer sur la flèche à l'ext
 
 ### Nettoyage de l'environnement de travail (élimination des objets inutiles)
 
-L'environnement de travail, auquel nous donne accès l'onglent Environment de RStudio (coin supérieur droit), contient tous vos objets. Chaque fois que vous emmagasinez une donnée dans une variable, celle-ci est ajoutée à l'environnement. Cela prend peu de temps pour charger l'environnement (et la mémoire) de RStudio. Voici comment nettoyer partiellement ou entièrement cet environnement:
+L'environnement de travail, auquel nous donne accès la fenêtre supérieure droite de RStudio, contient tous vos objets. Chaque fois que vous emmagasinez une donnée dans une variable, celle-ci est ajoutée à l'environnement. Cela prend peu de temps pour encombrer l'environnement (et la mémoire) de RStudio. Voici comment nettoyer partiellement ou entièrement cet environnement:
 
 ```{r}
-#| include: false
 
 # Création d'objets à éliminer
 a=1
@@ -71,20 +72,18 @@ b=3
 c="Virginie"
 d="Théodore"
 
-# Élimination de tout le contenu de l'environnement:
-
-rm(list = ls()) 
-
-
 # Élimination d'une sélection d'éléments
-rm(list = setdiff(ls(), c("d")))
+rm(list = setdiff(ls(), c("d", "c")))
+
+# Élimination de tout le contenu de l'environnement:
+rm(list = ls()) 
 
 
 ```
 
 ## Préparation de l'environnement de travail
 
-Il est d'usage de placer en haut de son script les extensions qu'on compte utiliser. On voit d'abord une série d'instructions indiquant à R que si telle extension n'est pas installée déjà, il doit le faire. Ensuite, chacune des extensions est activée individuellement. Il y a des manières plus rapides de faire cela, mais on déplie ici le processus pour être clair.
+Il est d'usage de placer en haut de son script les extensions qu'on compte utiliser. Dans le bloc ci-dessous, vous trouvez une série d'instructions indiquant à R que si telle extension n'est pas installée déjà, il doit le faire (la structure de chaque ligne correspond à ce qu'on appelle "structure de contrôle"). Ensuite, chacune des extensions est activée individuellement. Il y a des manières plus rapides de faire cela, mais on déplie ici le processus par souci de clarté.
 
 ```{r}
 
@@ -112,14 +111,14 @@ library(lsa)                  # Extension offrant un antidictionnaire élaboré
 
 ## Importation des données
 
-Les données que nous utiliserons sont contenues dans un dossier séparé du répertoire. Il est judicieux de séparer les scripts, les données et les résultats dans trois dossiers différents. Les données sont emmagasinées dans un fichier Excel. Pour lire un tel fichier, il faut utiliser une extension spécialisée appelée **readxl**. Ci-dessous, on appelle la fonction read_excel() de cette extension et on lui donne, comme argument **path=**, le chemin conduisant vers le fichier. On lui indique également (argument **sheet=1**) que la première feuille de calcul seule est à lire.
+Les données que nous utiliserons sont contenues dans un dossier séparé du répertoire. Il est judicieux de séparer les scripts, les données et les résultats dans trois dossiers différents. Les données proviennent d'un fichier Excel. Pour lire un tel fichier, il faut utiliser une extension spécialisée appelée **readxl**. Ci-dessous, on appelle la fonction `read_excel()` de cette extension et on lui donne, comme argument `path=`, le chemin conduisant vers le fichier. On lui indique également (argument `sheet=1`) que seule la première feuille de calcul doit être lue.
 
-Le résultat de cette lecture est emmagasiné dans la variable xyz.
+Le résultat de cette lecture est emmagasiné dans la variable `xyz`.
 
 ```{r}
 
 # Lecture des données et assignation à une variable 
-xyz <- readxl::read_excel("../donnees/XYZ-2015-2022-table-20230205JV.xlsx", sheet = 1)
+xyz <- readxl::read_excel("donnees/XYZ-2015-2022-table-20230205JV.xlsx", sheet = 1)
 
 
 ```
@@ -395,7 +394,7 @@ cor.test(mtcars$disp, mtcars$mpg, method = "kendall")
 
 Pour faire un test de corrélation avec des données textuelles, il faut créer des variables numériques qui seront mises en relation. Les chaines de caractères ne peuvent pas, telles quelles, être corrélées. Il faut choisir une mesure liée à la question de recherche. On prendra ici un exemple très simple et assez futile, simplement pour indiquer le processus.
 
-Nous allons vérifier s'il y a une corrélation, positive ou négative, entre la longueur des titres et la longueur des textes. Comme mesure, nous pouvons utiliser le nombre de mots que comportent les titres et les textes, ou encore le nombre de caractères de chaque variable. Nous allons retenir cette dernière option par souci de simplicité. Les sommes de caractères pour chaque titre et chaque texte sera faite avec la fonction de base `nchar()`.
+Nous allons vérifier s'il y a une corrélation, positive ou négative, entre la longueur des titres et la longueur des textes. Comme mesure, nous pouvons utiliser le nombre de mots que comportent les titres et les textes, ou encore le nombre de caractères de chaque variable. Nous allons retenir cette dernière option par souci de simplicité. Les sommes de caractères pour chaque titre et chaque texte seront faites avec la fonction de base `nchar()`.
 
 ```{r}
 
@@ -535,7 +534,7 @@ xyz_dfm <- dfm(xyz_toks) |>
 head(xyz_dfm, 2)
 
 ### Exercice: modifiez les seuils et voyez l'effet sur les dimensions de l'objet!
-# Pour voir les dimensions de l'objet, vous n'avez qu'à l'apeller ainsi:
+# Pour voir les dimensions de l'objet, vous n'avez qu'à l'appeler ainsi:
 
 
 
@@ -615,7 +614,7 @@ textplot_wordcloud(xyz_dfm_th_YOLO)
 
 ### Réseaux des cooccurrences
 
-L'exploration de textes fondée sur la fréquence (brute, pondérée ou normalisée) et la technique du "sac de mots" (*BOW*) ne dit rien du contexte immédiat dans lequel les mots sont plongés. Dans le nuage de mots généré à partir des textes de l'auteur David Dorais, on a vu que "jeune" et "femme" sont les mots dominants, suivis de près par "homme". De là à dire que les textes de Dorais s'intéresse à la "jeune femme", il y a un pas qu'on ne peut franchir avant d'avoir vérifié si les mots apparaissent bel et bien, de manière récurrente, dans le même contexte. L'une des manières de se rapprocher du texte et de vérifier quels couples de mots s'attirent, apparaissent souvent dans un même contexte, est de créer un **réseau de cooccurrence**.
+L'exploration de textes fondée sur la fréquence (brute, pondérée ou normalisée) et la technique du "sac de mots" (*BOW*) ne dit rien du contexte immédiat dans lequel les mots sont plongés. Dans le nuage de mots généré à partir des textes de l'auteur David Dorais, on a vu que "jeune" et "femme" sont les mots dominants, suivis de près par "homme". De là à dire que les textes de Dorais s'intéressent à la "jeune femme", il y a un pas qu'on ne peut franchir avant d'avoir vérifié si les mots apparaissent bel et bien, de manière récurrente, dans le même contexte. L'une des manières de se rapprocher du texte et de vérifier quels couples de mots s'attirent, apparaissent souvent dans un même contexte, est de créer un **réseau de cooccurrence**.
 
 Selon Kboubi, Habacha, and BenAhmed (2010), "un réseau de cooccurrence est un réseau de termes où chaque noeud représente un terme et un arc entre deux nœuds représente la relation de cooccurrence entre les deux termes concernés. Ce réseau permet d'identifier les termes qui apparaissent souvent ensemble au sein d'une même fenêtre mais pas nécessairement juxtaposés."
 
@@ -664,7 +663,7 @@ xyz_cooc_matrice["jeune", "femme"]
 
 ### Au plus près des textes: le concordancier
 
-On peut souhaiter se rapprocher davantage encore de la texture des mots et vérifier *de visu*, sans pour autant lire intégralement tous les textes, si "jeune" et "femme" se suivent dans cet ordre et, le cas échéant, quels mots viennent tout juste avant et après la cooccurrence. On utilisera alors un outil bien connu, le concordancier, que Quanteda met à notre portée avec la fonction `kwic()`. Cette fonction, dont le nom correspond à *keywords-in-context*, peut prendre en entrée un objet **corpus** ou encore un objet **tokens**. Un argument, `window=`, permet d'indiquer le nombre de mots que l'on souhaite obtenir de chaque côté du mot-pivot. Ce dernier est précisé à l'aide de l'argument `pattern=`, ce qui veut dire que vous pouvez utiliser une expression régulière (*regex*) pour attraper différentes formes d'un mot.
+On peut souhaiter se rapprocher davantage encore de la texture des mots et vérifier *de visu*, sans pour autant lire intégralement tous les textes, si "jeune" et "femme" se suivent dans cet ordre et, le cas échéant, quels mots viennent tout juste avant et après la cooccurrence. On utilisera alors un outil bien connu, le concordancier, que Quanteda met à notre portée avec la fonction `kwic()`. Cette fonction, dont le nom correspond à *keywords-in-context*, peut prendre en entrée un objet **corpus** ou encore un objet **tokens**. Un argument, `window=`, permet d'indiquer le nombre de mots que l'on souhaite obtenir de chaque côté du mot pivot. Ce dernier est précisé à l'aide de l'argument `pattern=`, ce qui veut dire que vous pouvez utiliser une expression régulière (*regex*) pour attraper différentes formes d'un mot.
 
 ```{r}
 
