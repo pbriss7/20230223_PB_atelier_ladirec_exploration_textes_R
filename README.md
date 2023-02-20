@@ -5,7 +5,6 @@ Le répertoire contient le matériel utilisé lors d'un atelier d'introduction �
 1. une présentation introductive à R et à RStudio (`Introduction_EDA_R.pptx`);
 2. Dossier `code/`: 
 * un fichier Quarto, `xyz.qmd`, contenant le code commenté;
-* un ficher `xyz.html` généré par la fonction Render de Quarto;
 * un script R, `xyz.R`, avec le code et un minimum de commentaires;
 3. Dossier `donnees/`: 
 * un jeu de données textuelles, soit 321 textes de fictions publiés initialement dans la revue de création XYZ.
@@ -15,6 +14,6 @@ L’autorisation d’utiliser les données textuelles dans le cadre d’ateliers
 
 Une fois le dossier importé et décompressé, il faut ouvrir le fichier EDA_R.Rproj pour activer le projet et faire en sorte que les chemins soient lus correctement.
 
-Pour toute question ou suggestion: 
+Pour toute question ou commentaire: 
 Pascal Brissette (U. McGill)
 pascal.brissette@mcgill.ca
