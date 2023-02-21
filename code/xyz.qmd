@@ -31,20 +31,11 @@ Lorsque vous cliquez sur le bouton **Render** dans le menu supérieur, un docume
 romans <- c("Illusions perdues", "Le Dernier jour d'un condamné", "La Débâcle")
 
 # Impression d'une chaine de caractères et d'une fonction qui choisit au hasard l'un des trois éléments du vecteur romans
-cat("Mon roman préféré est ", sample(romans, 1), ".", sep = "")
+cat("Mon roman préféré est ", sample(x = romans, size = 1), ".", sep = "")
 
 ```
 
-Vous pouvez également ajouter des options. L'option `#| echo: false`, par exemple, permet d'imprimer le résultat d'une instruction dans le document généré avec **Render**, mais non le bloc de code. Cliquez sur **Render** et voyez le résultat.
-
-```{r}
-#| echo: false
-
-romans <- c("Illusions perdues", "Le Dernier jour d'un condamné", "La Débâcle")
-
-cat("Mon roman préféré est ", sample(romans, 1), ".", sep = "")
-
-```
+Vous pouvez également ajouter des options. L'option `#| echo: false`, par exemple, permet d'imprimer le résultat d'une instruction dans le document généré avec **Render**, mais non le bloc de code.
 
 ### Raccourci et aide
 
