@@ -2,12 +2,13 @@
 title: "Exploration de données textuelles avec R"
 author: "Pascal Brissette"
 date: 2023-02-23
-format:
-  html:
-    toc: true
-    theme: yete
-    fontsize: 1.1em
-    linestretch: 1.7
+format: pdf
+  # html:
+  #   toc: true
+  #   theme: yete
+  #   fontsize: 1.1em
+  #   linestretch: 1.7
+
 toc: true
 editor: visual
 ---
@@ -45,9 +46,7 @@ Pour exécuter tout un bloc de code, vous pouvez cliquer sur la flèche à l'ext
 #| include: false
 ?paste()
 ?str()
-?install.packages()
 ?nchar()
-?data.frame()
 
 ```
 
@@ -203,7 +202,7 @@ On appelle prétraitement les opérations qui doivent être faites aux données 
 
 Traitons ces problèmes un par un.
 
-Problème 1. Renommer les colonnes
+#### Problème 1. Renommer les colonnes
 
 ```{r}
 
@@ -216,7 +215,7 @@ colnames(xyz) <- c("periodique", "titre", "auteur",
 
 ```
 
-Problème 2. Créer un identifiant unique. On peut utiliser les numéros de ligne.
+#### Problème 2. Créer un identifiant unique: utiliser les numéros de ligne
 
 ```{r}
 
@@ -234,7 +233,7 @@ xyz$doc_id <- faire_unique_id_fonction(vecteur1 = xyz$auteur, vecteur2 = 1:nrow(
 
 ```
 
-Problème 3. Repérer les colonnes inutiles et les éliminer
+#### Problème 3. Repérer les colonnes inutiles et les éliminer
 
 ```{r}
 
@@ -261,7 +260,7 @@ xyz[, colonnes_a_supprimer] <- NULL
 
 ```
 
-Problème 4. On veut créer une colonne contenant les années.
+#### Problème 4. Créer une colonne contenant les années
 
 ```{r}
 
@@ -275,7 +274,7 @@ xyz$annee <- stringr::str_extract(xyz$date, "[0-9]+")
 
 ```
 
-Problème 5. Cette colonne \`annee\`, de même que la colonne \`numero\`, devraient être de type \`numeric\`, non de type \`chr\`.
+#### Problème 5. Forcer le changement de type de données des colonnes `annee` et `numero` 
 
 ```{r}
 
@@ -290,7 +289,7 @@ xyz$numero <- as.integer(xyz$numero)
 
 ```
 
-Problème 6. Remplacer un symbole dans une longue chaine de caractères (un texte).
+#### Problème 6. Remplacer un symbole dans une longue chaine de caractères (un texte)
 
 ```{r}
 
@@ -322,11 +321,11 @@ xyz <- xyz[, c("doc_id", "auteur", "titre", "numero", "annee", "theme", "texte")
 
 Maintenant que le tableau ne présente plus de problèmes apparents, on peut commencer à explorer les données. On veut pour l'essentiel se familiariser avec le contenu du tableau, observer des distributions, voir si des variables sont corrélées. Il est bon de séparer dans un premier temps l'exploration des métadonnées de celle des données textuelles.
 
-Une fonction de base très utile est `table()`. Celle-ci calcule le nombre de valeurs uniques d'une variable. On peut ensuite faire des statistiques sur cette distribution.
+Une fonction de base très utile est `table()`. Celle-ci calcule le nombre de valeurs uniques d'un vecteur. On peut ensuite faire des statistiques sur cette distribution.
 
 ```{r}
 
-# La fonction `table( )` permet d'observer le nombre de modalités uniques d'une variable. 
+# La fonction `table( )` permet d'observer le nombre de modalités uniques d'un vecteur 
 distrib_annuelle <- table(xyz$annee)
 
 # Observons le résultat en appelant les 10 premiers éléments de L'objet `table`
@@ -359,7 +358,7 @@ Vous trouverez ci-dessous la réponse à la question posée ci-dessus (10 princi
 
 ```{r}
 
-# 1. Syntaxe étendue -- plus explicite: le résultat de chaque opération est emmagasiné dans une variable -- plus d'objets sont cependant générés et stockés en mémoire
+# 1. Syntaxe étendue -- plus explicite: le résultat de chaque opération est emmagasiné dans des conteneurs indépendants, sollicitant davantage la mémoire
 distrib_auteurs <- table(xyz$auteur)
 distrib_auteurs_ord <- sort(distrib_auteurs, decreasing = TRUE)
 head(distrib_auteurs_ord, n = 10)
@@ -423,7 +422,7 @@ xyz[, c("ncharTitre", "ncharTexte")]
 
 ```
 
-Procédons maintenant au test de corrélation
+Procédons maintenant au test de corrélation.
 
 ```{r}
 
@@ -444,12 +443,12 @@ ggplot(xyz, aes(x=ncharTitre, y=ncharTexte))+
 
 ## Enrichissement des données
 
-On peut tirer profit des données numériques ajoutées (longueur des titres et des textes) pour créer de nouveaux champs. Par exemple, on pourrait souhaiter classer les textes selon qu'ils sont "courts", "moyens" ou "longs". Un tel type de données est dit "catégorique". Le type d'objet que nous créerons pour emmagasiner ces données catégoriques s'appelle `factor`. Ci-dessous, nous allons choisir trois seuils aléatoires pour diviser nos données.
+On peut tirer profit des données numériques ajoutées (longueur des titres et des textes) pour créer de nouveaux champs. Par exemple, on pourrait souhaiter classer les textes selon qu'ils sont "courts", "moyens" ou "longs". Un tel type de données est dit "catégoriel". Ce type de données est généralement encapsulé dans des objets appelés `factor` dans R. Ci-dessous, nous allons choisir trois seuils aléatoires pour diviser nos données.
 
 ```{r}
 
 # On peut tout d'abord observer le sommaire statistique et s'en inspirer
-summary(xyz$ncharTexte)    
+summary(xyz$ncharTexte)
 
 # Création de valeurs catégorielles fondées sur les modalités d'une autre colonne
 # La fonction `factor()` possède un argument, `levels=` qui permet de déterminer l'ordre des catégories
@@ -474,23 +473,23 @@ ggplot(xyz, aes(x = longueur_texte_cat))+
 
 ## Exploration 2: les données textuelles
 
-Pour explorer les données textuelles à proprement parler, soit les textes de fiction contenus dans le tableau sous la variable `texte`, nous devons transformer l'objet de fond en comble. Comme on l'a vu ci-dessus avec les tests de corrélation, il est plus facile de demander à l'ordinateur de traiter des chiffres que des mots. Le corpus, composé des données textuelles et des métadonnées, sera donc transformé en une grande matrice d'occurrences de type documents-mots, où chaque ligne correspondra à un document et chaque colonne, à l'un des mots du vocabulaire des données textuelles.
+Pour explorer les données textuelles à proprement parler, soit les textes de fiction contenus dans le tableau sous la variable `texte`, nous devons transformer l'objet de fond en comble. Comme on l'a vu ci-dessus avec les tests de corrélation, il est plus facile de demander à l'ordinateur de traiter des chiffres que des mots! Le corpus, composé des données textuelles et des métadonnées, sera donc transformé en une grande matrice d'occurrences de type documents-mots, où chaque ligne correspondra à un document et chaque colonne, à l'un des mots du vocabulaire des données textuelles.
 
 Figure 1: matrice documents-mots (dtm)
 
 ![](images/Capture%20d%E2%80%99e%CC%81cran,%20le%202023-02-19%20a%CC%80%2015.17.58-01.png)
 
-Comme vous le voyez, une **matrice** est un objet qui ressemble beaucoup à un tableau de données, à ceci près que les valeurs dans les cellules sont toutes du même type. Dans notre grande matrice documents-mots, les valeurs seront numériques et correspondront au nombre de fois que tel mot en colonne apparaît dans tel texte en ligne. La représentation des textes qui en résulte est souvent appelée *Bag-Of-Words*, un sac de mots, car chaque texte est conçu comme un ensemble particulier de mots dont l'ordre d'apparition n'est pas pris en compte. Cette représentation repose sur l'idée qu'un texte qui contient un grand nombre de fois les mots "enfant", "parent" et "lien", par exemple, parlera vraisemblablement de la relation parent-enfant.
+Comme vous le voyez, une **matrice** est un objet qui ressemble beaucoup à un tableau de données, à ceci près que les valeurs dans les cellules sont toutes du même type (ici numérique). Dans notre grande matrice documents-mots, les valeurs correspondront au nombre de fois que tel mot en colonne apparaît dans tel texte en ligne. La représentation des textes qui en résulte est souvent appelée *Bag-Of-Words*, un "sac de mots", car chaque texte est conçu comme un ensemble particulier de mots dont l'ordre d'apparition n'est pas pris en compte. Cette représentation repose sur l'idée qu'un texte qui contient un grand nombre de fois les mots "enfant", "parent" et "lien", par exemple, parlera vraisemblablement de la relation parent-enfant.
 
-Pour faire face aux limites de ce modèle un peu grossier, mais aisé à concevoir, les spécialistes ont mis au point plusieurs techniques, telle l'application d'antidictionnaires aux matrices pour éliminer les mots fonctionnels ou sans intérêt dans un contexte de recherche spécifique. On peut également filtrer les matrices selon des seuils d'occurrences inférieurs ou supérieurs, on peut les pondérer pour augmenter le poids de mots (par exemple ceux qui sont particulièrement représentatifs d'un texte par rapport à tous les autres textes du corpus) et les normaliser (pour mieux comparer des textes de longueurs différentes). On peut également forger des n-grammes fondés sur des expressions d'intérêt pour la recherche ou sur des mesures de collocation. Nous ne ferons pas toutes ces opérations ici, mais il est important que vous sachiez que les limites inhérentes au *BOW* ont fait l'objet de nombreuses recherches et suscité des stratégies pour en neutraliser les inconvénients.
+Pour faire face aux limites de ce modèle un peu grossier, les spécialistes ont mis au point plusieurs techniques telle l'application d'antidictionnaires aux matrices pour éliminer les mots fonctionnels ou sans intérêt dans un contexte de recherche spécifique. On peut également filtrer les matrices selon des seuils d'occurrences inférieurs ou supérieurs, on peut les pondérer pour augmenter le poids de mots (par exemple ceux qui sont particulièrement représentatifs d'un texte par rapport à tous les autres textes du corpus) et les normaliser (pour mieux comparer des textes de longueurs différentes). On peut également forger des n-grammes fondés sur des expressions d'intérêt pour la recherche ou sur des mesures de collocation. Nous ne ferons pas toutes ces opérations ici, mais il est important que vous sachiez que les limites inhérentes au *BOW* ont fait l'objet de nombreuses recherches et suscité des stratégies pour en neutraliser les inconvénients.
 
 Également, il est bon de savoir que d'autres représentations du texte ont fait leur apparition depuis le début du siècle (word2vec, BERT, etc.), dont on ne parlera pas ici. Le fameux modèle de langue GPT-3, derrière ChatGPT, est le dernier en date de ces modèles.
 
 Dans la suite de l'atelier, nous allons donc transformer le corpus textuel en une grande matrice d'occurrences de type documents-mots.
 
-Pour faire l'ensemble des opérations, nous allons recourir à l'extension Quanteda, créée spécifiquement pour l'analyse statistique des textes. Il existe plusieurs autres extensions de ce type (udpipe, text2vec, tm, lsa, tidytext, etc.). On retient ici Quanteda en raison de la cohérence de la syntaxe et de la grande variété des analyses qu'elle permet.
+Pour faire l'ensemble des opérations, nous allons recourir à l'extension **quanteda**, créée spécifiquement pour l'analyse statistique des textes. Il existe plusieurs autres extensions de ce type (**udpipe**, **text2vec**, **tm**, **lsa**, **tidytext**, etc.). On retient ici quanteda en raison de la cohérence de la syntaxe et de la grande variété des analyses qu'elle permet.
 
-On gagnera à consulter la page du *Comprehensive R Archive Network (CRAN)* consacrée au [*Natural Language Processing*](https://cran.r-project.org/web/views/NaturalLanguageProcessing.html).
+On gagnera à consulter la page du *Comprehensive R Archive Network (CRAN)* consacrée au [*Natural Language Processing*](https://cran.r-project.org/web/views/NaturalLanguageProcessing.html). On y trouvera de nombreuses extensions consacrées à ce type de tâche.
 
 ### Transformation de l'objet avec Quanteda
 
@@ -498,7 +497,7 @@ Le processus de transformation de l'objet tableau de données en grande matrice 
 
 1.  La première étape est la création d'un corpus avec la fonction `corpus()`. On y précise la colonne des identifiants uniques et la colonne contenant le texte à analyser;
 
-2.  La deuxième étape est la tokénisation des textes du corpus. On peut à cette étape se servir d'un antidictionnaire pour éliminer les mots fonctionnels;
+2.  La deuxième étape est la séparation des mots de chacun des textes du corpus, ce qu'on appelle tokénisation ou lemmatisation. On peut à cette étape se servir d'un antidictionnaire pour éliminer les mots fonctionnels;
 
 3.  La troisième étape est le passage entre cet objet "tokens" à la dfm (*document-feature matrix*).
 
