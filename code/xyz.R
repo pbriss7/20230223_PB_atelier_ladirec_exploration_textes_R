@@ -1,6 +1,32 @@
+#' ---
+#' title: "Exploration de données textuelles avec R"
+#' author: "Pascal Brissette"
+#' date: 2023-02-23
+#' format: 
+#'   html:
+#'     toc: true
+#'     theme: yete
+#'     fontsize: 1.1em
+#'     linestretch: 1.7
+#' 
+#' toc: true
+#' editor: visual
+#' ---
+#' 
+## ----setup, include=FALSE----------------------------------------------------------------------------------------------------
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 
+#' 
+#' ## Avant-propos
+#' 
+#' Vous trouverez dans le répertoire de travail, à l'intérieur du dossier `code/`, deux fichiers contenant le code de l'atelier, l'un portant l'extension **.qmd**, l'autre **.R**. Le premier, que vous avez ouvert et dont vous lisez actuellement le contenu, se présente comme une page HTML avec du texte suivi et des blocs de code. Si vous ouvrez l'autre fichier, vous verrez que le code est identique, mais que l'apparence est plus brute. En général, on utilise des documents Quarto, avec l'extension **.qmd**, lorsqu'on veut faire des présentations et qu'on souhaite ajouter au code à exécuter des paragraphes de commentaires. Un script **.R** de base est davantage fait pour exécuter du code. On peut certes y insérer des commentaires, mais on ne dispose d'aucun des outils d'édition auxquels on est habitués (tailles de titres, italiques, caractères gras, etc.). Il est tout de même bon de se familiariser avec ces deux formats. Le langage R peut également être exécuté dans des carnets Jupyter (*Jupyter Notebooks*), largement utilisés par la communauté scientifique.
+#' 
+#' ### Exécuter le code dans un document Quarto
+#' 
+#' Lorsque vous cliquez sur le bouton **Render** dans le menu supérieur, un document est généré comprenant aussi bien le contenu que le résultat des blocs de code. Vous pouvez insérer du code comme ceci:
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # Création d'un vecteur comprenant trois titres de romans
 romans <- c("Illusions perdues", "Le Dernier jour d'un condamné", "La Débâcle")
@@ -9,11 +35,25 @@ romans <- c("Illusions perdues", "Le Dernier jour d'un condamné", "La Débâcle
 cat("Mon roman préféré est ", sample(x = romans, size = 1), ".", sep = "")
 
 
+#' 
+#' Vous pouvez également ajouter des options. L'option `#| echo: false`, par exemple, permet d'imprimer le résultat d'une instruction dans le document généré avec **Render**, mais non le bloc de code.
+#' 
+#' ### Raccourci et aide
+#' 
+#' Pour exécuter tout un bloc de code, vous pouvez cliquer sur la flèche à l'extrémité supérieure droite du bloc. Si vous souhaitez plutôt exécuter les instructions d'un même bloc les unes après les autres, et observer le résultat, vous pouvez placer votre curseur au début de la ligne d'instruction à exécuter, puis appuyez sur 'COMMAND' + 'RETURN' (raccourci Mac) ou 'CTRL' + 'RETURN' (raccourci Windows) de votre clavier. Vous pouvez vous pratiquer avec les lignes d'instruction ci-dessous. Chacune appelle de l'aide sur une fonction en particulier. La fenêtre d'aide s'ouvrira dans la partie inférieure droite de RStudio.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 ?paste()
 ?str()
 ?nchar()
 
 
+#' 
+#' ### Nettoyage de l'environnement de travail (élimination des objets inutiles)
+#' 
+#' L'environnement de travail, auquel nous donne accès la fenêtre supérieure droite de RStudio, contient tous vos objets. Chaque fois que vous emmagasinez une donnée dans une variable, celle-ci est ajoutée à l'environnement. Cela prend peu de temps pour encombrer l'environnement (et la mémoire) de RStudio. Voici comment nettoyer partiellement ou entièrement cet environnement:
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # Création d'objets à éliminer
 a=1
@@ -29,6 +69,12 @@ rm(list = ls())
 
 
 
+#' 
+#' ## Préparation de l'environnement de travail
+#' 
+#' Il est d'usage de placer en haut de son script les extensions qu'on compte utiliser. Dans le bloc ci-dessous, vous trouvez une série d'instructions indiquant à R que si telle extension n'est pas installée déjà, il doit le faire (la structure de chaque ligne correspond à ce qu'on appelle "structure de contrôle"). Ensuite, chacune des extensions est activée individuellement. Il y a des manières plus rapides de faire cela, mais on déplie ici le processus par souci de clarté.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # Installation des extensions dont nous aurons besoin (si elles ne sont pas déjà installées)
 if(!"stringr" %in% rownames(installed.packages())) {install.packages("stringr")}
@@ -53,6 +99,14 @@ library(lsa)                  # Extension offrant un antidictionnaire élaboré
 library(janitor)              # Extension qui offre des fonctions pour le "nettoyage" de chaines de caractères
 
 
+#' 
+#' ## Importation des données
+#' 
+#' Les données que nous utiliserons sont contenues dans un dossier séparé du répertoire. Il est judicieux de séparer les scripts, les données et les résultats dans trois dossiers différents. Les données proviennent d'un fichier Excel. Pour lire un tel fichier, il faut utiliser une extension spécialisée appelée **readxl**. Ci-dessous, on appelle la fonction `read_excel()` de cette extension et on lui donne, comme argument `path=`, le chemin conduisant vers le fichier. On lui indique également (argument `sheet=1`) que seule la première feuille de calcul doit être lue.
+#' 
+#' Le résultat de cette lecture est emmagasiné dans la variable `xyz`.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # Lecture des données et assignation à une variable
 # Les deux points suivis de / indiquent à R qu'il doit remonter d'un niveau pour trouver un dossier appelé `donnees`
@@ -61,6 +115,12 @@ xyz <- readxl::read_excel("../donnees/XYZ-2015-2022-table-20230205JV.xlsx", shee
 
 
 
+#' 
+#' ## Examen de l'objet
+#' 
+#' La différence entre un logiciel comme Excel et un environnement de développement comme RStudio, c'est qu'on ne voit pas d'emblée le contenu des objets qu'on importe ou qu'on crée. Il faut soit les appeler directement (on exécute le nom d'un objet), soit cliquer sur l'icône de la grille qui se trouve à droite du nom de l'objet dans la partie Environment (cela fera apparaître une fenêtre similaire à une feuille Excel), soit encore utiliser différentes fonctions qui renverront les informations utiles sur l'objet. Voici les principales:
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 # Structure de l'objet
 str(xyz)
 
@@ -85,6 +145,12 @@ class(xyz)
 # Type de données d'un vecteur du tableau
 class(xyz$`ISSN (numérique)`)
 
+#' 
+#' ### Valeurs nulles et cellules sans contenu
+#' 
+#' On ne verra pas ici les différentes manières de traiter les valeurs nulles ou sans contenu, mais on peut au moins montrer comment les repérer. Dans R, une valeur nulle est indiquée par NA (*not available*). Cependant, vous quand vous travaillez avec des textes, vous pouvez avoir de nombreuses chaines de caractères tout simplement vides. On voit ci-dessous la manière de repérer ces deux types de valeurs.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 # La première fonction renvoie, pour chaque colonne du tableau, la somme des valeurs correspondant à NA.
 sapply(xyz, function(x) sum(is.na(x)))
 
@@ -110,6 +176,30 @@ colnames(xyz)
 
 
 
+#' 
+#' ## Prétraitement des données
+#' 
+#' On appelle prétraitement les opérations qui doivent être faites aux données pour faciliter ou rendre possible leur manipulation. Le prétraitement peut impliquer une réduction des dimensions du jeu de données pour réduire le bruit ou simplement rendre moins lourd les processus ultérieurs. D'autres problèmes requièrent des opérations plus chronophages: corrections de chaînes de caractères, traitement des valeurs nulles, etc. Des logiciels gratuits tel OpenRefine sont de très puissants alliés à cette étape, même si tout peut être fait avec R.
+#' 
+#' ### Principaux problèmes du jeu de données
+#' 
+#' -   Problème1: les noms de colonnes contiennent des accents et des espaces;
+#' 
+#' -   Problème 2: les observations ne sont pas pourvues d'identifiants uniques;
+#' 
+#' -   Problème 3: certaines colonnes semblent n'apporter aucune information essentielle;
+#' 
+#' -   Problème 4: on aimerait avoir une colonne réservée aux années;
+#' 
+#' -   Problème 5: on voudrait que les valeurs numériques soient considérées comme des nombres, non comme des chaines de caractères;
+#' 
+#' -   Problème 6: dans la colonne \`texte\`, les sauts de paragraphes du texte original sont indiqués par "\\n". Ce symbole ne sera pas utile ici et crée du bruit.
+#' 
+#' Traitons ces problèmes un par un.
+#' 
+#' #### Problème 1. Renommer les colonnes
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # On assigne aux noms de colonnes un vecteur comprenant, pour chaque colonne, le nom choisi, dans le bon ordre.
 colnames(xyz) <- c("periodique", "titre", "auteur",
@@ -119,6 +209,10 @@ colnames(xyz) <- c("periodique", "titre", "auteur",
 
 
 
+#' 
+#' #### Problème 2. Créer un identifiant unique: utiliser les numéros de ligne
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # Nous allons créer une petite fonction maison qui va générer des identifiants uniques composé d'une chaine de caractères commençant par le nom de l'auteur du texte, suivi du numéro de la ligne du document dans le tableau. Ces éléments seront concaténés. La fonction recourra ensuite à la fonction `make_clean_names()` de l'extension janitor pour assurer un résultat propre et uniforme.
 
@@ -133,6 +227,10 @@ xyz$doc_id <- faire_unique_id_fonction(vecteur1 = xyz$auteur, vecteur2 = 1:nrow(
 
 
 
+#' 
+#' #### Problème 3. Repérer les colonnes inutiles et les éliminer
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # La première colonne semble contenir une information redondante. Vérifions:
 unique(xyz[ , "periodique"])  # ou table(xyz$periodique)
@@ -144,6 +242,8 @@ unique(xyz[, "theme"])        # ou table(xyz$theme)
 # unique(...[, ...])
 
 
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 # Solution au problème no 3
 
 # On crée un vecteur avec les colonnes inutiles
@@ -154,6 +254,10 @@ colonnes_a_supprimer <- c("periodique", "editeur", "issn_imp", "issn_num", "ment
 xyz[, colonnes_a_supprimer] <- NULL
 
 
+#' 
+#' #### Problème 4. Créer une colonne contenant les années
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # Il faut extraire les années de la colonne `date`. On utilise pour cela l'extension stringr.
 
@@ -164,6 +268,10 @@ xyz$annee <- stringr::str_extract(xyz$date, "[0-9]+")
 # xyz$... <- ...
 
 
+#' 
+#' #### Problème 5. Forcer le changement de type de données des colonnes `annee` et `numero`
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # La fonction as.integer() force la conversion du type chararcter en type integer.
 
@@ -175,6 +283,10 @@ xyz$numero <- as.integer(xyz$numero)
 
 
 
+#' 
+#' #### Problème 6. Remplacer un symbole dans une longue chaine de caractères (un texte)
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # Observons tout d'abord un texte en particulier
 # xyz$texte[1]
@@ -191,10 +303,22 @@ xyz$texte <- gsub(pattern = "\n",
 # xyz$...
 
 
+#' 
+#' Enfin, par souci de lisibilité, réordonnons la séquence des colonnes.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 xyz <- xyz[, c("doc_id", "auteur", "titre", "numero", "annee", "theme", "texte")]
 
 
+#' 
+#' ## Exploration 1: les métadonnées
+#' 
+#' Maintenant que le tableau ne présente plus de problèmes apparents, on peut commencer à explorer les données. On veut pour l'essentiel se familiariser avec le contenu du tableau, observer des distributions, voir si des variables sont corrélées. Il est bon de séparer dans un premier temps l'exploration des métadonnées de celle des données textuelles.
+#' 
+#' Une fonction de base très utile est `table()`. Celle-ci calcule le nombre de valeurs uniques d'un vecteur. On peut ensuite faire des statistiques sur cette distribution.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # La fonction `table( )` permet d'observer le nombre de modalités uniques d'un vecteur 
 distrib_annuelle <- table(xyz$annee)
@@ -209,6 +333,10 @@ mean(distrib_annuelle)
 # distrib_themes <- ...
 
 
+#' 
+#' Pour ordonner cette table en fonction des valeurs, on peut utiliser la fonction `sort( )`, auquel on passe l'argument `decreasing = TRUE` pour que les valeurs se présentent de manière décroissante.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 sort(distrib_annuelle, decreasing = TRUE)
 
@@ -220,6 +348,10 @@ sort(distrib_annuelle, decreasing = TRUE)
 # distrib_auteurs_ord <- ...
 
 
+#' 
+#' Vous trouverez ci-dessous la réponse à la question posée ci-dessus (10 principaux contributeurs). Vous verrez que différentes syntaxes peuvent produire le même résultat.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # 1. Syntaxe étendue -- plus explicite: le résultat de chaque opération est emmagasiné dans des conteneurs indépendants, sollicitant davantage la mémoire
 distrib_auteurs <- table(xyz$auteur)
@@ -236,6 +368,16 @@ xyz$auteur |> table() |> sort(decreasing = TRUE) |> head(10)
 
 
 
+#' 
+#' ### Tests de corrélation
+#' 
+#' Au cours de l'exploration des données, on peut tenter de comprendre s'il existe des corrélations entre des variables.
+#' 
+#' #### Test de corrélation avec des données numériques
+#' 
+#' Dans l'exemple ci-dessous, on utilise un jeu de données issu de l'extension de base de R, `mtcars`. Celui-ci présente différentes marques et modèles de voitures et leurs attributs techniques, telle la distance parcourue par différents types de voitures selon le volume de leurs moteurs. Pour la démonstration, on voudrait savoir s'il y a une corrélation entre le volume du moteur (disp) et la distance au "gallon" que peut parcourir une voiture.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 mtcars[1:3, 1:3] # Dans le jeu de données, les noms de lignes (rownames) correspondent aux marques
 
@@ -243,10 +385,22 @@ mtcars[1:3, 1:3] # Dans le jeu de données, les noms de lignes (rownames) corres
 plot(mtcars$disp, mtcars$mpg)
 
 
+#' 
+#' Le test de corrélation est un test statistique qui mesure l'interdépendance ou l'association entre des paires de valeurs. Plusieurs mesures permettent de vérifier la corrélation entre variables. Nous allons utiliser le coefficient appelé **tau de Kendall** (compris entre -1 et +1). Selon cette mesure, une corrélation positive est marquée par un tau positif, et inversement pour une corrélation négative. Plus le nombre s'éloigne de 0, plus la corrélation est forte. Vous pourrez lire l'article de Kendall [en ligne](https://academic.oup.com/biomet/article/30/1-2/81/176907). Avec les deux variables du jeu de données `mtcars`, le test montre que la variable dépendante est fortement corrélée à l'indépendante, et négative.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 cor.test(mtcars$disp, mtcars$mpg, method = "kendall")
 
 
+#' 
+#' #### Test de corrélation avec des données textuelles
+#' 
+#' Pour faire un test de corrélation avec des données textuelles, il faut créer des variables numériques qui seront mises en relation. Les chaines de caractères ne peuvent pas, telles quelles, être fournies en entrée aux tests de corrélation. Il faut choisir une mesure liée à la question de recherche. On prendra ici un exemple très simple et assez futile, simplement pour montrer le processus.
+#' 
+#' Nous allons vérifier s'il y a une corrélation, positive ou négative, entre la longueur des titres et la longueur des textes. Comme unité de mesure, nous pouvons utiliser le nombre de mots, ou encore de caractères, des variables `titres` et `texte`. La simplicité de la démarche pour obtenir le nombre total de caractères de chaque titre et de chaque texte nous convainc d'opter pour cette option. On utilisera pour ce faire la fonction `nchar()`, qui prend une chaine de caractères en entrée.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # Dans R, la plupart des fonctions de base sont vectorisées, c'est-à-dire que si on lui donne en entrée un vecteur, la fonction effectuera l'opération demandée sur chacun de ses éléments. D'où la grande simplicité des instructions suivantes:
 
@@ -262,17 +416,31 @@ xyz[, c("ncharTitre", "ncharTexte")]
 
 
 
+#' 
+#' Procédons maintenant au test de corrélation.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 cor.test(xyz$ncharTitre, xyz$ncharTexte, method = "kendall")
 
 
 
+#' 
+#' La mesure de corrélation, le `tau de Kendall`, est positive, mais très proche de zéro, ce qui dénote une corrélation très faible. On peut projeter ces données dans un diagramme à points
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 ggplot(xyz, aes(x=ncharTitre, y=ncharTexte))+
   geom_jitter()+
   geom_smooth()
 
 
+#' 
+#' ## Enrichissement des données
+#' 
+#' On peut tirer profit des données numériques ajoutées (longueur des titres et des textes) pour créer de nouveaux champs. Par exemple, on pourrait souhaiter classer les textes selon qu'ils sont "courts", "moyens" ou "longs". Un tel type de données est dit "catégoriel". Ce type de données est généralement encapsulé dans des objets appelés `factor` dans R. Ci-dessous, nous allons choisir trois seuils aléatoires pour diviser nos données.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # On peut tout d'abord observer le sommaire statistique et s'en inspirer
 summary(xyz$ncharTexte)
@@ -288,21 +456,73 @@ xyz$longueur_texte_cat <- factor(
 # Exercice: observez la distribution de cette variable avec la fonction table().
 
 
+#' 
+#' On peut observer ces proportions à l'aide d'un diagramme à barres.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 ggplot(xyz, aes(x = longueur_texte_cat))+                        
   geom_bar(stat = "count")
 
 
+#' 
+#' ## Exploration 2: les données textuelles
+#' 
+#' Pour explorer les données textuelles à proprement parler, soit les textes de fiction contenus dans le tableau sous la variable `texte`, nous devons transformer l'objet de fond en comble. Comme on l'a vu ci-dessus avec les tests de corrélation, il est plus facile de demander à l'ordinateur de traiter des chiffres que des mots! Le corpus, composé des données textuelles et des métadonnées, sera donc transformé en une grande matrice d'occurrences de type documents-mots, où chaque ligne correspondra à un document et chaque colonne, à l'un des mots du vocabulaire des données textuelles.
+#' 
+#' Figure 1: matrice documents-mots (dtm)
+#' 
+#' ![](images/Capture%20d%E2%80%99e%CC%81cran,%20le%202023-02-19%20a%CC%80%2015.17.58-01.png)
+#' 
+#' Comme vous le voyez, une **matrice** est un objet qui ressemble beaucoup à un tableau de données, à ceci près que les valeurs dans les cellules sont toutes du même type (ici numérique). Dans notre grande matrice documents-mots, les valeurs correspondront au nombre de fois que tel mot en colonne apparaît dans tel texte en ligne. La représentation des textes qui en résulte est souvent appelée *Bag-Of-Words*, un "sac de mots", car chaque texte est conçu comme un ensemble particulier de mots dont l'ordre d'apparition n'est pas pris en compte. Cette représentation repose sur l'idée qu'un texte qui contient un grand nombre de fois les mots "enfant", "parent" et "lien", par exemple, parlera vraisemblablement de la relation parent-enfant.
+#' 
+#' Pour faire face aux limites de ce modèle un peu grossier, les spécialistes ont mis au point plusieurs techniques telle l'application d'antidictionnaires aux matrices pour éliminer les mots fonctionnels ou sans intérêt dans un contexte de recherche spécifique. On peut également filtrer les matrices selon des seuils d'occurrences inférieurs ou supérieurs, on peut les pondérer pour augmenter le poids de mots (par exemple ceux qui sont particulièrement représentatifs d'un texte par rapport à tous les autres textes du corpus) et les normaliser (pour mieux comparer des textes de longueurs différentes). On peut également forger des n-grammes fondés sur des expressions d'intérêt pour la recherche ou sur des mesures de collocation. Nous ne ferons pas toutes ces opérations ici, mais il est important que vous sachiez que les limites inhérentes au *BOW* ont fait l'objet de nombreuses recherches et suscité des stratégies pour en neutraliser les inconvénients.
+#' 
+#' Également, il est bon de savoir que d'autres représentations du texte ont fait leur apparition depuis le début du siècle (word2vec, BERT, etc.), dont on ne parlera pas ici. Le fameux modèle de langue GPT-3, derrière ChatGPT, est le dernier en date de ces modèles.
+#' 
+#' Dans la suite de l'atelier, nous allons donc transformer le corpus textuel en une grande matrice d'occurrences de type documents-mots.
+#' 
+#' Pour faire l'ensemble des opérations, nous allons recourir à l'extension **quanteda**, créée spécifiquement pour l'analyse statistique des textes. Il existe plusieurs autres extensions de ce type (**udpipe**, **text2vec**, **tm**, **lsa**, **tidytext**, etc.). On retient ici quanteda en raison de la cohérence de la syntaxe et de la grande variété des analyses qu'elle permet.
+#' 
+#' On gagnera à consulter la page du *Comprehensive R Archive Network (CRAN)* consacrée au [*Natural Language Processing*](https://cran.r-project.org/web/views/NaturalLanguageProcessing.html). On y trouvera de nombreuses extensions consacrées à ce type de tâche.
+#' 
+#' ### Transformation de l'objet avec Quanteda
+#' 
+#' Le processus de transformation de l'objet tableau de données en grande matrice se fait, dans Quanteda, en trois grandes étapes.
+#' 
+#' 1.  La première étape est la création d'un corpus avec la fonction `corpus()`. On y précise la colonne des identifiants uniques et la colonne contenant le texte à analyser;
+#' 
+#' 2.  La deuxième étape est la séparation des mots de chacun des textes du corpus, ce qu'on appelle tokénisation ou lemmatisation. On peut à cette étape se servir d'un antidictionnaire pour éliminer les mots fonctionnels;
+#' 
+#' 3.  La troisième étape est le passage entre cet objet "tokens" à la dfm (*document-feature matrix*).
+#' 
+#' Les métadonnées sont emmagasinées dans chacun de ces objets. On verra comment les utiliser pour explorer des sous-ensembles de documents (par exemple tous les textes d'un même auteur).
+#' 
+#' Pour plus d'information sur chacune des fonctions, consultez la documentation. Exemple:
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 ?quanteda::corpus()
 
 
+#' 
+#' #### Premiière étape: création d'un objet corpus
+#' 
+#' Les arguments de la fonction `corpus()` permettent de préciser les colonnes du tableau correspondant aux identifiants uniques et aux textes.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 xyz_corp <- quanteda::corpus(xyz, docid_field = "doc_id", text_field = "texte")   
 
 head(xyz_corp, 2)
 
 
+#' 
+#' #### Deuxième étape: création d'un objet tokens avec le corpus
+#' 
+#' La transformation de l'objet **corpus** en objet **tokens** correspond à la séparation des mots ou n-grammes de chaque texte. C'est ce qu'on appelle la tokénisation. Plusieurs opérations peuvent être faites à la volée.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 xyz_toks <- tokens(xyz_corp, 
                    remove_punct = TRUE,              # On supprime à la volée la ponctuation
                    remove_symbols = TRUE,            # On supprime à la volée les symboles
@@ -313,6 +533,10 @@ xyz_toks <- tokens(xyz_corp,
 head(xyz_toks, 2)
 
 
+#' 
+#' #### Troisième étape: création d'un objet dfm à partir de l'objet tokens
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # On transforme l'objet tokens en dfm
 xyz_dfm <- dfm(xyz_toks) |>
@@ -333,6 +557,14 @@ head(xyz_dfm, 2)
 xyz_dfm
 
 
+#' 
+#' ### Exploration du vocabulaire de sous-ensembles de textes
+#' 
+#' L'extension Quanteda rend aisée l'exploration du vocabulaire de sous-ensembles de textes. Ces sous-ensembles sont générés grâce aux métadonnées que les objets **corpus**, **tokens** et dfmportent avec eux. La fonction `dfm_subset()` a un argument `subset=` qui permet d'insérer une expression formelle agissant comme filtre.
+#' 
+#' Dans le premier exemple, nous allons explorer les vocabulaires (filtrés) des textes parus en 2015 et en 2021. Le résultat sera transposé en un nuage de mots où ceux qui sont les plus fréquents seront magnifiés et positionnés au centre du nuage.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
           
 xyz_dfm_rioux <- dfm_subset(xyz_dfm, subset = auteur == "Hélène Rioux")
@@ -346,6 +578,10 @@ textplot_wordcloud(xyz_dfm_dorais, max_words = 200)
 
 
 
+#' 
+#' Si on veut mieux comparer deux sous-groupes dans un même graphique, on peut utiliser le code suivant, un peu plus sophistiqué.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 dfm_comp_auteurs <- xyz_corp |> 
   
@@ -373,6 +609,10 @@ textplot_wordcloud(dfm_comp_auteurs_groupes, comparison = TRUE, max_words = 300,
 
 
 
+#' 
+#' On pourrait maintenant souhaiter comparer les vocabulaires dominants de numéros thématiques.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 xyz_dfm_th_jardin <- dfm_subset(xyz_dfm, subset = theme == "Jardin : un enfer de morceaux de paradis")
 
@@ -389,6 +629,18 @@ textplot_wordcloud(xyz_dfm_th_YOLO)
 
 #### Exercice: choisissez deux autres numéros thématiques et comparez les vocabulaires. Vous pouvez utiliser la voie simple ou reprendre le bloc d'instructions enchainées ci-dessus.
 
+#' 
+#' ### Réseaux des cooccurrences
+#' 
+#' L'exploration de textes fondée sur la fréquence (brute, pondérée ou normalisée) et la technique du "sac de mots" (*BOW*) ne dit rien du contexte immédiat dans lequel les mots sont plongés. Dans le nuage de mots généré à partir des textes de l'auteur David Dorais, on a vu que "jeune" et "femme" sont les mots dominants, suivis de près par "homme". De là à dire que les textes de Dorais s'intéressent à la "jeune femme", il y a un pas qu'on ne peut franchir avant d'avoir vérifié si les mots apparaissent bel et bien, de manière récurrente, dans le même contexte. L'une des manières de se rapprocher du texte et de vérifier quels couples de mots s'attirent, apparaissent souvent dans un même contexte, est de créer un **réseau de cooccurrence**.
+#' 
+#' Selon Kboubi, Habacha, and BenAhmed (2010), "un réseau de cooccurrence est un réseau de termes où chaque noeud représente un terme et un arc entre deux nœuds représente la relation de cooccurrence entre les deux termes concernés. Ce réseau permet d'identifier les termes qui apparaissent souvent ensemble au sein d'une même fenêtre mais pas nécessairement juxtaposés."
+#' 
+#' Le réseau de cooccurrence ne permet pas encore de savoir si "jeune" et "femme" se suivent dans cet ordre dans les textes de D. Dorais, mais il permettra, à mi-chemin entre le "sac de mots" et la plongée dans le texte par une lecture rapprochée, de vérifier les associations.
+#' 
+#' L'extension Quanteda offre une fonction qui permet, à partir d'un objet tokens ou dfm, de construire une matrice de cooccurrence qui puisse être projetée sous forme de diagramme de réseau. C'est cette fonction, fcm(), que nous utiliserons ci-dessous. Nous allons devoir réduire considérablement les dimensions de cette matrice en utilisant un nombre réduit de cooccurrences -- les plus fréquentes --, sans quoi le diagramme sera impossible à déchiffrer. Mais vous pouvez modifier tous les paramètres et observer les effets sur le diagramme.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
   # On fournit en entrée l'objet tokens créé auparavant
 xyz_fcm <- xyz_toks |>
@@ -412,6 +664,10 @@ textplot_network(fcm_select(xyz_fcm, principaux_mots), min_freq = 0.7)
 
 
 
+#' 
+#' L'épaisseur du lien et la proximité entre les mots "jeune" et "femme" montrent que les mots s'appellent fortement. On peut retourner à la matrice pour voir exactement combien de fois les deux termes cooccurrent dans une fenêtre de 10 mots.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 
 # Conversion de l'objet fcm en simple matrice
 xyz_cooc_matrice <- convert(xyz_fcm, "matrix")
@@ -422,6 +678,12 @@ str(xyz_cooc_matrice)
 # On peut donc indexer la matrice avec les mots à observer. La valeur renvoyée correspondra au nombre de fois que ces mots cooccurrent dans la fenêtre de 10 mots.
 xyz_cooc_matrice["jeune", "femme"]
 
+#' 
+#' ### Au plus près des textes: le concordancier
+#' 
+#' On peut souhaiter se rapprocher davantage encore de la texture des mots et vérifier *de visu*, sans pour autant lire intégralement tous les textes, si "jeune" et "femme" se suivent dans cet ordre et, le cas échéant, quels mots viennent tout juste avant et après la cooccurrence. On utilisera alors un outil bien connu, le concordancier, que Quanteda met à notre portée avec la fonction `kwic()`. Cette fonction, dont le nom correspond à *keywords-in-context*, peut prendre en entrée un objet **corpus** ou encore un objet **tokens**. Un argument, `window=`, permet d'indiquer le nombre de mots que l'on souhaite obtenir de chaque côté du mot pivot. Ce dernier est précisé à l'aide de l'argument `pattern=`, ce qui veut dire que vous pouvez utiliser une expression régulière (*regex*) pour attraper différentes formes d'un mot.
+#' 
+## ----------------------------------------------------------------------------------------------------------------------------
 xyz_corp |> 
 
   corpus_subset(subset = auteur == "David Dorais") |> 
@@ -438,3 +700,38 @@ xyz_corp |>
        valuetype = "regex") |> head(10)
 
 
+
+#' 
+#' Ce concordancier est la dernière étape de notre exploration, mais plusieurs autres techniques sont à votre portée pour explorer et analyser vos données textuelles. La bibliographie ci-dessous pointe vers quelques-unes des ressources par où commencer votre périple en ADT. Sur le langage R, voyez notamment la [documentation](https://stt4230.rbind.io/) du cours en ligne de la statisticienne Sophie Baillargeon. Pour une application de R à l'analyse de textes littéraires, on pourra consulter la version gratuite du livre de Matthew L. Jockers, [*Text Analysis with R for Students of Literature*](https://doi.org/10.1007/978-3-319-03164-4). Les politologues apprécieront les ressources mises à leur disposition par Jean-Herman Gay (U. de Sherbrooke) sur son site [dimension.usherbrooke.ca](https://dimension.usherbrooke.ca/).
+#' 
+#' Suivez également la [programmation du LADIREC et ses ateliers](https://www.mcgill.ca/innovation/fr/channels/event/ateliers-du-ladirec-2023-initiation-lanalyse-de-textes-assistee-par-ordinateur-345112). Le prochain aura lieu le 9 mars 2023 et portera sur la visualisation des résultats d'analyse avec l'extension ggplot2 de R.
+#' 
+#' Pour toute question ou commentaire: pascal.brissette\@mcgill.ca
+#' 
+#' ## Bibliographie
+#' 
+#' Baillargeon, Sophie. s. d. « R pour scientifique ». Consulté le 31 août 2022. <https://stt4230.rbind.io/>.
+#' 
+#' Baruffa, Oscar. s. d. *Big Book of R*. Consulté le 1 septembre 2022. <https://www.bigbookofr.com/>.
+#' 
+#' Claveau, Vincent, Ewa Kijak, et Olivier Ferret. s. d. « Explorer le graphe de voisinage pour améliorer les thésaurus distributionnels ».
+#' 
+#' Digital Scholarship Hub - McGill University, réal. 2022. *Planning Your Text Analysis Project*. <https://www.youtube.com/watch?v=6DNmoRHRQ-g>.
+#' 
+#' Goulet, Vincent. s. d. « Introduction à R ». Consulté le 29 août 2022. <https://vigou3.github.io/raquebec-atelier-introduction-r/>.
+#' 
+#' Grimmer, Justin. 2022. *Text as Data: A New Framework for Machine Learning and the Social Sciences*. Princeton.
+#' 
+#' Guay, Jean-Herman. s. d. « Statistiques en sciences humaines et sociales avec R ». Consulté le 19 août 2022. <https://dimension.usherbrooke.ca/>.
+#' 
+#' Jockers, Matthew L. 2014. *Text Analysis with R for Students of Literature*. Quantitative Methods in the Humanities and Social Sciences. Springer International Publishing. <https://doi.org/10.1007/978-3-319-03164-4>.
+#' 
+#' Kboubi, Férihane, Anja Habacha Chabi, et Mohamed BenAhmed. s. d. « L'exploitation des relations d'association de termes pour l'enrichissement de l'indexation de documents textuels ».
+#' 
+#' Lebart, Ludovic, Bénédicte Pincemin, et Céline Poudat. 2019. *Analyse des données textuelles*. Mesure et évaluation 11. Québec: Presses de l'Université du Québec.
+#' 
+#' Paradis, Emmanuel. 2002. « R pour les débutants ». <https://cran.r-project.org/doc/contrib/Paradis-rdebuts_fr.pdf>.
+#' 
+#' Series, QCBS R. Workshop. s. d. « Ateliers du Centre québécois des sciences de la biodiversité ». Consulté le 20 août 2022. <https://r.qcbs.ca/fr/>.
+#' 
+#' Silge, Julia, et David Robinson. s. d. *Text Mining with R*. Consulté le 6 mars 2020. <https://www.tidytextmining.com/>.
