@@ -1,4 +1,5 @@
-# Contenu du répertoire
+# Atelier -- exploration des données textuelles avec R
+## Contenu du répertoire
 
 Le répertoire contient le matériel utilisé lors d'un atelier d'introduction à l’exploration des données textuelles avec R donné le 23 février 2023. L'atelier a été conçu pour des chercheur·euse·s en sciences humaines sans connaissance préalable en programmation. Les éléments du répertoire sont:
 
