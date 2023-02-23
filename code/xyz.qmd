@@ -2,12 +2,12 @@
 title: "Exploration de données textuelles avec R"
 author: "Pascal Brissette"
 date: 2023-02-23
-format: pdf
-  # html:
-  #   toc: true
-  #   theme: yete
-  #   fontsize: 1.1em
-  #   linestretch: 1.7
+format: 
+  html:
+    toc: true
+    theme: yete
+    fontsize: 1.1em
+    linestretch: 1.7
 
 toc: true
 editor: visual
@@ -274,7 +274,7 @@ xyz$annee <- stringr::str_extract(xyz$date, "[0-9]+")
 
 ```
 
-#### Problème 5. Forcer le changement de type de données des colonnes `annee` et `numero` 
+#### Problème 5. Forcer le changement de type de données des colonnes `annee` et `numero`
 
 ```{r}
 
