@@ -18,7 +18,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 ```
 
-## Avant-propos
+# Avant-propos
 
 ### Fichier Quarto VS fichier R
 
@@ -50,19 +50,6 @@ Pour exécuter tout un bloc de code, vous pouvez cliquer sur la flèche à l'ext
 ?paste()
 ?str()
 ?nchar()
-
-```
-
-### Nettoyage de l'environnement de travail (élimination des objets inutiles)
-
-L'environnement de travail, auquel nous donne accès la fenêtre supérieure droite de RStudio, contient tous vos objets. Chaque fois que vous emmagasinez une donnée dans une variable, celle-ci est ajoutée à l'environnement. Cela prend peu de temps pour encombrer l'environnement (et la mémoire) de RStudio. Voici comment nettoyer l'environnement (attention: aucun retour en arrière...):
-
-```{r}
-
-
-# Élimination de tout le contenu de l'environnement (opération irréversible):
-rm(list = ls()) 
-
 
 ```
 
@@ -116,7 +103,7 @@ library(janitor)              # Extension qui offre des fonctions pour le "netto
 
 ## Importation des données
 
-Les données que nous utiliserons sont contenues dans un dossier séparé du répertoire. Il est judicieux de séparer les scripts, les données et les résultats dans trois dossiers différents. Les données proviennent d'un fichier Excel. Pour lire un tel fichier, il faut utiliser une extension spécialisée appelée **readxl**. Ci-dessous, on appelle la fonction `read_excel()` de cette extension et on lui donne, comme argument `path=`, le chemin conduisant vers le fichier. On lui indique également (argument `sheet=1`) que seule la première feuille de calcul doit être lue.
+Les données que nous utiliserons sont contenues dans un dossier séparé du répertoire. Il est judicieux de séparer les scripts, les données et les résultats dans trois dossiers différents. Les données proviennent d'un fichier Excel. Pour lire un tel fichier, il faut utiliser une extension spécialisée appelée **readxl**. Ci-dessous, on appelle la fonction `read_excel()` de cette extension et on lui donne, comme argument `path=`, le chemin conduisant vers le fichier. On lui indique également avec l'argument `sheet=1` que seule la première feuille de calcul doit être lue.
 
 Le résultat de cette lecture est emmagasiné dans la variable `xyz`.
 
@@ -129,6 +116,8 @@ xyz <-
   readxl::read_excel("../donnees/XYZ-2015-2022-table-20230205JV.xlsx", sheet = 1)
 
 ```
+
+# Examen de l'objet et prétraitement
 
 ## Examen de l'objet
 
@@ -164,33 +153,26 @@ class(xyz$`ISSN (numérique)`)
 
 ### Valeurs nulles et cellules sans contenu
 
-On ne verra pas ici les différentes manières de traiter les valeurs nulles ou sans contenu, mais on peut au moins montrer comment les repérer. Dans R, une valeur nulle est indiquée par NA (*not available*). Cependant, vous quand vous travaillez avec des textes, vous pouvez avoir de nombreuses chaines de caractères tout simplement vides. On voit ci-dessous la manière de repérer ces deux types de valeurs (à faire pour vous même après l'atelier).
+Dans R, une valeur nulle est indiquée par `NA` (*not available*). Cependant, quand vous travaillez avec des textes, vous pouvez avoir de nombreuses chaines de caractères tout simplement vides, `""`. Dans le bloc ci-dessous, nous allons introduire des colonnes avec de telles valeurs et montrer comment les repérer.
 
 ```{r}
 #| include: false
 
-# La première fonction renvoie, pour chaque colonne du tableau, la somme des valeurs correspondant à NA.
+# On crée deux colonnes, l'une composée de NA, l'autre de chaines vides "":
+xyz$na <- NA
+xyz$chaine_vide <- ""
+
+# La fonction ci-dessous examine chaque valeur de chaque colonne et fait la somme du nombre de NA trouvés
 sapply(xyz, function(x)
   sum(is.na(x)))
 
-# Cette deuxième fonction renvoie, pour chacune des colonnes du tableau, la somme des valeurs correspondant à une chaîne de caractères vide.
-sapply(xyz, function(x)
-  sum(x == ""))
-
-
-# Simple test: on peut créer deux colonnes sans contenu, puis vérifier à nouveau si R repère ces valeurs nulles
-xyz$test <- NA
-xyz$test2 <- ""
-
-
-sapply(xyz, function(x)
-  sum(is.na(x)))
+# La fonction ci-dessous examine chaque valeur de chaque colonne et fait la somme du nombre de chaines vides "" trouvées
 sapply(xyz, function(x)
   sum(x == ""))
 
 
 # On supprime ainsi des colonnes devenues inutiles
-xyz[, c("test", "test2")] <- NULL
+xyz[, c("na", "chaine_vide")] <- NULL
 
 
 # Vérification que les colonnes ont bien disparu
@@ -360,9 +342,11 @@ xyz <-
 
 ```
 
-## Exploration 1: les métadonnées
+# Exploration 1: les métadonnées
 
-Maintenant que le tableau ne présente plus de problèmes apparents, on peut commencer à explorer les données. On veut pour l'essentiel se familiariser avec le contenu du tableau, observer des distributions, voir si des variables sont corrélées. Il est bon de séparer dans un premier temps l'exploration des métadonnées de celle des données textuelles.
+## Analyse univariée
+
+Maintenant que le tableau ne présente plus de problèmes apparents, on peut commencer à explorer les données. On veut pour l'essentiel se familiariser avec le contenu du tableau, observer des distributions, repérer les cas aberrants (outliers). Cette observation, lorsqu'elle s'attache à une seule variable, s'appelle analyse univariée.
 
 Une fonction de base très utile est `table()`. Celle-ci calcule le nombre de valeurs uniques d'un vecteur. On peut ensuite faire des statistiques sur cette distribution.
 
@@ -398,29 +382,22 @@ sort(distrib_annuelle, decreasing = TRUE)
 
 ```
 
-Vous trouverez ci-dessous la réponse à la question posée dans l'exercice du dernier bloc de code (quels sont les 10 principaux contributeurs). Vous verrez que différentes syntaxes peuvent produire le même résultat.
+Vous trouverez ci-dessous la réponse à la question posée dans l'exercice du dernier bloc de code (quels sont les 10 principaux contributeurs).
 
 ```{r}
 
-# 1. Syntaxe étendue -- plus explicite: le résultat de chaque opération est emmagasiné dans des conteneurs indépendants, sollicitant davantage la mémoire
 distrib_auteurs <- table(xyz$auteur)
+
 distrib_auteurs_ord <- sort(distrib_auteurs, decreasing = TRUE)
+
 head(distrib_auteurs_ord, n = 10)
-
-
-# 2. Syntaxe condensée: enchâssement des fonctions -- lire de l'intérieur vers l'extérieur
-head(sort(table(xyz$auteur), decreasing = TRUE), 10)
-
-
-# 3. Syntaxe enchainée (pipe), qui se lit de gauche à droite
-xyz$auteur |> table() |> sort(decreasing = TRUE) |> head(10)
 
 
 ```
 
-### Tests de corrélation
+## Analyse multivariée
 
-Au cours de l'exploration des données, on peut tenter de comprendre s'il existe des corrélations entre des variables.
+Au cours de l'exploration des données, on peut tenter de comprendre s'il existe des corrélations entre deux ou plusieurs variables. C'est ce qu'on appelle l'analyse multivariée. L'un des outils souvent utilisé pour observer la corrélation s'appelle justement "test de corrélation".
 
 #### Test de corrélation avec des données numériques
 
@@ -522,7 +499,7 @@ ggplot(xyz, aes(x = longueur_texte_cat))+
 
 ```
 
-## Exploration 2: les données textuelles
+# Exploration 2: les données textuelles
 
 Pour explorer les données textuelles à proprement parler, soit les textes de fiction contenus dans le tableau sous la variable `texte`, nous devons transformer l'objet de fond en comble. Comme on l'a vu ci-dessus avec les tests de corrélation, il est plus facile de demander à l'ordinateur de traiter des chiffres que des mots! Le corpus, composé des données textuelles et des métadonnées, sera donc transformé en une grande matrice de fréquences de type documents-mots, où chaque ligne correspondra à un document et chaque colonne, à l'un des mots du vocabulaire des données textuelles.
 
@@ -542,7 +519,7 @@ Pour faire l'ensemble des opérations, nous allons recourir à l'extension **qua
 
 On gagnera à consulter la page du *Comprehensive R Archive Network (CRAN)* consacrée au [*Natural Language Processing*](https://cran.r-project.org/web/views/NaturalLanguageProcessing.html). On y trouvera de nombreuses extensions consacrées à ce type de tâche.
 
-### Transformation de l'objet avec Quanteda
+## Transformation de l'objet avec Quanteda
 
 Le processus de transformation d'un tableau de données en grande matrice se fait, dans Quanteda, en trois grandes étapes.
 
@@ -562,7 +539,7 @@ Pour plus d'information sur chacune des fonctions, consultez la documentation. E
 
 ```
 
-#### Premiière étape: création d'un objet corpus
+#### Première étape: création d'un objet corpus
 
 Les arguments de la fonction `corpus()` permettent de préciser les colonnes du tableau correspondant aux identifiants uniques et aux textes.
 
@@ -624,7 +601,7 @@ head(xyz_dfm, 2)
 
 ```
 
-### Exploration du vocabulaire de sous-ensembles de textes
+## Exploration du vocabulaire de sous-ensembles de textes
 
 L'extension quanteda rend aisée l'exploration du vocabulaire de sous-ensembles de textes. Ces sous-ensembles sont générés grâce aux métadonnées que les objets **corpus**, **tokens** et **dfm** portent avec eux. La fonction `dfm_subset()` a un argument `subset=` qui permet d'insérer une expression formelle agissant comme filtre.
 
@@ -714,7 +691,7 @@ textplot_wordcloud(xyz_dfm_th_YOLO)
 #### Exercice: choisissez deux autres numéros thématiques et comparez les vocabulaires. Vous pouvez utiliser la voie simple ou reprendre le bloc d'instructions enchainées ci-dessus.
 ```
 
-### Réseaux des cooccurrences
+## Réseaux des cooccurrences
 
 L'exploration de textes fondée sur la fréquence (brute, pondérée ou normalisée) et la technique du "sac de mots" (*BOW*) ne dit rien du contexte immédiat dans lequel les mots sont plongés. Dans le nuage de mots généré à partir des textes de l'auteur David Dorais, on a vu que "jeune" et "femme" sont les mots dominants, suivis de près par "homme". De là à dire que les textes de Dorais s'intéressent à la "jeune femme", il y a un pas qu'on ne peut franchir avant d'avoir vérifié si les mots apparaissent bel et bien, de manière récurrente, dans le même contexte. L'une des manières de se rapprocher du texte et de vérifier quels couples de mots s'attirent, apparaissent souvent dans un même contexte, est de créer un **réseau de cooccurrence**.
 
@@ -773,7 +750,7 @@ str(xyz_cooc_matrice)
 xyz_cooc_matrice["jeune", "femme"]
 ```
 
-### Au plus près des textes: le concordancier
+## Au plus près des textes: le concordancier
 
 On peut souhaiter se rapprocher davantage encore de la texture des mots et vérifier *de visu*, sans pour autant lire intégralement tous les textes, si "jeune" et "femme" se suivent dans cet ordre dans les textes de Dorais et, le cas échéant, quels mots viennent tout juste avant et après la cooccurrence. On utilisera alors un outil bien connu, le concordancier, que quanteda met à notre portée avec la fonction `kwic()`. Cette fonction, dont le nom correspond à *keywords-in-context*, peut prendre en entrée un objet **corpus** ou encore un objet **tokens**. Un argument, `window=`, permet d'indiquer le nombre de mots que l'on souhaite obtenir de chaque côté du mot pivot. Ce dernier est précisé à l'aide de l'argument `pattern=`, ce qui veut dire que vous pouvez utiliser une expression régulière (*regex*) pour attraper différentes formes d'un mot.
 
