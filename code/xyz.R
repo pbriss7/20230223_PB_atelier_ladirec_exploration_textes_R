@@ -2,23 +2,22 @@
 #' title: "Exploration de données textuelles avec R"
 #' author: "Pascal Brissette"
 #' date: 2023-02-23
-#' format: 
-#'   html:
-#'     toc: true
-#'     theme: yete
-#'     fontsize: 1.1em
-#'     linestretch: 1.7
-#' 
+#' format:
+#'    html:
+#'      toc: true
+#'      theme: yete
+#'      fontsize: 1.1em
+#'      linestretch: 1.7
 #' toc: true
 #' editor: visual
 #' ---
 #' 
-## ----setup, include=FALSE-------------------------------------------------------------------------------------------------------------------
+## ----setup, include=FALSE----------------------------------------------------------------------------------------------------------
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 
 #' 
-#' ## Avant-propos
+#' # Avant-propos
 #' 
 #' ### Fichier Quarto VS fichier R
 #' 
@@ -28,7 +27,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 #' 
 #' Lorsque vous cliquez sur le bouton **Render** dans le menu supérieur, un document est généré comprenant aussi bien le contenu que le résultat des blocs de code. Nous n'aurons pas à faire cela dans le cadre de l'atelier, mais nous allons exécuter le code qui se trouve dans les blocs comme celui-ci:
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 
 # Création d'un vecteur comprenant trois titres de romans
@@ -44,23 +43,10 @@ cat("Mon roman préféré est ", sample(x = romans, size = 1), ".", sep = "")
 #' 
 #' Pour exécuter tout un bloc de code, vous pouvez cliquer sur la flèche à l'extrémité supérieure droite du bloc. Si vous souhaitez plutôt exécuter les instructions d'un même bloc les unes après les autres, et observer le résultat, vous pouvez placer votre curseur au début de la ligne d'instruction à exécuter, puis appuyez sur 'COMMAND' + 'RETURN' (raccourci Mac) ou 'CTRL' + 'RETURN' (raccourci Windows) de votre clavier. Vous pouvez vous pratiquer avec les lignes d'instruction ci-dessous. Chacune appelle de l'aide sur une fonction en particulier. La fenêtre d'aide s'ouvrira dans la partie inférieure droite de RStudio.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 ?paste()
 ?str()
 ?nchar()
-
-
-#' 
-#' ### Nettoyage de l'environnement de travail (élimination des objets inutiles)
-#' 
-#' L'environnement de travail, auquel nous donne accès la fenêtre supérieure droite de RStudio, contient tous vos objets. Chaque fois que vous emmagasinez une donnée dans une variable, celle-ci est ajoutée à l'environnement. Cela prend peu de temps pour encombrer l'environnement (et la mémoire) de RStudio. Voici comment nettoyer l'environnement (attention: aucun retour en arrière...):
-#' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
-
-
-# Élimination de tout le contenu de l'environnement (opération irréversible):
-rm(list = ls()) 
-
 
 
 #' 
@@ -68,7 +54,7 @@ rm(list = ls())
 #' 
 #' Il est d'usage de placer en haut de son script les extensions qu'on compte utiliser. Dans le bloc ci-dessous, vous trouvez une série d'instructions indiquant à R que si telle extension n'est pas installée déjà, il doit le faire (la structure de chaque ligne correspond à ce qu'on appelle "structure de contrôle"). Ensuite, chacune des extensions est activée individuellement. Il y a des manières plus rapides de faire cela, mais on déplie ici le processus par souci de clarté.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 # Installation des extensions dont nous aurons besoin (si elles ne sont pas déjà installées)
 if(!"stringr" %in% rownames(installed.packages())) {
@@ -114,11 +100,11 @@ library(janitor)              # Extension qui offre des fonctions pour le "netto
 #' 
 #' ## Importation des données
 #' 
-#' Les données que nous utiliserons sont contenues dans un dossier séparé du répertoire. Il est judicieux de séparer les scripts, les données et les résultats dans trois dossiers différents. Les données proviennent d'un fichier Excel. Pour lire un tel fichier, il faut utiliser une extension spécialisée appelée **readxl**. Ci-dessous, on appelle la fonction `read_excel()` de cette extension et on lui donne, comme argument `path=`, le chemin conduisant vers le fichier. On lui indique également (argument `sheet=1`) que seule la première feuille de calcul doit être lue.
+#' Les données que nous utiliserons sont contenues dans un dossier séparé du répertoire. Il est judicieux de séparer les scripts, les données et les résultats dans trois dossiers différents. Les données proviennent d'un fichier Excel. Pour lire un tel fichier, il faut utiliser une extension spécialisée appelée **readxl**. Ci-dessous, on appelle la fonction `read_excel()` de cette extension et on lui donne, comme argument `path=`, le chemin conduisant vers le fichier. On lui indique également avec l'argument `sheet=1` que seule la première feuille de calcul doit être lue.
 #' 
 #' Le résultat de cette lecture est emmagasiné dans la variable `xyz`.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 # Lecture des données et assignation à une variable
 # Les deux points suivis de / indiquent à R qu'il doit remonter d'un niveau pour trouver un dossier appelé `donnees`
@@ -128,11 +114,13 @@ xyz <-
 
 
 #' 
+#' # Examen de l'objet et prétraitement
+#' 
 #' ## Examen de l'objet
 #' 
 #' La différence entre un logiciel comme Excel et un environnement de développement comme RStudio, c'est qu'on ne voit pas d'emblée le contenu des objets qu'on importe ou qu'on crée. Il faut soit les appeler directement (on exécute le nom d'un objet), soit cliquer sur l'icône de la grille qui se trouve à droite du nom de l'objet dans la partie Environment (cela fera apparaître une fenêtre similaire à une feuille Excel), soit encore utiliser différentes fonctions qui renverront les informations utiles sur l'objet. Voici les principales:
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 # Structure de l'objet
 str(xyz)
 
@@ -160,31 +148,24 @@ class(xyz$`ISSN (numérique)`)
 #' 
 #' ### Valeurs nulles et cellules sans contenu
 #' 
-#' On ne verra pas ici les différentes manières de traiter les valeurs nulles ou sans contenu, mais on peut au moins montrer comment les repérer. Dans R, une valeur nulle est indiquée par NA (*not available*). Cependant, vous quand vous travaillez avec des textes, vous pouvez avoir de nombreuses chaines de caractères tout simplement vides. On voit ci-dessous la manière de repérer ces deux types de valeurs (à faire pour vous même après l'atelier).
+#' Dans R, une valeur nulle est indiquée par `NA` (*not available*). Cependant, quand vous travaillez avec des textes, vous pouvez avoir de nombreuses chaines de caractères tout simplement vides, `""`. Dans le bloc ci-dessous, nous allons introduire des colonnes avec de telles valeurs et montrer comment les repérer.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
-# La première fonction renvoie, pour chaque colonne du tableau, la somme des valeurs correspondant à NA.
+## ----------------------------------------------------------------------------------------------------------------------------------
+# On crée deux colonnes, l'une composée de NA, l'autre de chaines vides "":
+xyz$na <- NA
+xyz$chaine_vide <- ""
+
+# La fonction ci-dessous examine chaque valeur de chaque colonne et fait la somme du nombre de NA trouvés
 sapply(xyz, function(x)
   sum(is.na(x)))
 
-# Cette deuxième fonction renvoie, pour chacune des colonnes du tableau, la somme des valeurs correspondant à une chaîne de caractères vide.
-sapply(xyz, function(x)
-  sum(x == ""))
-
-
-# Simple test: on peut créer deux colonnes sans contenu, puis vérifier à nouveau si R repère ces valeurs nulles
-xyz$test <- NA
-xyz$test2 <- ""
-
-
-sapply(xyz, function(x)
-  sum(is.na(x)))
+# La fonction ci-dessous examine chaque valeur de chaque colonne et fait la somme du nombre de chaines vides "" trouvées
 sapply(xyz, function(x)
   sum(x == ""))
 
 
 # On supprime ainsi des colonnes devenues inutiles
-xyz[, c("test", "test2")] <- NULL
+xyz[, c("na", "chaine_vide")] <- NULL
 
 
 # Vérification que les colonnes ont bien disparu
@@ -215,7 +196,7 @@ colnames(xyz)
 #' 
 #' #### Problème 1. Renommer les colonnes
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 # On assigne aux noms de colonnes un vecteur comprenant, pour chaque colonne, le nom choisi, dans le bon ordre.
 colnames(xyz) <- c(
@@ -239,7 +220,7 @@ colnames(xyz) <- c(
 #' 
 #' #### Problème 2. Créer un identifiant unique: utiliser les numéros de ligne
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 # Nous allons créer une petite fonction maison qui va générer des identifiants uniques composé d'une chaine de caractères commençant par le nom de l'auteur du texte, suivi du numéro de la ligne du document dans le tableau. Ces éléments seront concaténés. La fonction recourra ensuite à la fonction `make_clean_names()` de l'extension janitor pour assurer un résultat propre et uniforme.
 
@@ -259,7 +240,7 @@ xyz$doc_id <-
 #' 
 #' #### Problème 3. Repérer les colonnes inutiles et les éliminer
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 # La première colonne semble contenir une information redondante. Vérifions:
 unique(xyz[, "periodique"])  
@@ -272,7 +253,7 @@ unique(xyz[, "theme"])
 
 
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 # Solution au problème no 3
 
 
@@ -294,7 +275,7 @@ xyz[, colonnes_a_supprimer] <- NULL
 #' 
 #' #### Problème 4. Créer une colonne contenant les années
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 
 # Il faut extraire les années de la colonne `date`. On utilise pour cela l'extension stringr.
@@ -309,7 +290,7 @@ xyz$annee <- stringr::str_extract(xyz$date, "[0-9]+")
 #' 
 #' #### Problème 5. Forcer le changement de type de données des colonnes `annee` et `numero`
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 # La fonction as.integer() force la conversion du type chararcter en type integer
 
@@ -324,7 +305,7 @@ xyz$annee <- as.integer(xyz$annee)
 #' 
 #' #### Problème 6. Remplacer un symbole dans une longue chaine de caractères (un texte)
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 
 # Observons tout d'abord un texte en particulier
@@ -347,20 +328,22 @@ xyz$texte <- gsub(
 #' 
 #' Enfin, par souci de lisibilité, réordonnons la séquence des colonnes.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 xyz <-
   xyz[, c("doc_id", "auteur", "titre", "numero", "annee", "theme", "texte")]
 
 
 #' 
-#' ## Exploration 1: les métadonnées
+#' # Exploration 1: les métadonnées
 #' 
-#' Maintenant que le tableau ne présente plus de problèmes apparents, on peut commencer à explorer les données. On veut pour l'essentiel se familiariser avec le contenu du tableau, observer des distributions, voir si des variables sont corrélées. Il est bon de séparer dans un premier temps l'exploration des métadonnées de celle des données textuelles.
+#' ## Analyse univariée
+#' 
+#' Maintenant que le tableau ne présente plus de problèmes apparents, on peut commencer à explorer les données. On veut pour l'essentiel se familiariser avec le contenu du tableau, observer des distributions, repérer les cas aberrants (outliers). Cette observation, lorsqu'elle s'attache à une seule variable, s'appelle analyse univariée.
 #' 
 #' Une fonction de base très utile est `table()`. Celle-ci calcule le nombre de valeurs uniques d'un vecteur. On peut ensuite faire des statistiques sur cette distribution.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 
 # La fonction `table( )` génère une table de fréquences
@@ -379,7 +362,7 @@ mean(distrib_annuelle)
 #' 
 #' Pour ordonner cette table en fonction des valeurs, on peut utiliser la fonction `sort( )`, auquel on passe l'argument `decreasing = TRUE` pour que les valeurs se présentent de manière décroissante.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 sort(distrib_annuelle, decreasing = TRUE)
 
@@ -392,35 +375,28 @@ sort(distrib_annuelle, decreasing = TRUE)
 
 
 #' 
-#' Vous trouverez ci-dessous la réponse à la question posée dans l'exercice du dernier bloc de code (quels sont les 10 principaux contributeurs). Vous verrez que différentes syntaxes peuvent produire le même résultat.
+#' Vous trouverez ci-dessous la réponse à la question posée dans l'exercice du dernier bloc de code (quels sont les 10 principaux contributeurs).
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
-# 1. Syntaxe étendue -- plus explicite: le résultat de chaque opération est emmagasiné dans des conteneurs indépendants, sollicitant davantage la mémoire
 distrib_auteurs <- table(xyz$auteur)
+
 distrib_auteurs_ord <- sort(distrib_auteurs, decreasing = TRUE)
+
 head(distrib_auteurs_ord, n = 10)
 
 
-# 2. Syntaxe condensée: enchâssement des fonctions -- lire de l'intérieur vers l'extérieur
-head(sort(table(xyz$auteur), decreasing = TRUE), 10)
-
-
-# 3. Syntaxe enchainée (pipe), qui se lit de gauche à droite
-xyz$auteur |> table() |> sort(decreasing = TRUE) |> head(10)
-
-
 
 #' 
-#' ### Tests de corrélation
+#' ## Analyse multivariée
 #' 
-#' Au cours de l'exploration des données, on peut tenter de comprendre s'il existe des corrélations entre des variables.
+#' Au cours de l'exploration des données, on peut tenter de comprendre s'il existe des corrélations entre deux ou plusieurs variables. C'est ce qu'on appelle l'analyse multivariée. L'un des outils souvent utilisé pour observer la corrélation s'appelle justement "test de corrélation".
 #' 
 #' #### Test de corrélation avec des données numériques
 #' 
 #' Dans l'exemple ci-dessous, on utilise un jeu de données issu de l'extension de base de R, `mtcars`. Celui-ci présente différentes marques et modèles de voitures et leurs attributs techniques, telle la distance parcourue par différents types de voitures selon le volume de leurs moteurs. Pour la démonstration, on voudrait savoir s'il y a une corrélation entre le volume du moteur (disp) et la distance au "gallon" que peut parcourir une voiture.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 mtcars[1:3, 1:3] # Dans le jeu de données, les noms de lignes (rownames) correspondent aux marques
 
@@ -431,7 +407,7 @@ plot(mtcars$disp, mtcars$mpg)
 #' 
 #' Le test de corrélation est un test statistique qui mesure l'interdépendance ou l'association entre des paires de valeurs. Plusieurs mesures permettent de vérifier la corrélation entre variables. Nous allons utiliser le coefficient appelé **tau de Kendall** (compris entre -1 et +1). Selon cette mesure, une corrélation positive est marquée par un tau positif, et inversement pour une corrélation négative. Plus le nombre s'éloigne de 0, plus la corrélation est forte. Vous pourrez lire l'article de Kendall [en ligne](https://academic.oup.com/biomet/article/30/1-2/81/176907). Avec les deux variables du jeu de données `mtcars`, le test montre que la variable dépendante est fortement corrélée à l'indépendante, et négative.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 cor.test(mtcars$disp, mtcars$mpg, method = "kendall")
 
@@ -443,7 +419,7 @@ cor.test(mtcars$disp, mtcars$mpg, method = "kendall")
 #' 
 #' Nous allons vérifier s'il y a une corrélation, positive ou négative, entre la longueur des titres et la longueur des textes. Comme unité de mesure, nous pouvons utiliser le nombre de mots, ou le nombre de caractères, des colonnes `titre` et `texte`. La simplicité de la démarche pour obtenir le nombre total de caractères de chaque titre et de chaque texte nous convainc d'opter pour cette option. On utilisera pour ce faire la fonction `nchar()`, qui prend une chaine de caractères en entrée.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 # Dans R, la plupart des fonctions de base sont vectorisées, c'est-à-dire que si on lui donne en entrée un vecteur, la fonction effectuera l'opération demandée sur chacun de ses éléments. D'où la grande simplicité des instructions suivantes:
 
@@ -462,7 +438,7 @@ xyz[, c("ncharTitre", "ncharTexte")]
 #' 
 #' Procédons maintenant au test de corrélation.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 cor.test(xyz$ncharTitre, xyz$ncharTexte, method = "kendall")
 
@@ -471,7 +447,7 @@ cor.test(xyz$ncharTitre, xyz$ncharTexte, method = "kendall")
 #' 
 #' La mesure de corrélation, le `tau de Kendall`, est positive, mais très proche de zéro, ce qui dénote une corrélation très faible. On peut projeter ces données dans un diagramme à points
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 ggplot(xyz, aes(x=ncharTitre, y=ncharTexte))+
   geom_jitter()+
@@ -483,7 +459,7 @@ ggplot(xyz, aes(x=ncharTitre, y=ncharTexte))+
 #' 
 #' On peut tirer profit des données numériques ajoutées (longueur des titres et des textes) pour créer de nouveaux champs. Par exemple, on pourrait souhaiter classer les textes selon qu'ils sont "courts", "moyens" ou "longs". Un tel type de données est dit "catégoriel". Ce type de données est généralement encapsulé dans des objets appelés `factor` dans R. Ci-dessous, nous allons choisir trois seuils aléatoires pour diviser nos données.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 # On peut tout d'abord observer le sommaire statistique et s'en inspirer
 summary(xyz$ncharTexte)
@@ -509,14 +485,14 @@ str(xyz$longueur_texte_cat)
 #' 
 #' On peut observer ces proportions à l'aide d'un diagramme à barres.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 ggplot(xyz, aes(x = longueur_texte_cat))+                        
   geom_bar(stat = "count")
 
 
 #' 
-#' ## Exploration 2: les données textuelles
+#' # Exploration 2: les données textuelles
 #' 
 #' Pour explorer les données textuelles à proprement parler, soit les textes de fiction contenus dans le tableau sous la variable `texte`, nous devons transformer l'objet de fond en comble. Comme on l'a vu ci-dessus avec les tests de corrélation, il est plus facile de demander à l'ordinateur de traiter des chiffres que des mots! Le corpus, composé des données textuelles et des métadonnées, sera donc transformé en une grande matrice de fréquences de type documents-mots, où chaque ligne correspondra à un document et chaque colonne, à l'un des mots du vocabulaire des données textuelles.
 #' 
@@ -536,7 +512,7 @@ ggplot(xyz, aes(x = longueur_texte_cat))+
 #' 
 #' On gagnera à consulter la page du *Comprehensive R Archive Network (CRAN)* consacrée au [*Natural Language Processing*](https://cran.r-project.org/web/views/NaturalLanguageProcessing.html). On y trouvera de nombreuses extensions consacrées à ce type de tâche.
 #' 
-#' ### Transformation de l'objet avec Quanteda
+#' ## Transformation de l'objet avec Quanteda
 #' 
 #' Le processus de transformation d'un tableau de données en grande matrice se fait, dans Quanteda, en trois grandes étapes.
 #' 
@@ -550,17 +526,17 @@ ggplot(xyz, aes(x = longueur_texte_cat))+
 #' 
 #' Pour plus d'information sur chacune des fonctions, consultez la documentation. Exemple:
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 ?quanteda::corpus()
 
 
 #' 
-#' #### Premiière étape: création d'un objet corpus
+#' #### Première étape: création d'un objet corpus
 #' 
 #' Les arguments de la fonction `corpus()` permettent de préciser les colonnes du tableau correspondant aux identifiants uniques et aux textes.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 xyz_corp <-
   quanteda::corpus(xyz, 
@@ -577,7 +553,7 @@ head(xyz_corp, 4)
 #' 
 #' La transformation de l'objet **corpus** en objet **tokens** correspond à la séparation des mots ou n-grammes de chaque texte. C'est ce qu'on appelle la tokénisation. Plusieurs opérations peuvent être faites à la volée.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 xyz_toks <- tokens(
   xyz_corp, 
   remove_punct = TRUE,              # On supprime à la volée la ponctuation
@@ -593,7 +569,7 @@ head(xyz_toks, 2)
 #' 
 #' #### Troisième étape: création d'un objet dfm à partir de l'objet tokens
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 # On transforme l'objet tokens en dfm
 xyz_dfm <- dfm(
@@ -618,13 +594,13 @@ head(xyz_dfm, 2)
 
 
 #' 
-#' ### Exploration du vocabulaire de sous-ensembles de textes
+#' ## Exploration du vocabulaire de sous-ensembles de textes
 #' 
 #' L'extension quanteda rend aisée l'exploration du vocabulaire de sous-ensembles de textes. Ces sous-ensembles sont générés grâce aux métadonnées que les objets **corpus**, **tokens** et **dfm** portent avec eux. La fonction `dfm_subset()` a un argument `subset=` qui permet d'insérer une expression formelle agissant comme filtre.
 #' 
 #' Dans le premier exemple, nous allons explorer les vocabulaires (filtrés) des textes parus dans la revue *XYZ* en 2015 et en 2021. Le résultat sera transposé en un nuage de mots où ceux qui sont les plus fréquents seront magnifiés et positionnés au centre du nuage.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 # Création de sous-ensembles à partir de la variable auteur
 xyz_dfm_rioux <-
@@ -647,7 +623,7 @@ textplot_wordcloud(xyz_dfm_dorais, max_words = 200)
 #' 
 #' Si on veut mieux comparer deux sous-groupes dans un même graphique, on peut utiliser le code suivant, un peu plus sophistiqué.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 dfm_comp_auteurs <- xyz_corp |>
   
@@ -689,7 +665,7 @@ textplot_wordcloud(
 #' 
 #' On pourrait maintenant souhaiter comparer les vocabulaires dominants de numéros thématiques.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 xyz_dfm_th_jardin <- dfm_subset(xyz_dfm, subset = theme == "Jardin : un enfer de morceaux de paradis")
 
@@ -708,7 +684,7 @@ textplot_wordcloud(xyz_dfm_th_YOLO)
 #### Exercice: choisissez deux autres numéros thématiques et comparez les vocabulaires. Vous pouvez utiliser la voie simple ou reprendre le bloc d'instructions enchainées ci-dessus.
 
 #' 
-#' ### Réseaux des cooccurrences
+#' ## Réseaux des cooccurrences
 #' 
 #' L'exploration de textes fondée sur la fréquence (brute, pondérée ou normalisée) et la technique du "sac de mots" (*BOW*) ne dit rien du contexte immédiat dans lequel les mots sont plongés. Dans le nuage de mots généré à partir des textes de l'auteur David Dorais, on a vu que "jeune" et "femme" sont les mots dominants, suivis de près par "homme". De là à dire que les textes de Dorais s'intéressent à la "jeune femme", il y a un pas qu'on ne peut franchir avant d'avoir vérifié si les mots apparaissent bel et bien, de manière récurrente, dans le même contexte. L'une des manières de se rapprocher du texte et de vérifier quels couples de mots s'attirent, apparaissent souvent dans un même contexte, est de créer un **réseau de cooccurrence**.
 #' 
@@ -718,7 +694,7 @@ textplot_wordcloud(xyz_dfm_th_YOLO)
 #' 
 #' L'extension quanteda offre une fonction qui permet, à partir d'un objet tokens ou dfm, de construire une matrice de cooccurrence qui puisse être projetée sous forme de diagramme de réseau. C'est cette fonction, `fcm()`, que nous utiliserons ci-dessous. Nous allons devoir réduire considérablement les dimensions de cette matrice en utilisant un nombre réduit de cooccurrences -- les plus fréquentes --, sans quoi le diagramme sera impossible à déchiffrer. Mais vous pouvez modifier tous les paramètres et observer les effets sur le diagramme.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 # On fournit en entrée l'objet tokens créé auparavant
 xyz_fcm <- xyz_toks |>
@@ -755,7 +731,7 @@ textplot_network(
 #' 
 #' L'épaisseur du lien et la proximité entre les mots "jeune" et "femme" montrent que les mots s'appellent fortement. On peut retourner à la matrice pour voir exactement combien de fois les deux termes cooccurrent dans une fenêtre de 10 mots.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 
 # Conversion de l'objet fcm en simple matrice
 xyz_cooc_matrice <- convert(xyz_fcm, "matrix")
@@ -767,11 +743,11 @@ str(xyz_cooc_matrice)
 xyz_cooc_matrice["jeune", "femme"]
 
 #' 
-#' ### Au plus près des textes: le concordancier
+#' ## Au plus près des textes: le concordancier
 #' 
 #' On peut souhaiter se rapprocher davantage encore de la texture des mots et vérifier *de visu*, sans pour autant lire intégralement tous les textes, si "jeune" et "femme" se suivent dans cet ordre dans les textes de Dorais et, le cas échéant, quels mots viennent tout juste avant et après la cooccurrence. On utilisera alors un outil bien connu, le concordancier, que quanteda met à notre portée avec la fonction `kwic()`. Cette fonction, dont le nom correspond à *keywords-in-context*, peut prendre en entrée un objet **corpus** ou encore un objet **tokens**. Un argument, `window=`, permet d'indiquer le nombre de mots que l'on souhaite obtenir de chaque côté du mot pivot. Ce dernier est précisé à l'aide de l'argument `pattern=`, ce qui veut dire que vous pouvez utiliser une expression régulière (*regex*) pour attraper différentes formes d'un mot.
 #' 
-## -------------------------------------------------------------------------------------------------------------------------------------------
+## ----------------------------------------------------------------------------------------------------------------------------------
 xyz_kwic_jfemme <- xyz_corp |>
   
   corpus_subset(

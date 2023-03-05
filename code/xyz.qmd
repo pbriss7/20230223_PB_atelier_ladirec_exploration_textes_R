@@ -2,13 +2,12 @@
 title: "Exploration de données textuelles avec R"
 author: "Pascal Brissette"
 date: 2023-02-23
-format: 
-  html:
-    toc: true
-    theme: yete
-    fontsize: 1.1em
-    linestretch: 1.7
-
+format:
+   html:
+     toc: true
+     theme: yete
+     fontsize: 1.1em
+     linestretch: 1.7
 toc: true
 editor: visual
 ---
@@ -357,7 +356,7 @@ Une fonction de base très utile est `table()`. Celle-ci calcule le nombre de va
 distrib_annuelle <- table(xyz$annee)
 
 # Observons le résultat en appelant les 10 premiers éléments de l'objet
-distrib_annuelle[1:10]
+distrib_annuelle
 
 # Quelle est la moyenne de cette distribution?
 mean(distrib_annuelle)
@@ -390,7 +389,7 @@ distrib_auteurs <- table(xyz$auteur)
 
 distrib_auteurs_ord <- sort(distrib_auteurs, decreasing = TRUE)
 
-head(distrib_auteurs_ord, n = 10)
+head(distrib_auteurs_ord)
 
 
 ```
