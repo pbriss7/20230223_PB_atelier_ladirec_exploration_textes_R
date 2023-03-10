@@ -112,7 +112,7 @@ Le résultat de cette lecture est emmagasiné dans la variable `xyz`.
 # Les deux points suivis de / indiquent à R qu'il doit remonter d'un niveau pour trouver un dossier appelé `donnees`
 
 xyz <-
-  readxl::read_excel("../donnees/XYZ-2015-2022-table-20230205JV.xlsx", sheet = 1)
+  readxl::read_excel(path = "../donnees/XYZ-2015-2022-table-20230205JV.xlsx", sheet = 1)
 
 ```
 
@@ -437,7 +437,7 @@ xyz$ncharTexte <- nchar(xyz$texte)
 
 
 # Observons le résultat dans le tableau de données
-xyz[, c("ncharTitre", "ncharTexte")]
+xyz[, c("titre", "ncharTitre", "ncharTexte")]
 
 
 ```
@@ -617,10 +617,10 @@ xyz_dfm_dorais <-
 
 # Création de nuages à partir des sous-ensembles
 # La fonction set.seed() assure la reproductibilité de l'opération
-set.seed(100)
+set.seed(1)
 textplot_wordcloud(xyz_dfm_rioux, max_words = 200)
 
-set.seed(100)
+set.seed(1)
 textplot_wordcloud(xyz_dfm_dorais, max_words = 200)
 
 
