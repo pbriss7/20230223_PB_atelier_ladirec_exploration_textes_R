@@ -1,0 +1,10 @@
+"0","xyz$ncharTitre <- nchar(xyz$titre)
+
+# Nombre total de caractères pour chaque texte
+xyz$ncharTexte <- nchar(xyz$texte)
+
+
+# Observons le résultat dans le tableau de données
+xyz[, c(""titre"", ""ncharTitre"", ""ncharTexte"")]
+"
+"0",""

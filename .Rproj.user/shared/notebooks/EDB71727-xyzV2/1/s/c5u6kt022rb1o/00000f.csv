@@ -1,0 +1,7 @@
+"0","# On peut donc indexer la matrice avec les mots à observer. La valeur renvoyée correspondra au nombre de fois que ces mots cooccurrent dans la fenêtre de 10 mots.
+xyz_cooc_matrice[""jeune"", ""femme""]
+"
+"1","[1]"
+"1"," 22"
+"1","
+"

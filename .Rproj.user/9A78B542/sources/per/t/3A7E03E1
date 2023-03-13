@@ -1,0 +1,32 @@
+{
+    "id": "3A7E03E1",
+    "path": "~/github/PERSONNEL/Ateliers/202302_PB_EDA_corpus_xyz/code/xyzV2.qmd",
+    "project_path": "code/xyzV2.qmd",
+    "type": "quarto_markdown",
+    "hash": "2599065726",
+    "contents": "",
+    "dirty": false,
+    "created": 1678714084404.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "rmdVisualMode": "true",
+        "rmdVisualWrapConfigured": "true",
+        "source_window_id": "",
+        "Source": "Source",
+        "docOutlineVisible": "0",
+        "rmdVisualCollapsedChunks": "1,7272,9149,9529,10474,10733",
+        "rmdVisualModeLocation": "2082:551.8181762695312",
+        "cursorPosition": "774,3",
+        "scrollLine": "0",
+        "last_setup_crc32": "f5d0f4421dd76d5b"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1678716167,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1678738175258,
+    "read_only": false,
+    "read_only_alternatives": []
+}

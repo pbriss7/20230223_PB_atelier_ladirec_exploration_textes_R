@@ -1,0 +1,7 @@
+"0",""
+"0","# Lecture des données et assignation à une variable"
+"0","# Les deux points suivis de / indiquent à R qu'il doit remonter d'un niveau pour trouver un dossier appelé `donnees`"
+"0",""
+"0","xyz <-"
+"0","  readxl::read_excel(path = ""../donnees/XYZ-2015-2022-table-20230205JV.xlsx"", sheet = 1)"
+"0",""

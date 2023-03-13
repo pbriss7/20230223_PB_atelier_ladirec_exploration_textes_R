@@ -1,0 +1,4 @@
+"0","xyz$trimestre <- str::str_extract(xyz$annee, ""[[:alpha:]]"")
+"
+"2","Error in loadNamespace(x) : there is no package called ‘str’
+"
