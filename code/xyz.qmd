@@ -286,11 +286,10 @@ xyz[, colonnes_a_supprimer] <- NULL
 
 # Il faut extraire les années de la colonne `date`. On utilise pour cela l'extension stringr.
 
-xyz$annee <- stringr::str_extract(xyz$date, "[0-9]+")
+xyz$trimestre <- str_extract(xyz$date, "[[:alpha:]]+")
+xyz$annee <- str_extract(xyz$date, "[0-9]+")
 
 
-### Exercice: éliminez la colonne `date`, qui ne sert plus à rien. ###
-# xyz$... <- ...
 
 ```
 
@@ -337,7 +336,7 @@ Enfin, par souci de lisibilité, réordonnons la séquence des colonnes.
 ```{r}
 
 xyz <-
-  xyz[, c("doc_id", "auteur", "titre", "numero", "annee", "theme", "texte")]
+  xyz[, c("doc_id", "auteur", "titre", "numero", "trimestre", "annee", "theme", "texte")]
 
 ```
 
